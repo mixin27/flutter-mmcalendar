@@ -46,7 +46,7 @@ final class Config {
   ///
   /// If not set it will create a default config.
   static Config get instance {
-    _instance ??= Config._private(Builder());
+    _instance ??= Config._private(MmCalendarBuilder());
     return _instance!;
   }
 
@@ -55,25 +55,25 @@ final class Config {
     _instance = config;
   }
 
-  Config._private(Builder builder) {
+  Config._private(MmCalendarBuilder builder) {
     _calendarType = builder.calendarType;
     _language = builder.language;
   }
 }
 
-class Builder {
+class MmCalendarBuilder {
   CalendarType _calendarType = CalendarType.english;
   CalendarType get calendarType => _calendarType;
 
   Language _language = Language.myanmar;
   Language get language => _language;
 
-  Builder setCalendarType(CalendarType calendarType) {
+  MmCalendarBuilder setCalendarType(CalendarType calendarType) {
     _calendarType = calendarType;
     return this;
   }
 
-  Builder setLanguage(Language language) {
+  MmCalendarBuilder setLanguage(Language language) {
     _language = language;
     return this;
   }

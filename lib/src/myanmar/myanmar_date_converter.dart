@@ -1,4 +1,5 @@
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import 'package:flutter_mmcalendar/src/western/western_date_kernel.dart';
 
 class MyanmarDateConverter {
   static MyanmarDate convertByDateTime(DateTime dateTime) {
@@ -19,8 +20,9 @@ class MyanmarDateConverter {
     CalendarType calendarType,
     double sg,
   ) {
-    // double julianDayNumber = WesternDateKernel.w2j(year, month, day, calendarType, SG);
-    return convert(0);
+    double julianDayNumber =
+        WesternDateKernel.w2jByYMDTSG(year, month, day, calendarType, sg);
+    return convert(julianDayNumber);
   }
 
   /// Western day, month, year to Myanmar Date

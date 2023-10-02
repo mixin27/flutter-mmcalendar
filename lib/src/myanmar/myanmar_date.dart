@@ -1,6 +1,5 @@
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_mmcalendar/src/constants/date_format.dart';
-import 'package:flutter_mmcalendar/src/language_catalog.dart';
 
 /// Myanmar date
 class MyanmarDate implements Comparable<MyanmarDate> {
@@ -107,7 +106,7 @@ class MyanmarDate implements Comparable<MyanmarDate> {
     return NumberToStringUtil.convert(myear + 1182, languageCatalog);
   }
 
-  String getBuddhistEraBy() {
+  String getBuddhistEra() {
     return getBuddhistEraByLanguage(LanguageCatalog.instance);
   }
 
@@ -120,16 +119,17 @@ class MyanmarDate implements Comparable<MyanmarDate> {
   }
 
   String _getMnt(LanguageCatalog languageCatalog) {
-    String s = "";
+    // 0=common, 1=little watat, 2=big watat
+    String str = '';
     if (monthType > 0) {
-      s += languageCatalog.translate("Late");
+      str += languageCatalog.translate("Late");
     }
 
     if (yearType > 0 && mmonth == 4) {
-      s += languageCatalog.translate('Second');
+      str += languageCatalog.translate("Second");
     }
 
-    return s;
+    return str;
   }
 
   String getMnt() {

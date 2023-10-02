@@ -1,7 +1,4 @@
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
-import 'package:flutter_mmcalendar/src/era.dart';
-import 'package:flutter_mmcalendar/src/myanmar/myanmar_date.dart';
-import 'package:flutter_mmcalendar/src/myanmar/myanmar_months.dart';
 
 class MyanmarDateKernel {
   static const List<String> ema = [
@@ -45,31 +42,24 @@ class MyanmarDateKernel {
     Map<String, double> yo;
 
     // convert jd to jdn
-    jdn = jd.roundToDouble();
+    jdn = (jd).roundToDouble();
 
-    // Myanmar year
+    /// Myanmar year
     myear = ((jdn - 0.5 - Constants.mo) / Constants.solarYear).floorToDouble();
-
     // check year
     yo = chkMy(myear);
-
     // day count
     dd = jdn - (yo["tg1"] ?? 0) + 1;
     b = ((yo["myt"] ?? 0) / 2.0).floorToDouble();
-
     // big wa and common yr
-    c = (1 / (yo["myt"] ?? 0) + 1).floorToDouble();
-
+    c = (1 / ((yo["myt"] ?? 0) + 1)).floorToDouble();
     // year length
     yearLength = 354 + (1 - c) * 30 + b;
-
-    // month type: Hnaung = 1 or Oo = 0
+    // month type: Hnaung =1 or Oo = 0
     monthType = ((dd - 1) / yearLength).floorToDouble();
     dd -= monthType * yearLength;
-
     // adjust day count and threshold
     a = ((dd + 423) / 512.0).floorToDouble();
-
     // month
     mmonth = ((dd - b * a + c * a * 30 + 29.26) / 29.544).floorToDouble();
     e = ((mmonth + 12) / 16.0).floorToDouble();
@@ -93,9 +83,9 @@ class MyanmarDateKernel {
     // week day
     weekDay = (jdn + 2) % 7;
 
-    final myanmarDate = MyanmarDate(
+    MyanmarDate myanmarDate = MyanmarDate(
       myear: myear.toInt(),
-      yearType: (yo["myt"] ?? 0).toInt(),
+      yearType: yo["myt"]?.toInt() ?? 0,
       yearLength: yearLength.toInt(),
       mmonth: mmonth.toInt(),
       monthType: monthType.toInt(),

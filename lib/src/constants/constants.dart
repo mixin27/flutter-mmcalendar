@@ -12,5 +12,5 @@ class Constants {
   static const double mo = 1954168.050623;
 
   /// Beginning of `3rd Era`
-  static const double se3 = 29.53058794607172;
+  static const double se3 = 1312;
 }

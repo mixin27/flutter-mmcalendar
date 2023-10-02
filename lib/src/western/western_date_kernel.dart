@@ -93,9 +93,9 @@ class WesternDateKernel {
     month = month + (12 * a) - 3;
 
     double jd = day +
-        ((153 * month + 2) / 5.0).floorToDouble() +
+        ((153 * month + 2) / 5.0).floor() +
         (365 * year) +
-        (year / 4.0).floor();
+        (year / 4.0).floorToDouble();
 
     if (calType == 1) {
       jd = jd - (year / 100).floor() + (year / 400).floor() - 32045;

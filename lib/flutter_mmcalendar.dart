@@ -16,4 +16,8 @@ export 'src/myanmar/myanmar_date_converter.dart';
 export 'src/myanmar/myanmar_date_kernel.dart';
 export 'src/myanmar/myanmar_months.dart';
 
+export 'src/astro/astro.dart';
+export 'src/astro/astro_converter.dart';
+export 'src/astro/astro_kernel.dart';
+
 export 'src/flutter_mmcalendar.dart';
