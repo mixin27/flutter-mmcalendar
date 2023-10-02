@@ -1,9 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+/// Myanmar Tingyan
 class Thingyan {
-  final double ja;
-  final double jk;
-  final double da;
-  final double dk;
-
   const Thingyan({
     required this.ja,
     required this.jk,
@@ -11,14 +8,36 @@ class Thingyan {
     required this.dk,
   });
 
+  /// `Atat` time
+  final double ja;
+
+  /// `Akya` time
+  final double jk;
+
+  /// `Atat` day
+  final double da;
+
+  /// `Akya` day
+  final double dk;
+
+  /// `Atat` time
   double get atatTime => ja;
+
+  /// `Akya` time
   double get akyaTime => jk;
+
+  /// `Atat` day
   double get atatDay => da;
+
+  /// `Akya` day
   double get akyaDay => dk;
 
+  /// `Akyo` day
   double get akyoDay => dk - 1;
 
   /// Thingyan Akyat day
+  ///
+  /// `Akyat` day can be `two` days every `leap` year.
   List<double> get akyatDay {
     if ((da - dk) > 2) {
       return [dk + 1, dk + 2];

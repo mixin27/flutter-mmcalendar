@@ -46,6 +46,11 @@ class WesternDate {
   }
 
   @override
+  String toString() {
+    return 'WesternDate(year: $year, month: $month, day: $day, hour: $hour, minute: $minute, second: $second)';
+  }
+
+  @override
   bool operator ==(covariant WesternDate other) {
     if (identical(this, other)) return true;
 
@@ -65,10 +70,5 @@ class WesternDate {
         hour.hashCode ^
         minute.hashCode ^
         second.hashCode;
-  }
-
-  @override
-  String toString() {
-    return 'WesternDate(year: $year, month: $month, day: $day, hour: $hour, minute: $minute, second: $second)';
   }
 }

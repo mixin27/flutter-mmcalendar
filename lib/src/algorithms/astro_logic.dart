@@ -1,17 +1,19 @@
-import 'package:flutter_mmcalendar/src/old/astro/astro.dart';
+import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 /// Calculation Algorithms for Myanmar Astro
-class AstroKernel {
+class AstroLogic {
+  /// Get [Astro]
+  ///
   /// <a href=
   /// "http://cool-emerald.blogspot.sg/2013/12/myanmar-astrological-calendar-days.html">
   /// More details</a>
-  static Astro astro(
-    int mmonth,
-    int monthLength,
-    int monthDay,
-    int weekDay,
-    int myear,
-  ) {
+  static Astro getAstro({
+    required int mmonth,
+    required int monthLength,
+    required int monthDay,
+    required int weekDay,
+    required int myear,
+  }) {
     double d, m1, wd1, wd2;
     int sabbath, sabbatheve, yatyaza, pyathada, thamanyo, amyeittasote;
     int warameittugyi, warameittunge, yatpote, thamaphyu, nagapor, yatyotema;

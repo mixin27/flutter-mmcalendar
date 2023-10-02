@@ -1,3 +1,6 @@
+/// Language type
+///
+/// `myanmar` | `english` | `mon` | `zawgyi`
 enum Language {
   myanmar("\u104a\u200b", "\u104b\u200b"),
   english("\u104a\u200b", "\u104b\u200b"),
@@ -8,7 +11,4 @@ enum Language {
 
   final String comma;
   final String period;
-
-  String getComma() => comma;
-  String getPeriod() => period;
 }

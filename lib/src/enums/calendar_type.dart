@@ -1,3 +1,6 @@
+/// Calendar type
+///
+/// `0=English` | `1=Gregorian` | `2=Julian`
 enum CalendarType {
   english(0, "English"),
   gregorian(1, "Gregorian"),
@@ -7,8 +10,4 @@ enum CalendarType {
 
   final int number;
   final String label;
-
-  int getNumber() => number;
-
-  String getLabel() => label;
 }

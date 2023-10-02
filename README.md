@@ -28,11 +28,11 @@ Configure default `calendarType` and `language`. It is `optional`.
 
 ```dart
 void main() {
-  final mmCalendarBuilder = MmCalendarBuilder()
-      .setCalendarType(CalendarType.english)
-      .setLanguage(Language.english)
-      .build();
-  Config.initDefault(mmCalendarBuilder);
+  MmCalendarConfig.initDefault(
+    const MmCalendarOptions(
+      language: Language.myanmar,
+    ),
+  );
 
   runApp(const MyApp());
 }

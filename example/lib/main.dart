@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 void main() {
-  final mmCalendarBuilder = MmCalendarBuilder()
-      .setCalendarType(CalendarType.english)
-      .setLanguage(Language.english)
-      .build();
-  Config.initDefault(mmCalendarBuilder);
+  MmCalendarConfig.initDefault(
+    const MmCalendarOptions(
+      language: Language.myanmar,
+    ),
+  );
 
   runApp(const MyApp());
 }
@@ -32,7 +32,12 @@ class MyApp extends StatelessWidget {
             child: ListView(
               children: [
                 Text(
-                  getMyanmarDateInfo(),
+                  'Default',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  FlutterMmcalendar.getDateByLanguage(DateTime.now()),
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -82,6 +87,7 @@ class MyApp extends StatelessWidget {
                     language: Language.zawgyi,
                   ),
                 ),
+                const SizedBox(height: 20),
                 Text(
                   'Astro',
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -98,31 +104,6 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
-
-String getMyanmarDateInfo() {
-  final dateTime = DateTime.now();
-  MyanmarDate myanmarDate = FlutterMmcalendar.getMyanmarDate(
-    year: dateTime.year,
-    month: dateTime.month,
-    day: dateTime.day,
-  );
-
-  final buddhistEra = myanmarDate.getBuddhistEra();
-  final year = myanmarDate.getYear();
-  final monthName = myanmarDate.getMonthName();
-  final moonPhase = myanmarDate.getMoonPhase();
-  final fortNightDay = myanmarDate.getFortnightDay();
-  final weekday = myanmarDate.getWeekDay();
-
-  return '''
-BuddhistEra:  $buddhistEra
-Year:         $year
-Monthname:    $monthName
-MoonPhase:    $moonPhase
-FortnightDay: $fortNightDay
-WeekDay:      $weekday
-''';
 }
 
 String getAstroInfo() {

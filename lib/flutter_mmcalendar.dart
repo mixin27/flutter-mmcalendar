@@ -1,23 +1,66 @@
 library flutter_mmcalendar;
 
-export 'src/old/constants/constants.dart';
-export 'src/old/config/config.dart';
-export 'src/old/enums/calendar_type.dart';
-export 'src/old/enums/language.dart';
+import 'src/converters/myanmar_date_converter.dart';
+import 'src/enums/language.dart';
+import 'src/models/myanmar_date.dart';
+import 'src/utils/language_catalog.dart';
 
-export 'src/old/utils/binary_search_utils.dart';
-export 'src/old/utils/number_to_string_util.dart';
+export 'src/models/astro.dart';
+export 'src/models/era.dart';
+export 'src/models/myanmar_date.dart';
+export 'src/models/myanmar_months.dart';
+export 'src/models/thingyan.dart';
+export 'src/models/western_date.dart';
 
-export 'src/old/era.dart';
-export 'src/old/language_catalog.dart';
+export 'src/utils/binary_search_utils.dart';
+export 'src/utils/language_catalog.dart';
+export 'src/utils/number_to_string_utils.dart';
 
-export 'src/old/myanmar/myanmar_date.dart';
-export 'src/old/myanmar/myanmar_date_converter.dart';
-export 'src/old/myanmar/myanmar_date_kernel.dart';
-export 'src/old/myanmar/myanmar_months.dart';
+export 'src/constants/calendar_constants.dart';
+export 'src/constants/format_constants.dart';
 
-export 'src/old/astro/astro.dart';
-export 'src/old/astro/astro_converter.dart';
-export 'src/old/astro/astro_kernel.dart';
+export 'src/enums/calendar_type.dart';
+export 'src/enums/language.dart';
 
-export 'src/old/flutter_mmcalendar.dart';
+export 'src/converters/astro_converter.dart';
+export 'src/converters/myanmar_date_converter.dart';
+export 'src/converters/western_date_converter.dart';
+
+export 'src/algorithms/astro_logic.dart';
+export 'src/algorithms/myanmar_date_logic.dart';
+export 'src/algorithms/western_date_logic.dart';
+
+export 'src/config/mm_calendar_config.dart';
+
+class FlutterMmcalendar {
+  /// Get [MyanmarDate] object by `year`, `month` and `day.
+  ///
+  /// `year` - Year
+  ///
+  /// `month` - Month
+  ///
+  /// `day` - Day
+  static MyanmarDate getMyanmarDate({
+    required int year,
+    required int month,
+    required int day,
+  }) {
+    return MyanmarDateConverter.fromDate(year, month, day);
+  }
+
+  /// Get formatted string by [Language].
+  ///
+  /// `dateTime` - [DateTime] to format.
+  ///
+  /// `language` - Language type `englisht` | `myanmar` | `mon` | `zawgyi`.
+  static String getDateByLanguage(
+    DateTime dateTime, {
+    Language? language,
+  }) {
+    final mmDate = MyanmarDateConverter.fromDateTime(dateTime);
+    return mmDate.formatByPatternAndLanguage(
+      'S s k, B y k, M p f r En',
+      LanguageCatalog(language: language),
+    );
+  }
+}

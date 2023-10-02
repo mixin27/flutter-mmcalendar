@@ -1,26 +1,15 @@
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
-class MyanmarDateKernel {
-  static const List<String> ema = [
-    "First Waso",
-    "Tagu",
-    "Kason",
-    "Nayon",
-    "Waso",
-    "Wagaung",
-    "Tawthalin",
-    "Thadingyut",
-    "Tazaungmon",
-    "Nadaw",
-    "Pyatho",
-    "Tabodwe",
-    "Tabaung",
-    "Late Tagu",
-    "Late Kason"
-  ];
-
-  /// Julian date to Myanmar date dependency: chk_my(my)
-  static MyanmarDate j2m(double jd) {
+/// Converting logic for [MyanmarDate].
+///
+/// Core Calculation and Algorithms for Myanmar Date
+class MyanmarDateLogic {
+  /// Julian date to Myanmar date.
+  ///
+  /// `julianDay` - Julian day
+  ///
+  /// Return - [MyanmarDate]
+  static MyanmarDate julianToMyanmarDate(double julianDay) {
     double jdn,
         dd,
         yearLength,
@@ -42,15 +31,16 @@ class MyanmarDateKernel {
     Map<String, double> yo;
 
     // convert jd to jdn
-    jdn = (jd).roundToDouble();
+    jdn = (julianDay).roundToDouble();
 
     /// Myanmar year
-    myear = ((jdn - 0.5 - Constants.mo) / Constants.solarYear).floorToDouble();
+    myear = ((jdn - 0.5 - CalendarConstants.mo) / CalendarConstants.solarYear)
+        .floorToDouble();
     // check year
     yo = chkMy(myear);
     // day count
     dd = jdn - (yo["tg1"] ?? 0) + 1;
-    b = ((yo["myt"] ?? 0) / 2.0).floorToDouble();
+    b = ((yo["myt"] ?? 0) / 2.0.floor());
     // big wa and common yr
     c = (1 / ((yo["myt"] ?? 0) + 1)).floorToDouble();
     // year length
@@ -94,7 +84,7 @@ class MyanmarDateKernel {
       fortnightDay: fortnightDay.toInt(),
       moonPhase: moonPhase.toInt(),
       weekDay: weekDay.toInt(),
-      jd: jd,
+      jd: julianDay,
     );
 
     return myanmarDate;
@@ -141,35 +131,38 @@ class MyanmarDateKernel {
 
   /// Check watat (intercalary month) dependency: chk_exception(my,fm,watat,ei)
   static Map<String, double> chkWatat(double myear) {
-    int i = Era.gEras.length - 1;
+    int i = eraList.length - 1;
 
     do {
       // get data for respective era
-      if (myear >= Era.gEras[i].begin) {
+      if (myear >= eraList[i].begin) {
         break;
       }
       i--;
     } while (i > 0);
 
-    Era era = Era.gEras[i];
+    Era era = eraList[i];
     int nm = era.nm;
     double wo = era.wo;
 
     // threshold to adjust
-    double ta = (Constants.solarYear / 12.0 - Constants.lunarMonth) * (12 - nm);
+    double ta =
+        (CalendarConstants.solarYear / 12.0 - CalendarConstants.lunarMonth) *
+            (12 - nm);
     // excess day
-    double ed = (Constants.solarYear * (myear + 3739)) % Constants.lunarMonth;
+    double ed = (CalendarConstants.solarYear * (myear + 3739)) %
+        CalendarConstants.lunarMonth;
 
     if (ed < ta) {
       // adjust excess days
-      ed += Constants.lunarMonth;
+      ed += CalendarConstants.lunarMonth;
     }
 
     // full moon day of 2nd Waso
-    double fm = (Constants.solarYear * myear +
-            Constants.mo -
+    double fm = (CalendarConstants.solarYear * myear +
+            CalendarConstants.mo -
             ed +
-            4.5 * Constants.lunarMonth +
+            4.5 * CalendarConstants.lunarMonth +
             wo)
         .roundToDouble();
 
@@ -178,8 +171,9 @@ class MyanmarDateKernel {
 
     if (era.eid >= 2) {
       // if 2nd era or later find watat based on excess days
-      tw = Constants.lunarMonth -
-          (Constants.solarYear / 12.0 - Constants.lunarMonth) * nm;
+      tw = CalendarConstants.lunarMonth -
+          (CalendarConstants.solarYear / 12.0 - CalendarConstants.lunarMonth) *
+              nm;
 
       if (ed >= tw) {
         watat = 1;
@@ -196,14 +190,14 @@ class MyanmarDateKernel {
       watat = (watat / 12.0).floorToDouble();
     }
 
-    i = BinarySearchUtils.searchOf2DArray(myear, era.wte);
+    i = searchOf2DArray(myear, era.wte);
     if (i >= 0) {
       // correct watat exceptions
       watat = (era.wte[i][1]).toDouble();
     }
 
     if (watat > 0) {
-      i = BinarySearchUtils.searchOf2DArray(myear, era.fme);
+      i = searchOf2DArray(myear, era.fme);
       if (i >= 0) {
         fm += era.fme[i][1];
       }
@@ -216,60 +210,38 @@ class MyanmarDateKernel {
     return map;
   }
 
-  /// Myanmar date to Julian date
-  static double m2jByMyanmarDate(MyanmarDate myanmarDate) {
-    return m2j(
-      myanmarDate.myear.toDouble(),
-      myanmarDate.mmonth.toDouble(),
-      myanmarDate.monthType.toDouble(),
-      myanmarDate.moonPhase.toDouble(),
-      myanmarDate.fortnightDay.toDouble(),
-    );
-  }
-
-  /// Myanmar date to Julian date dependency: chk_my(my)
-  static double m2jByYearMonthDay(double myear, double mmonth, double mmday) {
-    double monthType = (mmonth / 13).floorToDouble();
-    double month = mmonth % 12;
-    return m2j(myear, month, monthType, 0, mmday);
-  }
-
-  /// Myanmar date to Julian date dependency: chk_my(my)
+  /// Convert [MyanmarDate] to `julian`
   ///
-  /// `myear` - Myanmar year
+  /// `year` - Myanmar year
   ///
-  /// `mmonth` - Myanmar month (Tagu=1, Kason=2, Nayon=3, 1st Waso=0, (2nd)
-  /// Waso=4, Wagaung=5, Tawthalin=6, Thadingyut=7, Tazaungmon=8,
-  /// Nadaw=9, Pyatho=10, Tabodwe=11, Tabaung=12)
+  /// `month` - Myanmar month
   ///
-  /// `monthType` - month type (1=hnaung, 0=Oo)
+  /// `monthType` - Month type `1=hnaung, 0=Oo`
   ///
-  /// `moonPhase` - moon phase (0=waxing, 1=full moon, 2=waning, 3=new moon)
+  /// `fortnightDay` - Fortnight day `1 to 15`
   ///
-  /// `fortnightDay` - fortnight day (1 to 15)
-  ///
-  /// Return julian day number
-  static double m2j(
-    double myear,
-    double mmonth,
-    double monthType,
-    double moonPhase,
-    double fortnightDay,
-  ) {
+  /// Return - Julian day number
+  static double myanmarDateToJulian({
+    required double year,
+    required double month,
+    required double monthType,
+    required double moonPhase,
+    required double fortnightDay,
+  }) {
     double b, c, mml, m1, m2, md, dd;
 
-    // check year
-    Map<String, double> yo = chkMy(myear);
+    //check year
+    Map<String, double> yo = chkMy(year);
 
-    b = (yo["myt"] ?? 0 / 2).floorToDouble();
+    b = ((yo["myt"] ?? 0) / 2).floorToDouble();
 
     //if big watat and common year
     c = (yo["myt"] == 0) ? 1 : 0;
 
     //month length
-    mml = 30 - mmonth % 2;
+    mml = 30 - month % 2;
 
-    if (mmonth == 3) {
+    if (month == 3) {
       //adjust if Nayon in big watat
       mml += b;
     }
@@ -279,13 +251,13 @@ class MyanmarDateKernel {
     md = m1 * (15 + m2 * (mml - 15)) + (1 - m1) * (fortnightDay + 15 * m2);
 
     // adjust month
-    mmonth +=
-        4 - ((mmonth + 15) / 16.0).floor() * 4 + ((mmonth + 12) / 16).floor();
+    month +=
+        4 - ((month + 15) / 16.0).floor() * 4 + ((month + 12) / 16).floor();
 
     dd = md +
-        (29.544 * mmonth - 29.26).floor() -
-        c * ((mmonth + 11) / 16.0).floor() * 30 +
-        b * ((mmonth + 12) / 16.0).floor();
+        (29.544 * month - 29.26).floor() -
+        c * ((month + 11) / 16.0).floor() * 30 +
+        b * ((month + 12) / 16.0).floor();
     // year length
     double myl = 354 + (1 - c) * 30 + b;
     // adjust day count
@@ -294,19 +266,61 @@ class MyanmarDateKernel {
     return dd + (yo["tg1"] ?? 0) - 1;
   }
 
-  /// Time to Fraction of day starting from 12 noon (t2d)
-  static double time2dayFraction(double hour, double minute, double second) {
-    return ((hour - 12) / 24) + (minute / 1440) + (second / 86400);
+  /// Convert [MyanmarDate] to `julian`
+  static double toJulian(MyanmarDate myanmarDate) {
+    return myanmarDateToJulian(
+      year: myanmarDate.myear.toDouble(),
+      month: myanmarDate.mmonth.toDouble(),
+      monthType: myanmarDate.monthType.toDouble(),
+      moonPhase: myanmarDate.moonPhase.toDouble(),
+      fortnightDay: myanmarDate.fortnightDay.toDouble(),
+    );
   }
 
-  /// Calculate Myanmar Month List
-  static MyanmarMonths getMyanmarMonth(int myear, int mmonth) {
-    double j1 = (Constants.solarYear * myear + Constants.mo).round() + 1;
-    double j2 =
-        (Constants.solarYear * (myear + 1) + Constants.mo).roundToDouble();
+  /// Convert [MyanmarDate] to `julian`
+  ///
+  /// `year` - Myanmar year
+  ///
+  /// `month` - Myanmar month
+  ///
+  /// `day` - Myanmar day
+  static double myanmarDateToJulianWithDate(
+    double year,
+    double month,
+    double day,
+  ) {
+    double monthType = (month / 13).floorToDouble();
+    double m = month % 12;
+    return myanmarDateToJulian(
+      year: year,
+      month: m,
+      monthType: monthType,
+      moonPhase: 0,
+      fortnightDay: day,
+    );
+  }
 
-    MyanmarDate m1 = j2m(j1);
-    MyanmarDate m2 = j2m(j2);
+  /// Time to Fraction of day starting from 12 noon (t2d)
+  static double timeToDayFraction(double hour, double minute, double second) =>
+      ((hour - 12) / 24) + (minute / 1440) + (second / 86400);
+
+  /// Calculate Myanmar Month List
+  ///
+  /// `year` - Myanmar year
+  ///
+  /// `month` - Myanmar month
+  ///
+  /// Return - [MyanmarMonths]
+  static MyanmarMonths getMyanmarMonths(int year, int month) {
+    double j1 = (CalendarConstants.solarYear * year + CalendarConstants.mo)
+            .roundToDouble() +
+        1;
+    double j2 =
+        (CalendarConstants.solarYear * (year + 1) + CalendarConstants.mo)
+            .roundToDouble();
+
+    MyanmarDate m1 = julianToMyanmarDate(j1);
+    MyanmarDate m2 = julianToMyanmarDate(j2);
 
     int si = m1.mmonth + 12 * m1.monthType;
     int ei = m2.mmonth + 12 * m2.monthType;
@@ -314,33 +328,33 @@ class MyanmarDateKernel {
     if (si == 0) {
       si = 4;
     }
-    if (mmonth == 0 && m1.yearType == 0) {
-      mmonth = 4;
+    if (month == 0 && m1.yearType == 0) {
+      month = 4;
     }
-    if (mmonth != 0 && mmonth < si) {
-      mmonth = si;
+    if (month != 0 && month < si) {
+      month = si;
     }
-    if (mmonth > ei) {
-      mmonth = ei;
+    if (month > ei) {
+      month = ei;
     }
 
-    List<int> index = List.empty();
-    List<String> monthNameList = List.empty();
+    List<int> index = [];
+    List<String> monthNameList = [];
     int currentIndex = 0;
 
     for (int i = si; i <= ei; i++) {
       if (i == 4 && m1.yearType != 0) {
         index.add(0);
-        monthNameList.add(ema[0]);
-        if (mmonth == 0) {
+        monthNameList.add(_emaList[0]);
+        if (month == 0) {
           currentIndex = 0;
         }
       }
       index.add(i);
       monthNameList
-          .add(((i == 4 && m1.yearType != 0) ? "Second " : "") + ema[i]);
+          .add(((i == 4 && m1.yearType != 0) ? "Second " : "") + _emaList[i]);
 
-      if (i == mmonth) {
+      if (i == month) {
         //if(Math.abs(i - mmonth) < 0.0000001 ) {
         currentIndex = i;
       }
@@ -353,3 +367,21 @@ class MyanmarDateKernel {
     );
   }
 }
+
+const List<String> _emaList = [
+  "First Waso",
+  "Tagu",
+  "Kason",
+  "Nayon",
+  "Waso",
+  "Wagaung",
+  "Tawthalin",
+  "Thadingyut",
+  "Tazaungmon",
+  "Nadaw",
+  "Pyatho",
+  "Tabodwe",
+  "Tabaung",
+  "Late Tagu",
+  "Late Kason"
+];
