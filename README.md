@@ -102,8 +102,12 @@ The following pattern letters are defined ('S', 's', 'B', 'y', 'k', 'M', 'p', 'f
 
 Algorithm, Program and Calculation of Myanmar Calendar
 
-- [http://cool-emerald.blogspot.sg/2013/06/algorithm-program-and-calculation-of.html](http://cool-emerald.blogspot.sg/2013/06/algorithm-program-and-calculation-of.html) [(Dr Yan Naing Aye)](https://github.com/yan9a/)
+- [https://cool-emerald.blogspot.com/2013/06/algorithm-program-and-calculation-of.html](https://cool-emerald.blogspot.com/2013/06/algorithm-program-and-calculation-of.html) [(Dr Yan Naing Aye)](https://github.com/yan9a/)
 
-Java Library
+C++ and Javascript Implementation
+
+- [https://github.com/yan9a/mmcal](https://github.com/yan9a/mmcal)
+
+Java Library Implementation
 
 - [https://github.com/chanmratekoko/mmcalendar](https://github.com/chanmratekoko/mmcalendar)
