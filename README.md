@@ -1,4 +1,4 @@
-**Myanmar Calendar** package for `Flutter` and `dart` applications.
+**Myanmar Calendar** package for `Flutter` applications.
 
 ## Features
 
