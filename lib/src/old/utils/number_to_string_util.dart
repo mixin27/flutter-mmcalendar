@@ -1,4 +1,4 @@
-import 'package:flutter_mmcalendar/src/language_catalog.dart';
+import 'package:flutter_mmcalendar/src/old/language_catalog.dart';
 
 /// Number To Specific Language String
 final class NumberToStringUtil {

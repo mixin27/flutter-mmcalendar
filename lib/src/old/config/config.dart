@@ -1,5 +1,5 @@
-import 'package:flutter_mmcalendar/src/enums/calendar_type.dart';
-import 'package:flutter_mmcalendar/src/enums/language.dart';
+import 'package:flutter_mmcalendar/src/old/enums/calendar_type.dart';
+import 'package:flutter_mmcalendar/src/old/enums/language.dart';
 
 /// Configuration for `Calendar`
 final class Config {

@@ -1,5 +1,5 @@
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
-import 'package:flutter_mmcalendar/src/myanmar/thingyan.dart';
+import 'package:flutter_mmcalendar/src/old/myanmar/thingyan.dart';
 
 class ThingyanCalculator {
   /// Calculate the Thingyan (Myanmar new year)

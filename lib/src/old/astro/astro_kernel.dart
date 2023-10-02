@@ -1,4 +1,4 @@
-import 'package:flutter_mmcalendar/src/astro/astro.dart';
+import 'package:flutter_mmcalendar/src/old/astro/astro.dart';
 
 /// Calculation Algorithms for Myanmar Astro
 class AstroKernel {
