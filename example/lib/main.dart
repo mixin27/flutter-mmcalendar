@@ -107,31 +107,58 @@ class MyApp extends StatelessWidget {
 }
 
 String getAstroInfo() {
-  final dateTime = DateTime.now();
-  MyanmarDate myanmarDate = FlutterMmcalendar.getMyanmarDate(
-    year: dateTime.year,
-    month: dateTime.month,
-    day: dateTime.day,
-  );
-
+  final myanmarDate = MyanmarDateConverter.fromDateTime(DateTime.now());
   final astro = AstroConverter.convert(myanmarDate);
 
-  return '''
-isSabbath:            ${astro.isSabbath}
-isThamanyo:           ${astro.isThamanyo}
-isThamaphyu:         ${astro.isSabbath}
-isAmyeittasote:      ${astro.isSabbath}
-isWarameittugyi:     ${astro.isSabbath}
-isWarameittunge:     ${astro.isSabbath}
-isYatpote:           ${astro.isSabbath}
-isNagapor:           ${astro.isSabbath}
-isYatyotema:         ${astro.isSabbath}
-isMahayatkyan:       ${astro.isSabbath}
-isShanyat:           ${astro.isSabbath}
-Nagahle:              ${astro.getNagahle()}
-Mahabote:             ${astro.getMahabote()}
-Nakhat:               ${astro.getNakhat()}
-YearName:             ${astro.getYearName()}
-AstroligicalDay:      ${astro.getAstrologicalDay()}
-''';
+  var str = '';
+
+  final amyeittasote = astro.getAmyeittasote();
+  str += 'Amyeittasote: $amyeittasote\n';
+
+  final astrologicalDay = astro.getAstrologicalDay();
+  str += 'AstrologicalDay: $astrologicalDay\n';
+
+  final mahabote = astro.getMahabote();
+  str += 'Mahabote: $mahabote\n';
+
+  final mahayatkyan = astro.getMahayatkyan();
+  str += 'Mahayatkyan: $mahayatkyan\n';
+
+  final nagahle = astro.getNagahle();
+  str += 'Nagahle: $nagahle\n';
+
+  final nagapor = astro.getNagapor();
+  str += 'Nagapor: $nagapor\n';
+
+  final nakhat = astro.getNakhat();
+  str += 'Nakhat: $nakhat\n';
+
+  final sabbath = astro.getSabbath();
+  str += 'Sabbath: $sabbath\n';
+
+  final shanyat = astro.getShanyat();
+  str += 'Shanyat: $shanyat\n';
+
+  final thamanyo = astro.getThamanyo();
+  str += 'Thamanyo: $thamanyo\n';
+
+  final thamaphyu = astro.getThamaphyu();
+  str += 'Thamaphyu: $thamaphyu\n';
+
+  final warameittugyi = astro.getWarameittugyi();
+  str += 'Warameittugyi: $warameittugyi\n';
+
+  final warameittunge = astro.getWarameittunge();
+  str += 'Warameittunge: $warameittunge\n';
+
+  final yatpote = astro.getYatpote();
+  str += 'Yatpote: $yatpote\n';
+
+  final yatyotema = astro.getYatyotema();
+  str += 'Yatyotema: $yatyotema\n';
+
+  final yearName = astro.getYearName();
+  str += 'YearName: $yearName';
+
+  return str;
 }

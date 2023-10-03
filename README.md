@@ -39,6 +39,8 @@ void main() {
 
 ```
 
+Sample Usage:
+
 ```dart
 // Get MyanmarDate by year, month and day
 MyanmarDate myanmarDate = MyanmarDateConverter.convertByYMD(2023, 10, 29);
@@ -97,6 +99,124 @@ The following pattern letters are defined ('S', 's', 'B', 'y', 'k', 'M', 'p', 'f
 | r      | Yat              | ရက်              |                  |
 | E      | Day name in week | တနင်္လာ          | Monday           |
 | n      | Nay              | နေ့              |                  |
+
+### Available Converters
+
+- `MyanmarDateConverter`
+- `WesternDateConverter`
+- `AstroConverter`
+
+`MyanmarDateConverter`
+
+```dart
+// Get MyanmarDate by dart DateTime
+final myanmarDate = MyanmarDateConverter.fromDateTime(DateTime.now());
+// Get MyanmarDate by custom year, month and day
+final myanmarDate = MyanmarDateConverter.fromDate(2023, 10, 19);
+// Get MyanmarDate by custom year, month, day, hour, minute and second
+final myanmarDate = MyanmarDateConverter.fromDateAndTime(2023, 10, 19, 12, 30, 00);
+// Get MyanmarDate by julian day numbers
+final myanmarDate = MyanmarDateConverter.fromJulianDate(20);
+```
+
+`WesternDateConverter`
+
+```dart
+// By julian day number
+final westernDate = WesternDateConverter.fromJulianDate(julianDate);
+// By MyanmarDate
+final westernDate = WesternDateConverter.fromMyanmarDate(myanmarDate);
+```
+
+`AstroConverter`
+
+```dart
+final astro = AstroConverter.convert(myanmarDate);
+```
+
+### Available Converting Logics
+
+- **`AstroLogic`**
+  - `getAstro()`
+- **`MyanmarDateLogic`**
+  - `julianToMyanmarDate()`
+  - `myanmarDateToJulian()`
+  - `myanmarDateToJulianWithDate()`
+  - `toJulian()`
+  - `getMyanmarMonths()`
+- **`WesternDateLogic`**
+  - `julianToWestern()`
+  - `westernToJulian()`
+  - `westernToJulianWithTime()`
+  - `toJulian()`
+  - `getJulianDayNumberOfStartOfMonth()`
+  - `getJulianDayNumberOfEndOfMonth()`
+  - `getLengthOfMonth()`
+
+### Astrological Information
+
+```dart
+final myanmarDate = MyanmarDateConverter.fromDateTime(DateTime.now());
+final astro = AstroConverter.convert(myanmarDate);
+
+// အမြိတ္တစုတ်
+final amyeittasote = astro.getAmyeittasote();
+
+// ရက်ရာဇာ, ပြဿဒါး, မွန်းလွဲပြဿဒါး
+final astrologicalDay = astro.getAstrologicalDay();
+
+// "Binga", "Atun", "Yaza", "Adipati", "Marana", "Thike", "Puti"
+final mahabote = astro.getMahabote();
+
+// မဟာရက်ကြမ်း
+final mahayatkyan = astro.getMahayatkyan();
+
+// "West", "North", "East", "South"
+final nagahle = astro.getNagahle();
+
+// နဂါးပေါ်
+final nagapor = astro.getNagapor();
+
+// "Orc", "Elf", "Human"
+final nakhat = astro.getNakhat();
+
+// ဥပုသ်
+final sabbath = astro.getSabbath();
+
+// ရှမ်းရက်
+final shanyat = astro.getShanyat();
+
+// သမားညို
+final thamanyo = astro.getThamanyo();
+
+// သမားဖြူ
+final thamaphyu = astro.getThamaphyu();
+
+// ဝါရမိတ္တုကြီး
+final warameittugyi = astro.getWarameittugyi();
+
+// ဝါရမိတ္တုငယ်
+final warameittunge = astro.getWarameittunge();
+
+// ရက်ပုပ်
+final yatpote = astro.getYatpote();
+
+// ရက်ယုတ်မာ
+final yatyotema = astro.getYatyotema();
+
+// "ပုဿနှစ်", "မာခနှစ်", "ဖ္လကိုန်သံဝစ္ဆိုဝ်ရနှစ်", "စယ်နှစ်", "ပိသျက်နှစ်", "စိဿနှစ်", "အာသတ်နှစ်", "သရဝန်နှစ်",
+// "ဘဒ္ဒြသံဝစ္ဆုံရ်နှစ်", "အာသိန်နှစ်", "ကြတိုက်နှစ်", "မြိက္ကသိုဝ်နှစ်"
+final yearName = astro.getYearName();
+```
+
+You can also check these days by calling `is` prefix properties.
+
+Example:
+
+```dart
+// It will return true or false
+final isAmyeittasote = astro.isAmyeittasote;
+```
 
 ### Concept reference resources
 

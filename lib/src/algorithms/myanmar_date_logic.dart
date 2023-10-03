@@ -90,7 +90,7 @@ class MyanmarDateLogic {
     return myanmarDate;
   }
 
-  /// Check Myanmar Year dependency: chk_watat(my)
+  /// Check Myanmar Year dependency
   static Map<String, double> chkMy(double myear) {
     int yd = 0;
     Map<String, double> y1;
@@ -129,7 +129,7 @@ class MyanmarDateLogic {
     return map;
   }
 
-  /// Check watat (intercalary month) dependency: chk_exception(my,fm,watat,ei)
+  /// Check watat (intercalary month)
   static Map<String, double> chkWatat(double myear) {
     int i = eraList.length - 1;
 
