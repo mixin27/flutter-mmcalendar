@@ -2,6 +2,48 @@ import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 /// Holiday Calculator
 class HolidaysCalculator {
+  /// Get all holidays.
+  static List<String> getHolidays(
+    MyanmarDate myanmarDate, {
+    CalendarType? calendarType,
+  }) {
+    // WesternDate westernDate = WesternDateConverter.convert(myanmarDate.jd, calendarType);
+    WesternDate westernDate = WesternDateConverter.fromMyanmarDate(
+      myanmarDate,
+      calendarType: calendarType,
+    );
+
+    List<String> holiday = List.empty(growable: true);
+
+    // Office Off
+    List<String> hde = englishHolidays(
+      westernDate.year,
+      westernDate.month,
+      westernDate.day,
+    );
+    holiday.addAll(hde);
+
+    List<String> hdm = myanmarHolidays(
+      myanmarDate.myear.toDouble(),
+      myanmarDate.mmonth,
+      myanmarDate.monthDay,
+      myanmarDate.moonPhase,
+    );
+    holiday.addAll(hdm);
+
+    List<String> hdt = thingyanHolidays(
+      myanmarDate.jd,
+      myanmarDate.myear.toDouble(),
+      myanmarDate.monthType,
+    );
+    holiday.addAll(hdt);
+
+    List<String> hdo = otherHolidays(myanmarDate.jd); // Diwali Eid
+    holiday.addAll(hdo);
+
+    return holiday;
+  }
+
   /// Check for English Holiday
   ///
   /// `gy` - Gregorian year
@@ -10,26 +52,27 @@ class HolidaysCalculator {
   ///
   /// `gd` - Gregorian Day `0-31`
   static List<String> englishHolidays(int gy, int gm, int gd) {
-    List<String> holiday = [];
-    if ((gy >= 2018) && (gm == 1) && (gd == 1)) {
-      holiday.add("New Year Day");
-    } else if ((gy >= 1948) && (gm == 1) && (gd == 4)) {
+    List<String> holiday = List.empty(growable: true);
+
+    if (gy >= 2018 && gm == 1 && gd == 1) {
+      holiday.add("New Year's Day");
+    } else if (gy >= 1948 && gm == 1 && gd == 4) {
       holiday.add("Independence Day");
-    } else if ((gy >= 1947) && (gm == 2) && (gd == 12)) {
+    } else if (gy >= 1947 && gm == 2 && gd == 12) {
       holiday.add("Union Day");
-    } else if ((gy >= 1958) && (gm == 3) && (gd == 2)) {
-      holiday.add("Peasants Day");
-    } else if ((gy >= 1945) && (gm == 3) && (gd == 27)) {
+    } else if (gy >= 1958 && gm == 3 && gd == 2) {
+      holiday.add("Peasants' Day");
+    } else if (gy >= 1945 && gm == 3 && gd == 27) {
       holiday.add("Resistance Day");
-    } else if ((gy >= 1923) && (gm == 5) && (gd == 1)) {
+    } else if (gy >= 1923 && gm == 5 && gd == 1) {
       holiday.add("Labour Day");
-    } else if ((gy >= 1947) && (gm == 7) && (gd == 19)) {
-      holiday.add("Martyrs Day");
-    } else if ((gm == 12) && (gd == 25)) {
+    } else if (gy >= 1947 && gm == 7 && gd == 19) {
+      holiday.add("Martyrs' Day");
+    } else if (gy >= 1752 && gm == 12 && gd == 25) {
       holiday.add("Christmas Day");
-    } else if ((gy == 2017) && (gm == 12) && (gd == 30)) {
+    } else if (gy == 2017 && gm == 12 && gd == 30) {
       holiday.add("Holiday");
-    } else if ((gy >= 2017) && (gm == 12) && (gd == 31)) {
+    } else if (gy >= 2017 && gm == 12 && gd == 31) {
       holiday.add("Holiday");
     }
 
@@ -51,29 +94,29 @@ class HolidaysCalculator {
     int monthDay,
     int moonPhase,
   ) {
-    List<String> holiday = [];
+    List<String> holiday = List.empty(growable: true);
 
-    if ((mmonth == 2) && (moonPhase == 1)) {
+    if (mmonth == 2 && moonPhase == 1) {
       holiday.add("Buddha Day");
-    } // Vesak day
-    else if ((mmonth == 4) && (moonPhase == 1)) {
+    } //Vesak day
+    else if (mmonth == 4 && moonPhase == 1) {
       holiday.add("Start of Buddhist Lent");
-    } // Warso day
-    else if ((mmonth == 7) && (moonPhase == 1)) {
+    } //Warso day
+    else if (mmonth == 7 && moonPhase == 1) {
       holiday.add("End of Buddhist Lent");
-    } else if ((myear >= 1379) &&
-        (mmonth == 7) &&
+    } else if (myear >= 1379 &&
+        mmonth == 7 &&
         (monthDay == 14 || monthDay == 16)) {
       holiday.add("Holiday");
-    } else if ((mmonth == 8) && (moonPhase == 1)) {
+    } else if (mmonth == 8 && moonPhase == 1) {
       holiday.add("Tazaungdaing");
-    } else if ((myear >= 1379) && (mmonth == 8) && (monthDay == 14)) {
+    } else if (myear >= 1379 && mmonth == 8 && monthDay == 14) {
       holiday.add("Holiday");
-    } else if ((myear >= 1282) && (mmonth == 8) && (monthDay == 25)) {
+    } else if (myear >= 1282 && mmonth == 8 && monthDay == 25) {
       holiday.add("National Day");
-    } else if ((mmonth == 10) && (monthDay == 1)) {
-      holiday.add("Karen New Year Day");
-    } else if ((mmonth == 12) && (moonPhase == 1)) {
+    } else if (mmonth == 10 && monthDay == 1) {
+      holiday.add("Karen New Year's Day");
+    } else if (mmonth == 12 && moonPhase == 1) {
       holiday.add("Tabaung Pwe");
     }
 
@@ -91,7 +134,7 @@ class HolidaysCalculator {
     // start of Thingyan
     int startOfThingyan = 1100;
 
-    List<String> holiday = [];
+    List<String> holiday = List.empty(growable: true);
 
     // double atat;
     double akn, atn;
@@ -139,8 +182,7 @@ class HolidaysCalculator {
   ///
   /// `jd` - Julian Day Number to check
   static List<String> otherHolidays(double jd) {
-    List<String> holiday = [];
-
+    List<String> holiday = List.empty(growable: true);
     if (searchOf1DArray(jd, _ghDiwali) >= 0) {
       holiday.add("Diwali");
     }
@@ -160,7 +202,7 @@ class HolidaysCalculator {
   }) {
     calendarType ??= CalendarType.english;
 
-    List<String> holiday = [];
+    List<String> holiday = List.empty(growable: true);
 
     // WesternDate wd = WesternDateConverter.convert(jd, calendarType);
     WesternDate wd =
@@ -235,7 +277,7 @@ class HolidaysCalculator {
     int monthDay,
     int moonPhase,
   ) {
-    List<String> holiday = [];
+    List<String> holiday = List.empty(growable: true);
 
     if ((myear >= 1309) && (mmonth == 11) && (monthDay == 16)) {
       holiday.add("Mon National Day");
@@ -276,45 +318,6 @@ class HolidaysCalculator {
     return holiday;
   }
 
-  /// Get all holidays.
-  static List<String> getHoliday(
-    MyanmarDate myanmarDate, {
-    CalendarType? calendarType,
-  }) {
-    // WesternDate westernDate = WesternDateConverter.convert(myanmarDate.jd, calendarType);
-    WesternDate westernDate = WesternDateConverter.fromMyanmarDate(
-      myanmarDate,
-      calendarType: calendarType,
-    );
-    // Office Off
-    List<String> hde = englishHolidays(
-      westernDate.year,
-      westernDate.month,
-      westernDate.day,
-    );
-    List<String> hdm = myanmarHolidays(
-      myanmarDate.myear.toDouble(),
-      myanmarDate.mmonth,
-      myanmarDate.monthDay,
-      myanmarDate.moonPhase,
-    );
-    List<String> hdt = thingyanHolidays(
-      myanmarDate.jd,
-      myanmarDate.myear.toDouble(),
-      myanmarDate.monthType,
-    );
-    List<String> hdo = otherHolidays(myanmarDate.jd); // Diwali Eid
-
-    List<String> holiday = [];
-
-    holiday.addAll(hde);
-    holiday.addAll(hdm);
-    holiday.addAll(hdt);
-    holiday.addAll(hdo);
-
-    return holiday;
-  }
-
   /// Get all anniversary days
   static List<String> getAnniversaries(
     MyanmarDate myanmarDate, {
@@ -331,7 +334,7 @@ class HolidaysCalculator {
       myanmarDate.moonPhase,
     );
 
-    List<String> holiday = [];
+    List<String> holiday = List.empty(growable: true);
 
     holiday.addAll(ecd);
     holiday.addAll(mcd);

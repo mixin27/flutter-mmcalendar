@@ -8,7 +8,6 @@ int searchOf2DArray(double k, List<List<int>> a) {
   int i = 0;
   int l = 0;
   int u = a.length - 1;
-
   while (u >= l) {
     i = ((l + u) / 2.0).floor();
     if (a[i][0] > k) {
@@ -33,7 +32,7 @@ int searchOf1DArray(double k, List<int> a) {
   int l = 0;
   int u = a.length - 1;
 
-  while (u >= 1) {
+  while (u >= l) {
     i = ((l + u) / 2.0).floor();
     if (a[i] > k) {
       u = i - 1;
@@ -43,6 +42,5 @@ int searchOf1DArray(double k, List<int> a) {
       return i;
     }
   }
-
   return -1;
 }

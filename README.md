@@ -116,7 +116,7 @@ final myanmarDate = MyanmarDateConverter.fromDate(2023, 10, 19);
 // Get MyanmarDate by custom year, month, day, hour, minute and second
 final myanmarDate = MyanmarDateConverter.fromDateAndTime(2023, 10, 19, 12, 30, 00);
 // Get MyanmarDate by julian day numbers
-final myanmarDate = MyanmarDateConverter.fromJulianDate(20);
+final myanmarDate = MyanmarDateConverter.fromJulianDate(2460237);
 ```
 
 `WesternDateConverter`
@@ -152,6 +152,25 @@ final astro = AstroConverter.convert(myanmarDate);
   - `getJulianDayNumberOfStartOfMonth()`
   - `getJulianDayNumberOfEndOfMonth()`
   - `getLengthOfMonth()`
+
+### Available Holidays Calculation
+
+- `ThingyanCalculator`
+  - `getThingyan()`
+  - `getAkyoDay()`
+  - `getAkyaDay()`
+  - `getAkyatDays()`
+  - `getAtatDay()`
+  - `getThingyanDates()` - `Thingyan` dates map (`Map<String, MyanmarDate>`)
+- `HolidayCalculator`
+  - `getHolidays()`
+  - `myanmarHolidays()`
+  - `thingyanHolidays()`
+  - `englishHolidays()`
+  - `englishAnniversaryDays()`
+  - `myanmarAnniversaryDays()`
+  - `getAnniversaries()`
+  - `otherHolidays()`
 
 ### Astrological Information
 

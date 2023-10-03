@@ -30,6 +30,9 @@ export 'src/algorithms/astro_logic.dart';
 export 'src/algorithms/myanmar_date_logic.dart';
 export 'src/algorithms/western_date_logic.dart';
 
+export 'src/calculator/holidays_calculator.dart';
+export 'src/calculator/thingyan_calculator.dart';
+
 export 'src/config/mm_calendar_config.dart';
 
 class FlutterMmcalendar {
