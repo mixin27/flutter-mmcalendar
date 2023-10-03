@@ -10,7 +10,7 @@ class MyanmarDateConverter {
   }) {
     return fromDate(
       dateTime.year,
-      dateTime.month + 1,
+      dateTime.month,
       dateTime.day,
       calendarType: calendarType,
       sg: sg,
