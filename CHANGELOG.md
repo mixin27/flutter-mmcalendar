@@ -1,3 +1,8 @@
+## 0.0.3
+
+- Update `README.md`
+- Update example code
+
 ## 0.0.2
 
 - Redesign code base
