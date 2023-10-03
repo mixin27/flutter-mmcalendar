@@ -43,7 +43,7 @@ Sample Usage:
 
 ```dart
 // Get MyanmarDate by year, month and day
-MyanmarDate myanmarDate = MyanmarDateConverter.convertByYMD(2023, 10, 29);
+MyanmarDate myanmarDate = MyanmarDateConverter.fromDateTime(DateTime.now());
 
 // Output: 2567
 final buddhistEra = myanmarDate.getBuddhistEra();
