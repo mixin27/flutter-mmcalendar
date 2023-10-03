@@ -29,7 +29,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Holidays of 2023/12/25'),
+        title: const Text('Holidays'),
       ),
       body: ListView.separated(
         itemCount: _holidays.length,

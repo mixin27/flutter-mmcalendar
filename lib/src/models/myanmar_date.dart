@@ -258,18 +258,23 @@ extension MyanmarDateX on MyanmarDate {
   /// Format [MyanmarDate] by pattern
   ///
   /// `pattern` - Pattern to be formatted.
-  String format(String pattern) =>
-      formatByPatternAndLanguage(pattern, LanguageCatalog.instance);
+  String format({
+    String pattern = CalendarConstants.simpleMyanmarDateFormatPattern,
+  }) =>
+      formatByPatternAndLanguage(
+        pattern: pattern,
+        languageCatalog: LanguageCatalog.instance,
+      );
 
   /// Format [MyanmarDate] by pattern
   ///
   /// `pattern` - Pattern to be formatted.
   ///
   /// `languageCatalog` - Language catalog to be translated.
-  String formatByPatternAndLanguage(
-    String pattern,
-    LanguageCatalog languageCatalog,
-  ) {
+  String formatByPatternAndLanguage({
+    String pattern = CalendarConstants.simpleMyanmarDateFormatPattern,
+    required LanguageCatalog languageCatalog,
+  }) {
     if (pattern.isEmpty) {
       throw Exception('Pattern cannot not be empty.');
     }

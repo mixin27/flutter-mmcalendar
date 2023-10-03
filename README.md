@@ -43,7 +43,7 @@ Sample Usage:
 
 ```dart
 // Get MyanmarDate by year, month and day
-MyanmarDate myanmarDate = MyanmarDateConverter.fromDateTime(DateTime.now());
+final myanmarDate = MyanmarDateConverter.fromDate(2023, 10, 19);
 
 // Output: 2567
 final buddhistEra = myanmarDate.getBuddhistEra();
@@ -67,16 +67,18 @@ final weekday = myanmarDate.getWeekDay();
 ### Myanmar Date format
 
 ```dart
-myanmarDate.formatByPatternAndLanguage(
-    'S s k, B y k, M p f r En',
-    LanguageCatalog(language: Language.myanmar),
+final myanmarDate = MyanmarDateConverter.fromDate(2023, 10, 19);
+
+final resultStr = myanmarDate.formatByPatternAndLanguage(
+    pattern: 'S s k, B y k, M p f r En',
+    languageCatalog: LanguageCatalog(language: Language.myanmar),
 );
 // Output: သာသနာနှစ် ၂၅၆၇ ခု, မြန်မာနှစ် ၁၃၈၅ ခု, သီတင်းကျွတ် လပြည့်  ရက် တနင်္ဂနွေနေ့
 // (or)
 
-myanmarDate.formatByPatternAndLanguage(
-    'S s k, B y k, M p f r En',
-    LanguageCatalog(language: Language.english),
+final resultStr = myanmarDate.formatByPatternAndLanguage(
+    pattern: 'S s k, B y k, M p f r En',
+    languageCatalog: LanguageCatalog(language: Language.english),
 );
 // Output: Sasana Year 2567 , Myanmar Year 1385 , Thadingyut full moon   Sunday
 ```

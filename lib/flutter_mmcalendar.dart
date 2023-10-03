@@ -14,6 +14,7 @@ export 'src/models/western_date.dart';
 
 export 'src/utils/binary_search_utils.dart';
 export 'src/utils/language_catalog.dart';
+export 'src/utils/language_maps.dart';
 export 'src/utils/number_to_string_utils.dart';
 
 export 'src/constants/calendar_constants.dart';
@@ -62,8 +63,7 @@ class FlutterMmcalendar {
   }) {
     final mmDate = MyanmarDateConverter.fromDateTime(dateTime);
     return mmDate.formatByPatternAndLanguage(
-      'S s k, B y k, M p f r En',
-      LanguageCatalog(language: language),
+      languageCatalog: LanguageCatalog(language: language),
     );
   }
 }

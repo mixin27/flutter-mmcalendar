@@ -275,56 +275,79 @@ extension AstroX on Astro {
     return (shanyat > 0);
   }
 
+  /// Get `Shanyat`
   String getShanyat() {
     return getShanyatByLanguage(LanguageCatalog.instance);
   }
 
+  /// Get `Shanyat`
   String getShanyatByLanguage(LanguageCatalog languageCatalog) {
     return isShanyat ? languageCatalog.translate("Shanyat") : "";
   }
 
+  /// Get `Nagahle`
+  ///
+  /// Return - One of `"West", "North", "East", "South"`
   String getNagahle() {
     return getNagahleByLanguage(LanguageCatalog.instance);
   }
 
+  /// Get `Nagahle`
+  ///
+  /// Return - One of `"West", "North", "East", "South"`
   String getNagahleByLanguage(LanguageCatalog languageCatalog) {
     final na = ["West", "North", "East", "South"];
     return languageCatalog.translate(na[nagahle]);
   }
 
+  /// Get `Mahabote`
   String getMahabote() {
     return getMahaboteByLanguage(LanguageCatalog.instance);
   }
 
+  /// Get `Mahabote`
   String getMahaboteByLanguage(LanguageCatalog languageCatalog) {
     final pa = ["Binga", "Atun", "Yaza", "Adipati", "Marana", "Thike", "Puti"];
     return languageCatalog.translate(pa[mahabote]);
   }
 
+  /// Get `Nakhat`
   String getNakhat() {
     return getNakhatByLanguage(LanguageCatalog.instance);
   }
 
+  /// Get `Nakhat`
   String getNakhatByLanguage(LanguageCatalog languageCatalog) {
     final nk = ["Orc", "Elf", "Human"];
     return languageCatalog.translate(nk[nakhat]);
   }
 
+  /// Get year name
   String getYearName() {
+    return getYearNameByLanguage(LanguageCatalog.instance);
+  }
+
+  /// Get year name by [LanguageCatalog]
+  ///
+  /// Return - One of `["ပုဿနှစ်", "မာခနှစ်", "ဖ္လကိုန်သံဝစ္ဆိုဝ်ရနှစ်", "စယ်နှစ်", "ပိသျက်နှစ်",`
+  /// `"စိဿနှစ်", "အာသတ်နှစ်", "သရဝန်နှစ်", "ဘဒ္ဒြသံဝစ္ဆုံရ်နှစ်", "အာသိန်နှစ်", "ကြတိုက်နှစ်",`
+  /// `"မြိက္ကသိုဝ်နှစ်" ]` or `empty`
+  String getYearNameByLanguage(LanguageCatalog languageCatalog) {
     final yearNames = [
-      "\u1015\u102F\u103F\u1014\u103E\u1005\u103A",
-      "\u1019\u102C\u1001\u1014\u103E\u1005\u103A",
-      "\u1016\u1039\u101C\u1000\u102D\u102F\u1014\u103A\u101E\u1036\u101D\u1005\u1039\u1006\u102D\u102F\u101D\u103A\u101B\u1014\u103E\u1005\u103A",
-      "\u1005\u101A\u103A\u1014\u103E\u1005\u103A",
-      "\u1015\u102D\u101E\u103B\u1000\u103A\u1014\u103E\u1005\u103A",
-      "\u1005\u102D\u103F\u1014\u103E\u1005\u103A",
-      "\u1021\u102C\u101E\u1010\u103A\u1014\u103E\u1005\u103A",
-      "\u101E\u101B\u101D\u1014\u103A\u1014\u103E\u1005\u103A",
-      "\u1018\u1012\u1039\u1012\u103C\u101E\u1036\u101D\u1005\u1039\u1006\u102F\u1036\u101B\u103A\u1014\u103E\u1005\u103A",
-      "\u1021\u102C\u101E\u102D\u1014\u103A\u1014\u103E\u1005\u103A",
-      "\u1000\u103C\u1010\u102D\u102F\u1000\u103A\u1014\u103E\u1005\u103A",
-      "\u1019\u103C\u102D\u1000\u1039\u1000\u101E\u102D\u102F\u101D\u103A\u1014\u103E\u1005\u103A"
+      "Hpusha",
+      "Magha",
+      "Phalguni",
+      "Chitra",
+      "Visakha",
+      "Jyeshtha",
+      "Ashadha",
+      "Sravana",
+      "Bhadrapaha",
+      "Asvini",
+      "Krittika",
+      "Mrigasiras",
     ];
-    return yearNames[yearName];
+
+    return languageCatalog.translate(yearNames[yearName]);
   }
 }

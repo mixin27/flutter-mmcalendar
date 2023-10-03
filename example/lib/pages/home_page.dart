@@ -9,6 +9,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final date = DateTime(1998, 7, 27);
+    final dateStr = '${date.year}/${date.month}/${date.day}';
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter MM Calendar'),
@@ -29,78 +32,101 @@ class HomePage extends StatelessWidget {
           child: ListView(
             children: [
               Text(
-                'Thingyan',
+                'Thingyan Holidays for 2023',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 10),
               Text(
                 getThingyan(),
               ),
-              const SizedBox(height: 20),
               Text(
-                'Default',
+                'Default - $dateStr',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 10),
               Text(
-                FlutterMmcalendar.getDateByLanguage(DateTime.now()),
+                FlutterMmcalendar.getDateByLanguage(date),
               ),
               const SizedBox(height: 20),
               Text(
-                'Myanmar',
+                'Myanmar - $dateStr',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 10),
               Text(
                 FlutterMmcalendar.getDateByLanguage(
-                  DateTime.now(),
+                  date,
                   language: Language.myanmar,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
-                'English',
+                'English - $dateStr',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 10),
               Text(
                 FlutterMmcalendar.getDateByLanguage(
-                  DateTime.now(),
+                  date,
                   language: Language.english,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
-                'Mon',
+                'Mon - $dateStr',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 10),
               Text(
                 FlutterMmcalendar.getDateByLanguage(
-                  DateTime.now(),
+                  date,
                   language: Language.mon,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
-                'Zawgyi',
+                'Zawgyi - $dateStr',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 10),
               Text(
                 FlutterMmcalendar.getDateByLanguage(
-                  DateTime.now(),
+                  date,
                   language: Language.zawgyi,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
-                'Astro',
+                'Tai - $dateStr',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 10),
               Text(
-                getAstroInfo(),
+                FlutterMmcalendar.getDateByLanguage(
+                  date,
+                  language: Language.tai,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Karen - $dateStr',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                FlutterMmcalendar.getDateByLanguage(
+                  date,
+                  language: Language.karen,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Astrological - 1998/07/27',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                getAstroInfo(DateTime(1998, 7, 27)),
               ),
               const SizedBox(height: 20),
             ],
@@ -111,8 +137,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-String getAstroInfo() {
-  final myanmarDate = MyanmarDateConverter.fromDateTime(DateTime.now());
+String getAstroInfo(DateTime date) {
+  final myanmarDate = MyanmarDateConverter.fromDateTime(date);
   final astro = AstroConverter.convert(myanmarDate);
 
   var str = '';
@@ -171,18 +197,18 @@ String getAstroInfo() {
 String getThingyan() {
   int year = DateTime.now().year;
   final akyoDay = ThingyanCalculator.getAkyoDay(year);
-  String str = 'Akyo: ${akyoDay.format('f r En')}\n';
+  String str = 'Akyo: ${akyoDay.format(pattern: 'f r En')}\n';
 
   final akyaDay = ThingyanCalculator.getAkyaDay(year);
-  str += 'Akya: ${akyaDay.format('f r En')}\n';
+  str += 'Akya: ${akyaDay.format(pattern: 'f r En')}\n';
 
   final akyatDays = ThingyanCalculator.getAkyatDays(year);
   for (var i = 0; i < akyatDays.length; i++) {
-    str += 'Akyat(${i + 1}): ${akyatDays[i].format('f r En')}\n';
+    str += 'Akyat(${i + 1}): ${akyatDays[i].format(pattern: 'f r En')}\n';
   }
 
   final atatDay = ThingyanCalculator.getAtatDay(year);
-  str += 'Atat: ${atatDay.format('f r En')}\n';
+  str += 'Atat: ${atatDay.format(pattern: 'f r En')}\n';
 
   return str;
 }
