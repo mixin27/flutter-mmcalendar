@@ -32,14 +32,6 @@ class HomePage extends StatelessWidget {
           child: ListView(
             children: [
               Text(
-                'Thingyan Holidays for 2023',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                getThingyan(),
-              ),
-              Text(
                 'Default - $dateStr',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
@@ -190,25 +182,6 @@ String getAstroInfo(DateTime date) {
 
   final yearName = astro.getYearName();
   str += 'YearName: $yearName';
-
-  return str;
-}
-
-String getThingyan() {
-  int year = DateTime.now().year;
-  final akyoDay = ThingyanCalculator.getAkyoDay(year);
-  String str = 'Akyo: ${akyoDay.format(pattern: 'f r En')}\n';
-
-  final akyaDay = ThingyanCalculator.getAkyaDay(year);
-  str += 'Akya: ${akyaDay.format(pattern: 'f r En')}\n';
-
-  final akyatDays = ThingyanCalculator.getAkyatDays(year);
-  for (var i = 0; i < akyatDays.length; i++) {
-    str += 'Akyat(${i + 1}): ${akyatDays[i].format(pattern: 'f r En')}\n';
-  }
-
-  final atatDay = ThingyanCalculator.getAtatDay(year);
-  str += 'Atat: ${atatDay.format(pattern: 'f r En')}\n';
 
   return str;
 }
