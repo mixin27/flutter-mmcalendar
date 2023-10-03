@@ -1,3 +1,8 @@
+## 0.0.5
+
+- Add `Tai` and `Karen` language maps
+- Change to name parameters in `MyanmarDate.formatByPatternAndLanguage` and `MyanmarDate.format`
+
 ## 0.0.4
 
 - Update `README.md`
