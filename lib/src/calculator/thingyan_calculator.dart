@@ -2,93 +2,96 @@ import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 /// Thingyan Calculator
 class ThingyanCalculator {
-  /// Calculate the Thingyan (Myanmar new year)
-  static Thingyan getThingyan(int myear) {
-    double ja = CalendarConstants.solarYear * myear + CalendarConstants.mo;
+  /// Get [MyanmarThingyan] list by `julianDayNumber`.
+  static List<MyanmarThingyan> getMyanmarThingyanDays(MyanmarDate myanmarDate) {
+    List<MyanmarThingyan> thingyanDays = List.empty(growable: true);
+    final thingyan = getThingyan(myanmarDate);
 
-    double jk;
+    final akyoDay = MyanmarThingyan(
+      label: LanguageCatalog.instance.translate('Thingyan Akyo'),
+      jdn: thingyan.akyo.toDouble(),
+      date: thingyan.akyoDate,
+    );
+    thingyanDays.add(akyoDay);
 
-    if (myear >= CalendarConstants.se3) {
-      jk = ja - 2.169918982;
+    final akyaDay = MyanmarThingyan(
+      label: LanguageCatalog.instance.translate('Thingyan Akya'),
+      jdn: thingyan.akya.toDouble(),
+      date: thingyan.akyaDate,
+    );
+    thingyanDays.add(akyaDay);
+
+    for (var i = 0; i < thingyan.akyat.length; i++) {
+      final akyatDay = MyanmarThingyan(
+        label: LanguageCatalog.instance.translate('Thingyan Akyat'),
+        jdn: thingyan.akyat[i].toDouble(),
+        date: thingyan.akyatDates[i],
+      );
+      thingyanDays.add(akyatDay);
+    }
+
+    final atatDay = MyanmarThingyan(
+      label: LanguageCatalog.instance.translate('Thingyan Atat'),
+      jdn: thingyan.atat.toDouble(),
+      date: thingyan.atatDate,
+    );
+    thingyanDays.add(atatDay);
+
+    final newYearDay = MyanmarThingyan(
+      label: LanguageCatalog.instance.translate('Myanmar New Year Day'),
+      jdn: thingyan.myanmarNewYearDay.toDouble(),
+      date: thingyan.myanmarNewYearDate,
+    );
+    thingyanDays.add(newYearDay);
+
+    return thingyanDays;
+  }
+
+  /// Get [Thingyan] holiday from [MyanmarDate]
+  static Thingyan getThingyan(MyanmarDate myanmarDate) {
+    final my = myanmarDate.myear;
+    final mm = myanmarDate.mmonth;
+    final mmt = (mm / 13).floor();
+
+    // solar year (365.2587565)
+    double sy = 1577917828.0 / 4320000.0;
+
+    // beginning of 0 ME
+    double mo = 1954168.050623;
+
+    // // start of Thingyan and third era
+    int se3 = 1312;
+    double atatTime = sy * (my + mmt) + mo; // atat time
+    double akyaTime;
+
+    if (my >= se3) {
+      akyaTime = atatTime - 2.169918982; // akya time
     } else {
-      jk = ja - 2.1675;
+      akyaTime = atatTime - 2.1675;
     }
 
-    double da = (ja).roundToDouble();
-    double dk = (jk).roundToDouble();
+    // Akya
+    int akn = akyaTime.round();
+    // Atat
+    int atn = atatTime.round();
+    // Akyo
+    int akyo = akn - 1;
 
-    return Thingyan(ja: ja, jk: jk, da: da, dk: dk);
-  }
+    // Akyat start day
+    int akyat = akn + 1;
 
-  /// Get [Thingyan] `akyo` day.
-  ///
-  /// `year` - Year to be calculated
-  ///
-  /// Return - [MyanmarDate]
-  static MyanmarDate getAkyoDay(int year) {
-    final thingyan = getThingyan(year);
-    final akyoDay = MyanmarDateLogic.julianToMyanmarDate(thingyan.akyoDay);
-    return akyoDay;
-  }
-
-  /// Get [Thingyan] `akya` day.
-  ///
-  /// `year` - Year to be calculated
-  ///
-  /// Return - [MyanmarDate]
-  static MyanmarDate getAkyaDay(int year) {
-    final thingyan = getThingyan(year);
-    final akyaDay = MyanmarDateLogic.julianToMyanmarDate(thingyan.akyaDay);
-    return akyaDay;
-  }
-
-  /// Get [Thingyan] `akyat` days.
-  ///
-  /// `year` - Year to be calculated
-  ///
-  /// Return - List of [MyanmarDate]
-  static List<MyanmarDate> getAkyatDays(int year) {
-    final thingyan = getThingyan(year);
-    List<MyanmarDate> dates = List.empty(growable: true);
-
-    for (var i = 0; i < thingyan.akyatDay.length; i++) {
-      final akyatDay =
-          MyanmarDateLogic.julianToMyanmarDate(thingyan.akyatDay[i]);
-      dates.add(akyatDay);
+    /// Akyat days
+    List<int> akyats = List.empty(growable: true);
+    while (akyat < atn) {
+      akyats.add(akyat);
+      akyat++;
     }
 
-    return dates;
-  }
-
-  /// Get [Thingyan] `atat` day.
-  ///
-  /// `year` - Year to be calculated
-  ///
-  /// Return - [MyanmarDate]
-  static MyanmarDate getAtatDay(int year) {
-    final thingyan = getThingyan(year);
-    final atatDay = MyanmarDateLogic.julianToMyanmarDate(thingyan.atatDay);
-    return atatDay;
-  }
-
-  /// Get [Thingyan] dates map.
-  static Map<String, MyanmarDate> getThingyanDates(int year) {
-    Map<String, MyanmarDate> dateMap = {};
-
-    final akyoDay = ThingyanCalculator.getAkyoDay(year);
-    dateMap.putIfAbsent('Akyo', () => akyoDay);
-
-    final akyaDay = ThingyanCalculator.getAkyaDay(year);
-    dateMap.putIfAbsent('Akya', () => akyaDay);
-
-    final akyatDays = ThingyanCalculator.getAkyatDays(year);
-    for (var i = 0; i < akyatDays.length; i++) {
-      dateMap.putIfAbsent('Akyat_${i + 1}', () => akyatDays[i]);
-    }
-
-    final atatDay = ThingyanCalculator.getAtatDay(year);
-    dateMap.putIfAbsent('Atat', () => atatDay);
-
-    return dateMap;
+    return Thingyan(
+      akyo: akyo,
+      akya: akn,
+      akyat: akyats,
+      atat: atn,
+    );
   }
 }

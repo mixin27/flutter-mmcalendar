@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:intl/intl.dart';
 
-class HolidaysPage extends StatefulWidget {
-  const HolidaysPage({super.key});
+class ThingyanHolidaysPage extends StatefulWidget {
+  const ThingyanHolidaysPage({super.key});
 
   @override
-  State<HolidaysPage> createState() => _HolidaysPageState();
+  State<ThingyanHolidaysPage> createState() => _ThingyanHolidaysPageState();
 }
 
-class _HolidaysPageState extends State<HolidaysPage> {
-  List<String> _holidays = List.empty();
+class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
+  List<MyanmarThingyan> _holidays = List.empty();
 
   DateTime _selectedDate = DateTime.now();
 
@@ -22,9 +22,10 @@ class _HolidaysPageState extends State<HolidaysPage> {
 
   void getHolidays(DateTime dateTime) {
     final myanmarDate = MyanmarDateConverter.fromDateTime(dateTime);
-    final holidays = HolidaysCalculator.getHolidays(myanmarDate);
+    final thingyanHolidays =
+        ThingyanCalculator.getMyanmarThingyanDays(myanmarDate);
     setState(() {
-      _holidays = holidays;
+      _holidays = thingyanHolidays;
     });
   }
 
@@ -34,6 +35,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
       initialDate: _selectedDate,
       firstDate: DateTime(1900),
       lastDate: DateTime(3000),
+      initialDatePickerMode: DatePickerMode.year,
     );
     if (selectedDate != null) {
       setState(() {
@@ -48,7 +50,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Holidays'),
+        title: Text('Thingyan Holidays for ${_selectedDate.year}'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,14 +105,20 @@ class _HolidaysPageState extends State<HolidaysPage> {
           const Divider(),
           Expanded(
             child: ListView.separated(
-              itemCount: _holidays.length,
-              separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
                 final holiday = _holidays[index];
+
                 return ListTile(
-                  title: Text(holiday),
+                  title: Text(holiday.label),
+                  subtitle: Text(
+                    holiday.date.formatByPatternAndLanguage(
+                      languageCatalog: LanguageCatalog(),
+                    ),
+                  ),
                 );
               },
+              separatorBuilder: (_, __) => const Divider(),
+              itemCount: _holidays.length,
             ),
           ),
         ],

@@ -1,30 +1,29 @@
+import 'package:example/utils/astro_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:intl/intl.dart';
 
-class HolidaysPage extends StatefulWidget {
-  const HolidaysPage({super.key});
+class AstroInfoPage extends StatefulWidget {
+  const AstroInfoPage({super.key});
 
   @override
-  State<HolidaysPage> createState() => _HolidaysPageState();
+  State<AstroInfoPage> createState() => _AstroInfoPageState();
 }
 
-class _HolidaysPageState extends State<HolidaysPage> {
-  List<String> _holidays = List.empty();
-
+class _AstroInfoPageState extends State<AstroInfoPage> {
   DateTime _selectedDate = DateTime.now();
+  String _astroInfo = '';
 
   @override
   void initState() {
-    getHolidays(_selectedDate);
+    getData(_selectedDate);
     super.initState();
   }
 
-  void getHolidays(DateTime dateTime) {
-    final myanmarDate = MyanmarDateConverter.fromDateTime(dateTime);
-    final holidays = HolidaysCalculator.getHolidays(myanmarDate);
+  void getData(DateTime dateTime) {
+    final astroInfo = AstroUtils.getAstroInfo(dateTime);
     setState(() {
-      _holidays = holidays;
+      _astroInfo = astroInfo;
     });
   }
 
@@ -40,7 +39,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
         _selectedDate = selectedDate;
       });
 
-      getHolidays(_selectedDate);
+      getData(_selectedDate);
     }
   }
 
@@ -48,7 +47,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Holidays'),
+        title: const Text('Astrological Information'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,16 +100,11 @@ class _HolidaysPageState extends State<HolidaysPage> {
             ),
           ),
           const Divider(),
-          Expanded(
-            child: ListView.separated(
-              itemCount: _holidays.length,
-              separatorBuilder: (context, index) => const Divider(),
-              itemBuilder: (context, index) {
-                final holiday = _holidays[index];
-                return ListTile(
-                  title: Text(holiday),
-                );
-              },
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              _astroInfo,
+              style: Theme.of(context).textTheme.labelLarge,
             ),
           ),
         ],

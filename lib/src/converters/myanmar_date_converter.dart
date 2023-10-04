@@ -9,7 +9,7 @@ class MyanmarDateConverter {
     double sg = 0,
   }) {
     return fromDate(
-      dateTime.year,
+      dateTime.year - 1,
       dateTime.month,
       dateTime.day,
       calendarType: calendarType,
@@ -26,7 +26,7 @@ class MyanmarDateConverter {
     double sg = 0,
   }) {
     double julianDay = WesternDateLogic.westernToJulian(
-      year: year,
+      year: year + 1,
       month: month,
       day: day,
       calendarType: calendarType,

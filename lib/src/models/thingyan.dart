@@ -1,81 +1,126 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
+
+import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+
+/// Myanmar Thingyan
+class MyanmarThingyan {
+  /// Thingyan label
+  final String label;
+
+  /// `Julian` day number
+  final double jdn;
+
+  /// [MyanmarDate] value
+  final MyanmarDate date;
+
+  const MyanmarThingyan({
+    required this.label,
+    required this.jdn,
+    required this.date,
+  });
+
+  @override
+  String toString() => 'MyanmarThingyan(label: $label, jdn: $jdn, date: $date)';
+
+  @override
+  bool operator ==(covariant MyanmarThingyan other) {
+    if (identical(this, other)) return true;
+
+    return other.label == label && other.jdn == jdn && other.date == date;
+  }
+
+  @override
+  int get hashCode => label.hashCode ^ jdn.hashCode ^ date.hashCode;
+
+  MyanmarThingyan copyWith({
+    String? label,
+    double? jdn,
+    MyanmarDate? date,
+  }) {
+    return MyanmarThingyan(
+      label: label ?? this.label,
+      jdn: jdn ?? this.jdn,
+      date: date ?? this.date,
+    );
+  }
+}
+
 /// Myanmar Tingyan
 class Thingyan {
   const Thingyan({
-    required this.ja,
-    required this.jk,
-    required this.da,
-    required this.dk,
+    required this.akyo,
+    required this.akya,
+    required this.akyat,
+    required this.atat,
   });
 
-  /// `Atat` time
-  final double ja;
+  /// [Thingyan] akyo
+  final int akyo;
 
-  /// `Akya` time
-  final double jk;
+  /// [Thingyan] akyo [MyanmarDate]
+  MyanmarDate get akyoDate =>
+      MyanmarDateConverter.fromJulianDate(akyo.toDouble());
 
-  /// `Atat` day
-  final double da;
+  /// [Thingyan] akya
+  final int akya;
 
-  /// `Akya` day
-  final double dk;
+  /// [Thingyan] akya [MyanmarDate]
+  MyanmarDate get akyaDate =>
+      MyanmarDateConverter.fromJulianDate(akya.toDouble());
 
-  /// `Atat` time
-  double get atatTime => ja;
+  /// [Thingyan] akyats
+  final List<int> akyat;
 
-  /// `Akya` time
-  double get akyaTime => jk;
+  /// [Thingyan] akyats [MyanmarDate]
+  List<MyanmarDate> get akyatDates => akyat
+      .map((e) => MyanmarDateConverter.fromJulianDate(e.toDouble()))
+      .toList();
 
-  /// `Atat` day
-  double get atatDay => da;
+  /// [Thingyan] atat
+  final int atat;
 
-  /// `Akya` day
-  double get akyaDay => dk;
+  /// [Thingyan] atat [MyanmarDate]
+  MyanmarDate get atatDate =>
+      MyanmarDateConverter.fromJulianDate(atat.toDouble());
 
-  /// `Akyo` day
-  double get akyoDay => dk - 1;
+  /// Myanmar new year day
+  int get myanmarNewYearDay => atat + 1;
 
-  /// Thingyan Akyat day
-  ///
-  /// `Akyat` day can be `two` days every `leap` year.
-  List<double> get akyatDay {
-    if ((da - dk) > 2) {
-      return [dk + 1, dk + 2];
-    }
-    return [dk + 1];
-  }
-
-  /// Myanmar new year's day
-  double get myanmarNewYearDay => da + 1;
+  /// Myanmar new year [MyanmarDate]
+  MyanmarDate get myanmarNewYearDate =>
+      MyanmarDateConverter.fromJulianDate(myanmarNewYearDay.toDouble());
 
   Thingyan copyWith({
-    double? ja,
-    double? jk,
-    double? da,
-    double? dk,
+    int? akyo,
+    int? akya,
+    List<int>? akyat,
+    int? atat,
   }) {
     return Thingyan(
-      ja: ja ?? this.ja,
-      jk: jk ?? this.jk,
-      da: da ?? this.da,
-      dk: dk ?? this.dk,
+      akyo: akyo ?? this.akyo,
+      akya: akya ?? this.akya,
+      akyat: akyat ?? this.akyat,
+      atat: atat ?? this.atat,
     );
   }
 
   @override
   String toString() {
-    return 'Thingyan(ja: $ja, jk: $jk, da: $da, dk: $dk)';
+    return 'Thingyan(akyo: $akyo, akya: $akya, akyat: $akyat, atat: $atat)';
   }
 
   @override
   bool operator ==(covariant Thingyan other) {
     if (identical(this, other)) return true;
 
-    return other.ja == ja && other.jk == jk && other.da == da && other.dk == dk;
+    return other.akyo == akyo &&
+        other.akya == akya &&
+        listEquals(other.akyat, akyat) &&
+        other.atat == atat;
   }
 
   @override
   int get hashCode {
-    return ja.hashCode ^ jk.hashCode ^ da.hashCode ^ dk.hashCode;
+    return akyo.hashCode ^ akya.hashCode ^ akyat.hashCode ^ atat.hashCode;
   }
 }
