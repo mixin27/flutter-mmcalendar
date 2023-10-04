@@ -163,7 +163,7 @@ extension AstroX on Astro {
 
   bool get isSabbath => (sabbath > 0) || (sabbatheve > 0);
 
-  String getSabbath() => getAstrologicalDayByLanguage(LanguageCatalog.instance);
+  String getSabbath() => getSabbathByLanguage(LanguageCatalog.instance);
 
   String getSabbathByLanguage(LanguageCatalog languageCatalog) {
     String str = '';

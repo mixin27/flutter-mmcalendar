@@ -1,3 +1,7 @@
+## 0.0.7
+
+- Fixed: `getSabbath()` return wrong value
+
 ## 0.0.6
 
 - Fixed: `Thingyan` calculation wrong
