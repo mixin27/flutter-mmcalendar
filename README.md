@@ -159,7 +159,7 @@ final astro = AstroConverter.convert(myanmarDate);
 
 - `ThingyanCalculator`
 
-  - `fromDateTime()`
+  - `getMyanmarThingyanDaysFromDateTime()`
   - `getMyanmarThingyanDays()`
 
   ```dart
