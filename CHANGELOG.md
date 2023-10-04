@@ -1,3 +1,8 @@
+## 0.0.6
+
+- Fixed: `Thingyan` calculation wrong
+- Add more example
+
 ## 0.0.5
 
 - Add `Tai` and `Karen` language maps
