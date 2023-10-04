@@ -158,12 +158,17 @@ final astro = AstroConverter.convert(myanmarDate);
 ### Available Holidays Calculation
 
 - `ThingyanCalculator`
+
+  - `fromDateTime()`
+  - `getMyanmarThingyanDays()`
+
+  ```dart
+    final thingyanHolidays = ThingyanCalculator.getMyanmarThingyanDaysFromDateTime(DateTime.now());
+  ```
+
+  - `getThingyanFromDateTime()`
   - `getThingyan()`
-  - `getAkyoDay()`
-  - `getAkyaDay()`
-  - `getAkyatDays()`
-  - `getAtatDay()`
-  - `getThingyanDates()` - `Thingyan` dates map (`Map<String, MyanmarDate>`)
+
 - `HolidayCalculator`
   - `getHolidays()`
   - `myanmarHolidays()`

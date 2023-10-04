@@ -2,7 +2,14 @@ import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 /// Thingyan Calculator
 class ThingyanCalculator {
-  /// Get [MyanmarThingyan] list by `julianDayNumber`.
+  /// Get [MyanmarThingyan] list by [DateTime]
+  static List<MyanmarThingyan> getMyanmarThingyanDaysFromDateTime(
+      DateTime dateTime) {
+    final myanmarDate = MyanmarDateConverter.fromDateTime(dateTime);
+    return getMyanmarThingyanDays(myanmarDate);
+  }
+
+  /// Get [MyanmarThingyan] list by [MyanmarDate].
   static List<MyanmarThingyan> getMyanmarThingyanDays(MyanmarDate myanmarDate) {
     List<MyanmarThingyan> thingyanDays = List.empty(growable: true);
     final thingyan = getThingyan(myanmarDate);
@@ -45,6 +52,12 @@ class ThingyanCalculator {
     thingyanDays.add(newYearDay);
 
     return thingyanDays;
+  }
+
+  /// Get [Thingyan] holiday from [DateTime]
+  static Thingyan getThingyanFromDateTime(DateTime dateTime) {
+    final myanmarDate = MyanmarDateConverter.fromDateTime(dateTime);
+    return getThingyan(myanmarDate);
   }
 
   /// Get [Thingyan] holiday from [MyanmarDate]

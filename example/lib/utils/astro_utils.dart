@@ -1,9 +1,14 @@
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 class AstroUtils {
-  static String getAstroInfo(DateTime date) {
+  static Astro getAstro(DateTime date) {
     final myanmarDate = MyanmarDateConverter.fromDateTime(date);
     final astro = AstroConverter.convert(myanmarDate);
+    return astro;
+  }
+
+  static String getAstroInfo(DateTime date) {
+    final astro = getAstro(date);
 
     var str = '';
 

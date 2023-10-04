@@ -1,6 +1,6 @@
+import 'package:example/widgets/date_info_notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
-import 'package:intl/intl.dart';
 
 class ThingyanHolidaysPage extends StatefulWidget {
   const ThingyanHolidaysPage({super.key});
@@ -21,9 +21,8 @@ class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
   }
 
   void getHolidays(DateTime dateTime) {
-    final myanmarDate = MyanmarDateConverter.fromDateTime(dateTime);
     final thingyanHolidays =
-        ThingyanCalculator.getMyanmarThingyanDays(myanmarDate);
+        ThingyanCalculator.getMyanmarThingyanDaysFromDateTime(dateTime);
     setState(() {
       _holidays = thingyanHolidays;
     });
@@ -68,37 +67,7 @@ class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                      width: 2,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Selected Date - ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        MyanmarDateConverter.fromDateTime(_selectedDate)
-                            .format(),
-                        style: Theme.of(context).textTheme.labelMedium,
-                      ),
-                    ],
-                  ),
-                ),
+                DateInfoNotice(date: _selectedDate),
               ],
             ),
           ),
