@@ -35,11 +35,8 @@ screenshots:
     path: example.jpg
 
 topics:
-  - mm
   - calendar
   - myanmar
   - myanmar-calendar
   - utility
-  - util
-  - date
   - datetime
