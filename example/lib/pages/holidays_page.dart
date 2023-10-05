@@ -1,3 +1,4 @@
+import 'package:example/utils/formatter.dart';
 import 'package:example/widgets/date_info_notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
@@ -72,16 +73,22 @@ class _HolidaysPageState extends State<HolidaysPage> {
           ),
           const Divider(),
           Expanded(
-            child: ListView.separated(
-              itemCount: _holidays.length,
-              separatorBuilder: (context, index) => const Divider(),
-              itemBuilder: (context, index) {
-                final holiday = _holidays[index];
-                return ListTile(
-                  title: Text(holiday),
-                );
-              },
-            ),
+            child: _holidays.isEmpty
+                ? ListTile(
+                    title: Text(
+                      'Your selected date ${formattedDateString(_selectedDate)} does not include in holiday list',
+                    ),
+                  )
+                : ListView.separated(
+                    itemCount: _holidays.length,
+                    separatorBuilder: (context, index) => const Divider(),
+                    itemBuilder: (context, index) {
+                      final holiday = _holidays[index];
+                      return ListTile(
+                        title: Text(holiday),
+                      );
+                    },
+                  ),
           ),
         ],
       ),

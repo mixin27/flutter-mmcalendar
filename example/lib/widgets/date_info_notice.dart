@@ -1,6 +1,6 @@
+import 'package:example/utils/formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
-import 'package:intl/intl.dart';
 
 class DateInfoNotice extends StatelessWidget {
   const DateInfoNotice({super.key, required this.date});
@@ -26,7 +26,7 @@ class DateInfoNotice extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Selected Date - ${DateFormat('yyyy-MM-dd').format(date)}',
+            'Selected Date - ${formattedDateString(date)}',
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
