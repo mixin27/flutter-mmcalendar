@@ -38,13 +38,43 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton.icon(
-                    onPressed: selectDate,
-                    icon: const Icon(Icons.calendar_month),
-                    label: const Text('Choose Date'),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedDate = _selectedDate.subtract(
+                            const Duration(days: 1),
+                          );
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.chevron_left,
+                        size: 35,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextButton.icon(
+                        onPressed: selectDate,
+                        icon: const Icon(Icons.calendar_month),
+                        label: const Text('Choose Date'),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedDate = _selectedDate.add(
+                            const Duration(days: 1),
+                          );
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.chevron_right,
+                        size: 35,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 DateInfoNotice(date: _selectedDate),
@@ -91,18 +121,6 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Mon',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  FlutterMmcalendar.getDateByLanguage(
-                    _selectedDate,
-                    language: Language.mon,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
                   'Zawgyi',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
@@ -111,6 +129,18 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                   FlutterMmcalendar.getDateByLanguage(
                     _selectedDate,
                     language: Language.zawgyi,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Mon',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  FlutterMmcalendar.getDateByLanguage(
+                    _selectedDate,
+                    language: Language.mon,
                   ),
                 ),
                 const SizedBox(height: 20),

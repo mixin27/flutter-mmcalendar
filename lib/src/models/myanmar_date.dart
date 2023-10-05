@@ -317,7 +317,11 @@ extension MyanmarDateX on MyanmarDate {
           str += getWeekDayByLanguage(languageCatalog);
           break;
         case MyanmarDateFormat.nay:
-          str += languageCatalog.translate("Nay");
+          if (languageCatalog.language == Language.english) {
+            str += " ${languageCatalog.translate("Nay")}";
+          } else {
+            str += languageCatalog.translate("Nay");
+          }
           break;
         case MyanmarDateFormat.yat:
           str += languageCatalog.translate("Yat");

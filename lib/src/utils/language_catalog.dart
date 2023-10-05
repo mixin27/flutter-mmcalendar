@@ -22,10 +22,10 @@ class LanguageCatalog {
   /// Translate accorting to [Language] type.
   String _translate(Language language, String key) {
     return switch (language) {
-      Language.myanmar => langMyanMap[key] ?? '',
       Language.english => langEngMap[key] ?? '',
-      Language.mon => langMonMap[key] ?? '',
+      Language.myanmar => langMyanMap[key] ?? '',
       Language.zawgyi => langZawgyiMap[key] ?? '',
+      Language.mon => langMonMap[key] ?? '',
       Language.tai => langTaiMap[key] ?? '',
       Language.karen => langKarenMap[key] ?? '',
     };

@@ -6,18 +6,22 @@ import 'dart:io';
 import 'constants.dart';
 
 Future<void> writeDynaties() async {
+  const path = './lang';
+
   String str = jsonEncode(dynasties);
-  final file = File('dynasties.json');
+  final file = File('$path/dynasties.json');
   await file.writeAsString(str);
   print('dynasties.json write finished!');
 
   String str2 = jsonEncode(dynastyMap);
-  final file2 = File('dynasty_map.json');
+  final file2 = File('$path/dynasty_map.json');
   await file2.writeAsString(str2);
   print('dynasty_map.json write finished!');
 }
 
 Future<void> writeLanguages() async {
+  const path = './lang';
+
   Map<String, String> engMap = {};
   Map<String, String> myanMap = {};
   Map<String, String> zawgyiMap = {};
@@ -31,9 +35,9 @@ Future<void> writeLanguages() async {
     var eng = element[0];
     var myan = element[1];
     var zawgyi = element[2];
-    var mon = element[2];
-    var tai = element[2];
-    var karen = element[2];
+    var mon = element[3];
+    var tai = element[4];
+    var karen = element[5];
 
     engMap.putIfAbsent(eng, () => eng);
     myanMap.putIfAbsent(eng, () => myan);
@@ -43,7 +47,7 @@ Future<void> writeLanguages() async {
     karenMap.putIfAbsent(eng, () => karen);
   }
 
-  final engJson = File('lang_en.json');
+  final engJson = File('$path/lang_en.json');
   String engMapStr = "{\n";
   for (var i = 0; i < engMap.length; i++) {
     final map = engMap.entries.toList()[i];
@@ -56,10 +60,10 @@ Future<void> writeLanguages() async {
   }
   engMapStr += "}";
   await engJson.writeAsString(engMapStr);
-  print('lang_en.json write finished!');
+  print('$path/lang_en.json write finished!');
 
   // lang_myan
-  final myanJson = File('lang_my.json');
+  final myanJson = File('$path/lang_my.json');
   String myanMapStr = "{\n";
   for (var i = 0; i < myanMap.length; i++) {
     final map = myanMap.entries.toList()[i];
@@ -72,10 +76,10 @@ Future<void> writeLanguages() async {
   }
   myanMapStr += "}";
   await myanJson.writeAsString(myanMapStr);
-  print('lang_my.json write finished!');
+  print('$path/lang_my.json write finished!');
 
   // lang_zawgyi
-  final zawgyiJson = File('lang_zawgyi.json');
+  final zawgyiJson = File('$path/lang_zawgyi.json');
   String zawgyiMapStr = "{\n";
   for (var i = 0; i < zawgyiMap.length; i++) {
     final map = zawgyiMap.entries.toList()[i];
@@ -88,10 +92,10 @@ Future<void> writeLanguages() async {
   }
   zawgyiMapStr += "}";
   await zawgyiJson.writeAsString(zawgyiMapStr);
-  print('lang_zawgyi.json write finished!');
+  print('$path/lang_zawgyi.json write finished!');
 
   // lang_mon
-  final monJson = File('lang_mon.json');
+  final monJson = File('$path/lang_mon.json');
   String monMapStr = "{\n";
   for (var i = 0; i < monMap.length; i++) {
     final map = monMap.entries.toList()[i];
@@ -104,10 +108,10 @@ Future<void> writeLanguages() async {
   }
   monMapStr += "}";
   await monJson.writeAsString(monMapStr);
-  print('lang_mon.json write finished!');
+  print('$path/lang_mon.json write finished!');
 
   // lang_tai
-  final taiJson = File('lang_tai.json');
+  final taiJson = File('$path/lang_tai.json');
   String taiMapStr = "{\n";
   for (var i = 0; i < taiMap.length; i++) {
     final map = taiMap.entries.toList()[i];
@@ -120,10 +124,10 @@ Future<void> writeLanguages() async {
   }
   taiMapStr += "}";
   await taiJson.writeAsString(taiMapStr);
-  print('lang_tai.json write finished!');
+  print('$path/lang_tai.json write finished!');
 
   // lang_karen
-  final karenJson = File('lang_karen.json');
+  final karenJson = File('$path/lang_karen.json');
   String karenMapStr = "{\n";
   for (var i = 0; i < karenMap.length; i++) {
     final map = karenMap.entries.toList()[i];
@@ -136,5 +140,5 @@ Future<void> writeLanguages() async {
   }
   karenMapStr += "}";
   await karenJson.writeAsString(karenMapStr);
-  print('lang_karen.json write finished!');
+  print('$path/lang_karen.json write finished!');
 }
