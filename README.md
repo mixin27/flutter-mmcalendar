@@ -203,7 +203,7 @@ final nagahle = astro.getNagahle();
 // နဂါးပေါ်
 final nagapor = astro.getNagapor();
 
-// "Orc", "Elf", "Human"
+// "Ogre", "Elf", "Human"
 final nakhat = astro.getNakhat();
 
 // ဥပုသ်

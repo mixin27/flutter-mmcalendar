@@ -1,4 +1,5 @@
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import 'package:flutter_mmcalendar/src/lang/language_map.dart';
 
 /// Language catalog
 class LanguageCatalog {
@@ -21,12 +22,12 @@ class LanguageCatalog {
   /// Translate accorting to [Language] type.
   String _translate(Language language, String key) {
     return switch (language) {
-      Language.myanmar => englishToMyanmarMap[key] ?? '',
-      Language.english => englishToMyanglishMap[key] ?? '',
-      Language.mon => englishToMonMap[key] ?? '',
-      Language.zawgyi => englishToZawgyiMap[key] ?? '',
-      Language.tai => englishToTaiMap[key] ?? '',
-      Language.karen => englishToKarenMap[key] ?? '',
+      Language.myanmar => langMyanMap[key] ?? '',
+      Language.english => langEngMap[key] ?? '',
+      Language.mon => langMonMap[key] ?? '',
+      Language.zawgyi => langZawgyiMap[key] ?? '',
+      Language.tai => langTaiMap[key] ?? '',
+      Language.karen => langKarenMap[key] ?? '',
     };
   }
 }

@@ -318,7 +318,7 @@ extension AstroX on Astro {
 
   /// Get `Nakhat`
   String getNakhatByLanguage(LanguageCatalog languageCatalog) {
-    final nk = ["Orc", "Elf", "Human"];
+    final nk = ["Ogre", "Elf", "Human"];
     return languageCatalog.translate(nk[nakhat]);
   }
 
