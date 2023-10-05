@@ -33,3 +33,13 @@ platforms:
 screenshots:
   - description: "This screenshot shows a sample formatted date string by supported languages"
     path: example.jpg
+
+topics:
+  - mm
+  - calendar
+  - myanmar
+  - myanmar-calendar
+  - utility
+  - util
+  - date
+  - datetime
