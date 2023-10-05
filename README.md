@@ -13,7 +13,7 @@ Add package
 
 ```yaml
 dependencies:
-  flutter_mmcalendar: ^0.0.1
+  flutter_mmcalendar: any
 ```
 
 Import package
