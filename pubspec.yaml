@@ -3,6 +3,8 @@ description: Myanmar calendar library for flutter application with many utility 
 version: 0.0.6
 homepage: https://github.com/mixin27/flutter-mmcalendar
 issue_tracker: https://github.com/mixin27/flutter-mmcalendar/issues
+funding:
+  - https://www.buymeacoffee.com/kyawzayartun98
 
 environment:
   sdk: ">=3.1.3 <4.0.0"
@@ -27,3 +29,7 @@ platforms:
   macos:
   web:
   windows:
+
+screenshots:
+  - description: "This screenshot shows a sample formatted date string by supported languages"
+    path: example.jpg

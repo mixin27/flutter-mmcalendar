@@ -1,3 +1,5 @@
+/// Myanmar calendar library for flutter application with
+/// many utility methods and calculations.
 library flutter_mmcalendar;
 
 import 'src/converters/myanmar_date_converter.dart';
