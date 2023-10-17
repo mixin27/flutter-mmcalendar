@@ -1,4 +1,25 @@
+# Flutter MMCalendar
+
+[![License: MIT][license_badge]][license_link]
+
 **Myanmar Calendar** package for `Flutter` applications.
+
+## Installation 💻
+
+**❗ In order to start using `flutter_mmcalendar` you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
+
+Add `flutter_mmcalendar` to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  flutter_mmcalendar:
+```
+
+Install it:
+
+```sh
+flutter packages get
+```
 
 ## Features
 
@@ -7,22 +28,13 @@
 - `Astrological Converter`
 - `Myanmar Thingyan` holidays and other holidays calculation
 
-## Getting started
-
-Add package
-
-```yaml
-dependencies:
-  flutter_mmcalendar: any
-```
+## Usage
 
 Import package
 
 ```dart
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 ```
-
-## Usage
 
 Configure default `calendarType` and `language`. It is `optional`.
 
@@ -257,3 +269,7 @@ C++ and Javascript Implementation
 Java Library Implementation
 
 - [https://github.com/chanmratekoko/mmcalendar](https://github.com/chanmratekoko/mmcalendar)
+
+[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[license_link]: https://opensource.org/licenses/MIT
+[flutter_install_link]: https://docs.flutter.dev/get-started/install
