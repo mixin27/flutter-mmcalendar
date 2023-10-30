@@ -1,3 +1,8 @@
+## 0.0.8
+
+- Upgrade `flutter_lints` to `3.0.0`
+- Update `README.md` document
+
 ## 0.0.7
 
 - Fixed: `getSabbath()` return wrong value
