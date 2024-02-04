@@ -57,7 +57,7 @@ class FlutterMmcalendar {
   ///
   /// `dateTime` - [DateTime] to format.
   ///
-  /// `language` - Language type `englisht` | `myanmar` | `mon` | `zawgyi`.
+  /// `language` - Language type `english` | `myanmar` | `mon` | `zawgyi`.
   static String getDateByLanguage(
     DateTime dateTime, {
     Language? language,
