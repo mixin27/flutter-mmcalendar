@@ -1,3 +1,8 @@
+## 1.0.0
+
+- Update `flutter_lints` to `4.0.0`
+- Stable version release.
+
 ## 0.0.8
 
 - Upgrade `flutter_lints` to `3.0.0`

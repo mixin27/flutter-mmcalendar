@@ -1,6 +1,6 @@
 name: flutter_mmcalendar
 description: Myanmar calendar library for flutter application with many utility methods and calculations.
-version: 0.0.8
+version: 1.0.0
 homepage: https://github.com/mixin27/flutter-mmcalendar
 issue_tracker: https://github.com/mixin27/flutter-mmcalendar/issues
 funding:
@@ -20,7 +20,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
 
