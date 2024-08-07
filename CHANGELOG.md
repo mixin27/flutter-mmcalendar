@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Added `MMCalendarViewMonth` widget.
+
 ## 1.0.0
 
 - Update `flutter_lints` to `4.0.0`
