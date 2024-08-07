@@ -37,6 +37,8 @@ export 'src/calculator/thingyan_calculator.dart';
 
 export 'src/config/mm_calendar_config.dart';
 
+export 'src/ui/calendar_ui.dart';
+
 class FlutterMmcalendar {
   /// Get [MyanmarDate] object by `year`, `month` and `day.
   ///

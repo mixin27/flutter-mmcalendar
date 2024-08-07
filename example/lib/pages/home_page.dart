@@ -1,4 +1,5 @@
 import 'package:example/pages/astro_info_page.dart';
+import 'package:example/pages/calendar_view_page.dart';
 import 'package:example/pages/holidays_page.dart';
 import 'package:example/pages/language_sample_page.dart';
 import 'package:example/pages/thingyan_holidays_page.dart';
@@ -58,6 +59,16 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: const Text('Thingyan Holidays'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CalendarViewPage(),
+                  ),
+                );
+              },
+              child: const Text('Calendar Views'),
             ),
             const SizedBox(height: 20),
           ],
