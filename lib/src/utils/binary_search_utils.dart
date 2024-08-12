@@ -4,7 +4,7 @@
 /// `a` - Array
 ///
 /// Return `index`
-int searchOf2DArray(double k, List<List<int>> a) {
+int searchOf2DArray(int k, List<List<int>> a) {
   int i = 0;
   int l = 0;
   int u = a.length - 1;

@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Fixed `fortnightDay` wrong for some year.
+
 ## 1.0.0
 
 - Update `flutter_lints` to `4.0.0`

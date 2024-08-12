@@ -258,9 +258,9 @@ extension MyanmarDateX on MyanmarDate {
   /// Format [MyanmarDate] by pattern
   ///
   /// `pattern` - Pattern to be formatted.
-  String format({
+  String format([
     String pattern = CalendarConstants.simpleMyanmarDateFormatPattern,
-  }) =>
+  ]) =>
       formatByPatternAndLanguage(
         pattern: pattern,
         languageCatalog: LanguageCatalog.instance,
@@ -324,7 +324,9 @@ extension MyanmarDateX on MyanmarDate {
           }
           break;
         case MyanmarDateFormat.yat:
-          str += languageCatalog.translate("Yat");
+          if (getFortnightDay().isNotEmpty) {
+            str += languageCatalog.translate("Yat");
+          }
           break;
         default:
           str += charArray[i];

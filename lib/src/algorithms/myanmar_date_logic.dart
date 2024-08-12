@@ -10,7 +10,7 @@ class MyanmarDateLogic {
   ///
   /// Return - [MyanmarDate]
   static MyanmarDate julianToMyanmarDate(double julianDay) {
-    double jdn,
+    int jdn,
         dd,
         yearLength,
         monthType,
@@ -26,34 +26,34 @@ class MyanmarDateLogic {
         fortnightDay,
         weekDay;
 
-    double myear;
+    int myear;
 
     Map<String, double> yo;
 
     // convert jd to jdn
-    jdn = (julianDay).roundToDouble();
+    jdn = (julianDay).round();
 
     /// Myanmar year
     myear = ((jdn - 0.5 - CalendarConstants.mo) / CalendarConstants.solarYear)
-        .floorToDouble();
+        .floor();
     // check year
     yo = chkMy(myear);
     // day count
-    dd = jdn - (yo["tg1"] ?? 0) + 1;
-    b = ((yo["myt"] ?? 0) / 2.0.floor());
+    dd = (jdn - (yo["tg1"] as double) + 1).toInt();
+    b = (((yo["myt"] as double) / 2.0.floor())).toInt();
     // big wa and common yr
-    c = (1 / ((yo["myt"] ?? 0) + 1)).floorToDouble();
+    c = (1 / ((yo["myt"] as double) + 1)).floor();
     // year length
     yearLength = 354 + (1 - c) * 30 + b;
     // month type: Hnaung =1 or Oo = 0
-    monthType = ((dd - 1) / yearLength).floorToDouble();
+    monthType = ((dd - 1) / yearLength).floor();
     dd -= monthType * yearLength;
     // adjust day count and threshold
-    a = ((dd + 423) / 512.0).floorToDouble();
+    a = ((dd + 423) / 512.0).floor();
     // month
-    mmonth = ((dd - b * a + c * a * 30 + 29.26) / 29.544).floorToDouble();
-    e = ((mmonth + 12) / 16.0).floorToDouble();
-    f = ((mmonth + 11) / 16.0).floorToDouble();
+    mmonth = ((dd - b * a + c * a * 30 + 29.26) / 29.544).floor();
+    e = ((mmonth + 12) / 16.0).floor();
+    f = ((mmonth + 11) / 16.0).floor();
     // day
     monthDay = dd - (29.544 * mmonth - 29.26).floor() - b * e + c * f * 30;
     mmonth += f * 3 - e * 4;
@@ -62,10 +62,10 @@ class MyanmarDateLogic {
 
     if (mmonth == 3) {
       // adjust if Nayon in big watat
-      monthLength += b;
+      monthLength += ((yo['myt'] as double) / 2).toInt();
     }
 
-    moonPhase = ((monthDay + 1) / 16.0).floorToDouble() +
+    moonPhase = ((monthDay + 1) / 16.0).floor() +
         (monthDay / 16.0).floor() +
         (monthDay / monthLength).floor();
     // waxing or waning day
@@ -74,16 +74,16 @@ class MyanmarDateLogic {
     weekDay = (jdn + 2) % 7;
 
     MyanmarDate myanmarDate = MyanmarDate(
-      myear: myear.toInt(),
-      yearType: yo["myt"]?.toInt() ?? 0,
-      yearLength: yearLength.toInt(),
-      mmonth: mmonth.toInt(),
-      monthType: monthType.toInt(),
-      monthLength: monthLength.toInt(),
-      monthDay: monthDay.toInt(),
-      fortnightDay: fortnightDay.toInt(),
-      moonPhase: moonPhase.toInt(),
-      weekDay: weekDay.toInt(),
+      myear: myear,
+      yearType: (yo["myt"] as double).toInt(),
+      yearLength: yearLength,
+      mmonth: mmonth,
+      monthType: monthType,
+      monthLength: monthLength,
+      monthDay: monthDay,
+      fortnightDay: fortnightDay,
+      moonPhase: moonPhase,
+      weekDay: weekDay,
       jd: julianDay,
     );
 
@@ -91,7 +91,7 @@ class MyanmarDateLogic {
   }
 
   /// Check Myanmar Year dependency
-  static Map<String, double> chkMy(double myear) {
+  static Map<String, double> chkMy(int myear) {
     int yd = 0;
     Map<String, double> y1;
     double nd = 0;
@@ -99,7 +99,7 @@ class MyanmarDateLogic {
     double fm = 0;
 
     Map<String, double> y2 = chkWatat(myear);
-    double myt = y2["watat"] ?? 0.0;
+    double myt = y2["watat"] as double;
 
     do {
       yd++;
@@ -107,17 +107,17 @@ class MyanmarDateLogic {
     } while (y1["watat"] == 0 && yd < 3);
 
     if (myt > 0) {
-      nd = ((y2["fm"] ?? 0) - (y1["fm"] ?? 0)) % 354;
+      nd = ((y2["fm"] as double) - (y1["fm"] as double)) % 354;
       myt = (nd / 31.0).floorToDouble() + 1;
-      fm = y2["fm"] ?? 0;
+      fm = y2["fm"] as double;
       if (nd != 30 && nd != 31) {
         werr = 1;
       }
     } else {
-      fm = (y1["fm"] ?? 0) + 354 * yd;
+      fm = (y1["fm"] as double) + 354 * yd;
     }
 
-    double tg1 = (y1["fm"] ?? 0) + 354 * yd - 102;
+    double tg1 = (y1["fm"] as double) + 354 * yd - 102;
 
     Map<String, double> map = {
       "myt": myt,
@@ -130,7 +130,7 @@ class MyanmarDateLogic {
   }
 
   /// Check watat (intercalary month)
-  static Map<String, double> chkWatat(double myear) {
+  static Map<String, double> chkWatat(int myear) {
     int i = eraList.length - 1;
 
     do {
@@ -222,18 +222,18 @@ class MyanmarDateLogic {
   ///
   /// Return - Julian day number
   static double myanmarDateToJulian({
-    required double year,
-    required double month,
-    required double monthType,
-    required double moonPhase,
-    required double fortnightDay,
+    required int year,
+    required int month,
+    required int monthType,
+    required int moonPhase,
+    required int fortnightDay,
   }) {
     double b, c, mml, m1, m2, md, dd;
 
     //check year
     Map<String, double> yo = chkMy(year);
 
-    b = ((yo["myt"] ?? 0) / 2).floorToDouble();
+    b = ((yo["myt"] as double) / 2).floorToDouble();
 
     //if big watat and common year
     c = (yo["myt"] == 0) ? 1 : 0;
@@ -263,40 +263,17 @@ class MyanmarDateLogic {
     // adjust day count
     dd += monthType * myl;
 
-    return dd + (yo["tg1"] ?? 0) - 1;
+    return dd + (yo["tg1"] as double) - 1;
   }
 
   /// Convert [MyanmarDate] to `julian`
   static double toJulian(MyanmarDate myanmarDate) {
     return myanmarDateToJulian(
-      year: myanmarDate.myear.toDouble(),
-      month: myanmarDate.mmonth.toDouble(),
-      monthType: myanmarDate.monthType.toDouble(),
-      moonPhase: myanmarDate.moonPhase.toDouble(),
-      fortnightDay: myanmarDate.fortnightDay.toDouble(),
-    );
-  }
-
-  /// Convert [MyanmarDate] to `julian`
-  ///
-  /// `year` - Myanmar year
-  ///
-  /// `month` - Myanmar month
-  ///
-  /// `day` - Myanmar day
-  static double myanmarDateToJulianWithDate(
-    double year,
-    double month,
-    double day,
-  ) {
-    double monthType = (month / 13).floorToDouble();
-    double m = month % 12;
-    return myanmarDateToJulian(
-      year: year,
-      month: m,
-      monthType: monthType,
-      moonPhase: 0,
-      fortnightDay: day,
+      year: myanmarDate.myear,
+      month: myanmarDate.mmonth,
+      monthType: myanmarDate.monthType,
+      moonPhase: myanmarDate.moonPhase,
+      fortnightDay: myanmarDate.fortnightDay,
     );
   }
 
