@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-
-import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import '../calculations/calculations.dart';
+import 'models.dart';
 
 /// Myanmar Thingyan
 class MyanmarThingyan {
@@ -59,21 +59,21 @@ class Thingyan {
 
   /// [Thingyan] akyo [MyanmarDate]
   MyanmarDate get akyoDate =>
-      MyanmarDateConverter.fromJulianDate(akyo.toDouble());
+      MyanmarDateCalculation.fromJulianDay(akyo.toDouble());
 
   /// [Thingyan] akya
   final int akya;
 
   /// [Thingyan] akya [MyanmarDate]
   MyanmarDate get akyaDate =>
-      MyanmarDateConverter.fromJulianDate(akya.toDouble());
+      MyanmarDateCalculation.fromJulianDay(akya.toDouble());
 
   /// [Thingyan] akyats
   final List<int> akyat;
 
   /// [Thingyan] akyats [MyanmarDate]
   List<MyanmarDate> get akyatDates => akyat
-      .map((e) => MyanmarDateConverter.fromJulianDate(e.toDouble()))
+      .map((e) => MyanmarDateCalculation.fromJulianDay(e.toDouble()))
       .toList();
 
   /// [Thingyan] atat
@@ -81,14 +81,14 @@ class Thingyan {
 
   /// [Thingyan] atat [MyanmarDate]
   MyanmarDate get atatDate =>
-      MyanmarDateConverter.fromJulianDate(atat.toDouble());
+      MyanmarDateCalculation.fromJulianDay(atat.toDouble());
 
   /// Myanmar new year day
   int get myanmarNewYearDay => atat + 1;
 
   /// Myanmar new year [MyanmarDate]
   MyanmarDate get myanmarNewYearDate =>
-      MyanmarDateConverter.fromJulianDate(myanmarNewYearDay.toDouble());
+      MyanmarDateCalculation.fromJulianDay(myanmarNewYearDay.toDouble());
 
   Thingyan copyWith({
     int? akyo,

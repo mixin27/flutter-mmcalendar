@@ -1,7 +1,8 @@
-import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import '../language/language.dart';
+import '../models/models.dart';
 
 /// Calculation Algorithms for Myanmar Astro
-class AstroLogic {
+class AstroCalculation {
   /// Get [Astro]
   ///
   /// <a href=
@@ -13,6 +14,7 @@ class AstroLogic {
     required int monthDay,
     required int weekDay,
     required int myear,
+    LanguageCatalog? languageCatalog,
   }) {
     double d, m1, wd1, wd2;
     int sabbath, sabbatheve, yatyaza, pyathada, thamanyo, amyeittasote;
@@ -191,6 +193,7 @@ class AstroLogic {
       mahabote: mahabote,
       nakhat: nakhat,
       yearName: myear % 12,
+      languageCatalog: languageCatalog,
     );
 
     return astro;

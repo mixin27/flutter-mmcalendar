@@ -1,17 +1,24 @@
-import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import '../config/mm_calendar_config.dart';
+import '../constants/constants.dart';
+import '../language/language.dart';
+import '../models/models.dart';
+import '../utils/binary_search_utils.dart';
+import 'western_date_calculation.dart';
 
-/// Holiday Calculator
-class HolidaysCalculator {
+/// Holiday Calculation
+class HolidaysCalculation {
   /// Get all holidays.
   static List<String> getHolidays(
     MyanmarDate myanmarDate, {
-    CalendarType? calendarType,
-    Language? language,
+    LanguageCatalog? languageCatalog,
   }) {
-    // WesternDate westernDate = WesternDateConverter.convert(myanmarDate.jd, calendarType);
-    WesternDate westernDate = WesternDateConverter.fromMyanmarDate(
-      myanmarDate,
-      calendarType: calendarType,
+    WesternDate westernDate = WesternDateCalculation.julianToWestern(
+      julianDay: myanmarDate.jd,
+      config: languageCatalog == null
+          ? MmCalendarConfig.defaultConfig()
+          : MmCalendarConfig(
+              language: languageCatalog.language,
+            ),
     );
 
     List<String> holiday = List.empty(growable: true);
@@ -21,7 +28,7 @@ class HolidaysCalculator {
       westernDate.year,
       westernDate.month,
       westernDate.day,
-      language: language,
+      languageCatalog: languageCatalog,
     );
     holiday.addAll(hde);
 
@@ -57,12 +64,11 @@ class HolidaysCalculator {
     int gy,
     int gm,
     int gd, {
-    Language? language,
+    LanguageCatalog? languageCatalog,
   }) {
+    final lang = languageCatalog ?? LanguageCatalog.myanmar();
+
     List<String> holiday = List.empty(growable: true);
-    final lang = language == null
-        ? LanguageCatalog(language: language)
-        : LanguageCatalog.instance;
 
     if (gy >= 2018 && gm == 1 && gd == 1) {
       holiday.add(lang.translate('New Year Day'));
@@ -99,15 +105,9 @@ class HolidaysCalculator {
   ///
   /// `moonPhase` - Moon phase `0=waxing, 1=full moon, 2=waning, 3=new moon`
   static List<String> myanmarHolidays(
-    double myear,
-    int mmonth,
-    int monthDay,
-    int moonPhase, {
-    Language? language,
-  }) {
-    final lang = language == null
-        ? LanguageCatalog(language: language)
-        : LanguageCatalog.instance;
+      double myear, int mmonth, int monthDay, int moonPhase,
+      {LanguageCatalog? languageCatalog}) {
+    final lang = languageCatalog ?? LanguageCatalog.myanmar();
 
     List<String> holiday = List.empty(growable: true);
 
@@ -145,11 +145,9 @@ class HolidaysCalculator {
     double jdn,
     double myear,
     int monthType, {
-    Language? language,
+    LanguageCatalog? languageCatalog,
   }) {
-    final lang = language == null
-        ? LanguageCatalog(language: language)
-        : LanguageCatalog.instance;
+    final lang = languageCatalog ?? LanguageCatalog.myanmar();
 
     // start of Thingyan
     int startOfThingyan = 1100;
@@ -203,17 +201,15 @@ class HolidaysCalculator {
   /// `jd` - Julian Day Number to check
   static List<String> otherHolidays(
     double jd, {
-    Language? language,
+    LanguageCatalog? languageCatalog,
   }) {
-    final lang = language == null
-        ? LanguageCatalog(language: language)
-        : LanguageCatalog.instance;
+    final lang = languageCatalog ?? LanguageCatalog.myanmar();
 
     List<String> holiday = List.empty(growable: true);
-    if (searchOf1DArray(jd, _ghDiwali) >= 0) {
+    if (searchOf1DArray(jd, ghDiwali) >= 0) {
       holiday.add(lang.translate('Diwali'));
     }
-    if (searchOf1DArray(jd, _ghEid) >= 0) {
+    if (searchOf1DArray(jd, ghEid) >= 0) {
       holiday.add(lang.translate('Eid'));
     }
 
@@ -223,22 +219,20 @@ class HolidaysCalculator {
   /// English Anniversary days
   ///
   /// `jd` - Julian Day Number to check
-  static List<String> englishAnniversaryDays(
-    double jd, {
-    CalendarType? calendarType,
-    Language? language,
-  }) {
-    final lang = language == null
-        ? LanguageCatalog(language: language)
-        : LanguageCatalog.instance;
+  static List<String> englishAnniversaryDays(double jd,
+      {CalendarType? calendarType, LanguageCatalog? languageCatalog}) {
+    final lang = languageCatalog ?? LanguageCatalog.myanmar();
 
     calendarType ??= CalendarType.english;
 
     List<String> holiday = List.empty(growable: true);
 
-    // WesternDate wd = WesternDateConverter.convert(jd, calendarType);
-    WesternDate wd =
-        WesternDateConverter.fromJulianDate(jd, calendarType: calendarType);
+    WesternDate wd = WesternDateCalculation.julianToWestern(
+      julianDay: jd,
+      config: languageCatalog == null
+          ? MmCalendarConfig.defaultConfig()
+          : MmCalendarConfig(language: languageCatalog.language),
+    );
     double doe = dateOfEaster(wd.year);
 
     if ((wd.year <= 2017) && (wd.month == 1) && (wd.day == 1)) {
@@ -265,10 +259,10 @@ class HolidaysCalculator {
       holiday.add(lang.translate('Easter'));
     } else if ((wd.year >= 1876) && (jd == (doe - 2))) {
       holiday.add(lang.translate('Good Friday'));
-    } else if (searchOf1DArray(jd, _ghEid2) >= 0) {
+    } else if (searchOf1DArray(jd, ghEid2) >= 0) {
       holiday.add(lang.translate('Eid'));
     }
-    if (searchOf1DArray(jd, _ghCNY) >= 0) {
+    if (searchOf1DArray(jd, ghCNY) >= 0) {
       holiday.add(lang.translate('Chinese New Year'));
     }
 
@@ -297,22 +291,20 @@ class HolidaysCalculator {
     int month = (q / 31).floor();
     // this is for Gregorian
 
-    return WesternDateLogic.westernToJulian(
-        year: year, month: month, day: day, calendarType: CalendarType.english);
+    return WesternDateCalculation.westernToJulian(
+      year: year,
+      month: month,
+      day: day,
+      config: MmCalendarConfig.defaultConfig(),
+    );
   }
 
   /// Myanmar anniversary days.
   ///
   static List<String> myanmarAnniversaryDays(
-    double myear,
-    int mmonth,
-    int monthDay,
-    int moonPhase, {
-    Language? language,
-  }) {
-    final lang = language == null
-        ? LanguageCatalog(language: language)
-        : LanguageCatalog.instance;
+      double myear, int mmonth, int monthDay, int moonPhase,
+      {LanguageCatalog? languageCatalog}) {
+    final lang = languageCatalog ?? LanguageCatalog.myanmar();
 
     List<String> holiday = List.empty(growable: true);
 
@@ -359,19 +351,19 @@ class HolidaysCalculator {
   static List<String> getAnniversaries(
     MyanmarDate myanmarDate, {
     CalendarType? calendarType,
-    Language? language,
+    LanguageCatalog? languageCatalog,
   }) {
     List<String> ecd = englishAnniversaryDays(
       myanmarDate.jd,
       calendarType: calendarType,
-      language: language,
+      languageCatalog: languageCatalog,
     ); // anniversary day
     List<String> mcd = myanmarAnniversaryDays(
       myanmarDate.myear.toDouble(),
       myanmarDate.mmonth,
       myanmarDate.monthDay,
       myanmarDate.moonPhase,
-      language: language,
+      languageCatalog: languageCatalog,
     );
 
     List<String> holiday = List.empty(growable: true);
@@ -382,33 +374,3 @@ class HolidaysCalculator {
     return holiday;
   }
 }
-
-/// Eid 2
-const List<int> _ghEid2 = [2456936, 2457290, 2457644, 2457998, 2458353];
-
-/// Chinese new year ref
-const List<int> _ghCNY = [
-  2456689,
-  2456690,
-  2457073,
-  2457074,
-  2457427,
-  2457428,
-  2457782,
-  2457783,
-  2458166,
-  2458167
-];
-
-/// Diwali
-const List<int> _ghDiwali = [
-  2456599,
-  2456953,
-  2457337,
-  2457691,
-  2458045,
-  2458429
-];
-
-/// Eid
-const List<int> _ghEid = [2456513, 2456867, 2457221, 2457576, 2457930, 2458285];

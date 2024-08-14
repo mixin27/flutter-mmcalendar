@@ -1,15 +1,17 @@
-import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import '../constants/constants.dart';
+import '../models/models.dart';
+import '../utils/binary_search_utils.dart';
 
 /// Converting logic for [MyanmarDate].
 ///
 /// Core Calculation and Algorithms for Myanmar Date
-class MyanmarDateLogic {
+class MyanmarDateCalculation {
   /// Julian date to Myanmar date.
   ///
   /// `julianDay` - Julian day
   ///
   /// Return - [MyanmarDate]
-  static MyanmarDate julianToMyanmarDate(double julianDay) {
+  static MyanmarDate fromJulianDay(double julianDay) {
     int jdn,
         dd,
         yearLength,
@@ -68,6 +70,7 @@ class MyanmarDateLogic {
     moonPhase = ((monthDay + 1) / 16.0).floor() +
         (monthDay / 16.0).floor() +
         (monthDay / monthLength).floor();
+
     // waxing or waning day
     fortnightDay = monthDay - 15 * (monthDay / 16.0).floor();
     // week day
@@ -221,7 +224,7 @@ class MyanmarDateLogic {
   /// `fortnightDay` - Fortnight day `1 to 15`
   ///
   /// Return - Julian day number
-  static double myanmarDateToJulian({
+  static double toJulian({
     required int year,
     required int month,
     required int monthType,
@@ -267,8 +270,8 @@ class MyanmarDateLogic {
   }
 
   /// Convert [MyanmarDate] to `julian`
-  static double toJulian(MyanmarDate myanmarDate) {
-    return myanmarDateToJulian(
+  static double myanmarDateToJulian(MyanmarDate myanmarDate) {
+    return toJulian(
       year: myanmarDate.myear,
       month: myanmarDate.mmonth,
       monthType: myanmarDate.monthType,
@@ -296,8 +299,8 @@ class MyanmarDateLogic {
         (CalendarConstants.solarYear * (year + 1) + CalendarConstants.mo)
             .roundToDouble();
 
-    MyanmarDate m1 = julianToMyanmarDate(j1);
-    MyanmarDate m2 = julianToMyanmarDate(j2);
+    MyanmarDate m1 = fromJulianDay(j1);
+    MyanmarDate m2 = fromJulianDay(j2);
 
     int si = m1.mmonth + 12 * m1.monthType;
     int ei = m2.mmonth + 12 * m2.monthType;
@@ -322,14 +325,14 @@ class MyanmarDateLogic {
     for (int i = si; i <= ei; i++) {
       if (i == 4 && m1.yearType != 0) {
         index.add(0);
-        monthNameList.add(_emaList[0]);
+        monthNameList.add(emaList[0]);
         if (month == 0) {
           currentIndex = 0;
         }
       }
       index.add(i);
       monthNameList
-          .add(((i == 4 && m1.yearType != 0) ? "Second " : "") + _emaList[i]);
+          .add(((i == 4 && m1.yearType != 0) ? "Second " : "") + emaList[i]);
 
       if (i == month) {
         //if(Math.abs(i - mmonth) < 0.0000001 ) {
@@ -344,21 +347,3 @@ class MyanmarDateLogic {
     );
   }
 }
-
-const List<String> _emaList = [
-  "First Waso",
-  "Tagu",
-  "Kason",
-  "Nayon",
-  "Waso",
-  "Wagaung",
-  "Tawthalin",
-  "Thadingyut",
-  "Tazaungmon",
-  "Nadaw",
-  "Pyatho",
-  "Tabodwe",
-  "Tabaung",
-  "Late Tagu",
-  "Late Kason"
-];

@@ -22,8 +22,12 @@ class _HolidaysPageState extends State<HolidaysPage> {
   }
 
   void getHolidays(DateTime dateTime) {
-    final myanmarDate = MyanmarDateConverter.fromDateTime(dateTime);
-    final holidays = HolidaysCalculator.getHolidays(myanmarDate);
+    final mmCalendar = MmCalendar(
+      config: MmCalendarConfig.defaultConfig(),
+    );
+
+    final myanmarDate = mmCalendar.fromDateTime(dateTime);
+    final holidays = myanmarDate.holidays;
     setState(() {
       _holidays = holidays;
     });

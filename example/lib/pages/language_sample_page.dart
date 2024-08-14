@@ -93,7 +93,7 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  FlutterMmcalendar.getDateByLanguage(_selectedDate),
+                  MmCalendar.getDateByLanguage(_selectedDate),
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -102,7 +102,7 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  FlutterMmcalendar.getDateByLanguage(
+                  MmCalendar.getDateByLanguage(
                     _selectedDate,
                     language: Language.english,
                   ),
@@ -114,7 +114,7 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  FlutterMmcalendar.getDateByLanguage(
+                  MmCalendar.getDateByLanguage(
                     _selectedDate,
                     language: Language.myanmar,
                   ),
@@ -126,7 +126,7 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  FlutterMmcalendar.getDateByLanguage(
+                  MmCalendar.getDateByLanguage(
                     _selectedDate,
                     language: Language.zawgyi,
                   ),
@@ -138,7 +138,7 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  FlutterMmcalendar.getDateByLanguage(
+                  MmCalendar.getDateByLanguage(
                     _selectedDate,
                     language: Language.mon,
                   ),
@@ -150,7 +150,7 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  FlutterMmcalendar.getDateByLanguage(
+                  MmCalendar.getDateByLanguage(
                     _selectedDate,
                     language: Language.tai,
                   ),
@@ -162,7 +162,7 @@ class _LanguageSamplePageState extends State<LanguageSamplePage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  FlutterMmcalendar.getDateByLanguage(
+                  MmCalendar.getDateByLanguage(
                     _selectedDate,
                     language: Language.karen,
                   ),

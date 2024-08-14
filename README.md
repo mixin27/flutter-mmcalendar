@@ -24,10 +24,10 @@ flutter packages get
 
 ## Features
 
-- `Myanmar Date Converter`
-- `Western Date Converter`
-- `Astrological Converter`
-- `Myanmar Thingyan` holidays and other holidays calculation
+- `Myanmar Date`
+- `Western Date`
+- `Astrological Information`
+- `Holidays` - Myanmar Thingyan holidays and other holidays.
 
 ## Usage
 
@@ -37,63 +37,86 @@ Import package
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 ```
 
-Configure default `calendarType` and `language`. It is `optional`.
-
-```dart
-void main() {
-  MmCalendarConfig.initDefault(
-    const MmCalendarOptions(
-      language: Language.myanmar,
-    ),
-  );
-
-  runApp(const MyApp());
-}
-
-```
-
 Sample Usage:
 
 ```dart
-// Get MyanmarDate by year, month and day
-final myanmarDate = MyanmarDateConverter.fromDate(2023, 10, 19);
+  // Default
+  final mmCalendar = MmCalendar(
+    config: MmCalendarConfig.defaultConfig(),
+  );
 
-// Output: 2567
-final buddhistEra = myanmarDate.getBuddhistEra();
+  // English language config
+  final mmCalendar = MmCalendar(
+    config: MmCalendarConfig.englishLanguage(),
+  );
 
-// Output: 1385
-final year = myanmarDate.getYear();
-
-// Output: Thadingyut
-final monthName = myanmarDate.getMonthName();
-
-// Output: full moon
-final moonPhase = myanmarDate.getMoonPhase();
-
-// Output: empty
-final fortNightDay = myanmarDate.getFortnightDay();
-
-// Output: Sunday
-final weekday = myanmarDate.getWeekDay();
+  // Specific language and calendar type
+  final mmCalendar = MmCalendar(
+    config: const MmCalendarConfig(
+      calendarType: CalendarType.gregorian,
+      language: Language.myanmar,
+    ),
+  );
 ```
 
-### Myanmar Date format
+And use it
 
 ```dart
-final myanmarDate = MyanmarDateConverter.fromDate(2023, 10, 19);
+  // Get MyanmarDate by year, month and day
+  final myanmarDate = mmCalendar.fromDate(2023, 10, 19);
+```
 
-final resultStr = myanmarDate.formatByPatternAndLanguage(
-    pattern: 'S s k, B y k, M p f r En',
-    languageCatalog: LanguageCatalog(language: Language.myanmar),
-);
-// Output: သာသနာနှစ် ၂၅၆၇ ခု, မြန်မာနှစ် ၁၃၈၅ ခု, သီတင်းကျွတ် လပြည့်  ရက် တနင်္ဂနွေနေ့
-// (or)
+Available configs:
 
-final resultStr = myanmarDate.formatByPatternAndLanguage(
-    pattern: 'S s k, B y k, M p f r En',
-    languageCatalog: LanguageCatalog(language: Language.english),
-);
-// Output: Sasana Year 2567 , Myanmar Year 1385 , Thadingyut full moon   Sunday
+- `MmCalendarConfig.defaultConfig()`
+- `MmCalendarConfig.myanmarLanguage()`
+- `MmCalendarConfig.zawgyiLanguage()`
+- `MmCalendarConfig.englishLanguage()`
+- `MmCalendarConfig.monLanguage()`
+- `MmCalendarConfig.karenLanguage()`
+- `MmCalendarConfig.taiLanguage()`
+
+Available languages:
+
+- `english`
+- `myanmar` - myanmar unicode
+- `zawgyi` - myanmar zawgyi
+- `mon`
+- `karen`
+- `tai`
+
+Other usages:
+
+```dart
+  // Date conversion methods.
+  final myanmarDate = mmCalendar.fromDateTime(DateTime.now());
+  mmCalendar.fromDate(2023, 7, 27);
+  mmCalendar.fromDateAndTime(2023, 7, 27, 10, 30, 01);
+  mmCalendar.fromJulian(2456599);
+  final westernDate = mmCalendar.getWesternDateFromJulianDay(2456599);
+
+  /// Astrological information
+  final astro = myanmarDate.astro;
+  final astroByLanguage = myanmarDate.getAstro(
+    languageCatalog: LanguageCatalog.myanmar(),
+  );
+  astro.getMahabote();
+
+  // All Holidays
+  List<String> holidays = myanmarDate.holidays;
+
+  final resultStr = myanmarDate.formatByPatternAndLanguage(
+    pattern: MyanmarDateFormat.simple,
+    langCatalog: mmCalendar.languageCatalog,
+  );
+  // Output: သာသနာနှစ် ၂၅၆၇ ခု, မြန်မာနှစ် ၁၃၈၅ ခု, သီတင်းကျွတ် လပြည့်  ရက် တနင်္ဂနွေနေ့
+  // (or)
+
+  final resultStr = myanmarDate.formatByPatternAndLanguage(
+      pattern: 'S s k, B y k, M p f r En',
+      langCatalog: LanguageCatalog(language: Language.english),
+  );
+  // Output: Sasana Year 2567 , Myanmar Year 1385 , Thadingyut full moon   Sunday
 ```
 
 #### Myanmar Date Patterns
@@ -115,88 +138,15 @@ The following pattern letters are defined ('S', 's', 'B', 'y', 'k', 'M', 'p', 'f
 | E      | Day name in week | တနင်္လာ          | Monday           |
 | n      | Nay              | နေ့              |                  |
 
-### Available Converters
-
-- `MyanmarDateConverter`
-- `WesternDateConverter`
-- `AstroConverter`
-
-`MyanmarDateConverter`
-
-```dart
-// Get MyanmarDate by dart DateTime
-final myanmarDate = MyanmarDateConverter.fromDateTime(DateTime.now());
-// Get MyanmarDate by custom year, month and day
-final myanmarDate = MyanmarDateConverter.fromDate(2023, 10, 19);
-// Get MyanmarDate by custom year, month, day, hour, minute and second
-final myanmarDate = MyanmarDateConverter.fromDateAndTime(2023, 10, 19, 12, 30, 00);
-// Get MyanmarDate by julian day numbers
-final myanmarDate = MyanmarDateConverter.fromJulianDate(2460237);
-```
-
-`WesternDateConverter`
-
-```dart
-// By julian day number
-final westernDate = WesternDateConverter.fromJulianDate(julianDate);
-// By MyanmarDate
-final westernDate = WesternDateConverter.fromMyanmarDate(myanmarDate);
-```
-
-`AstroConverter`
-
-```dart
-final astro = AstroConverter.convert(myanmarDate);
-```
-
-### Available Converting Logics
-
-- **`AstroLogic`**
-  - `getAstro()`
-- **`MyanmarDateLogic`**
-  - `julianToMyanmarDate()`
-  - `myanmarDateToJulian()`
-  - `myanmarDateToJulianWithDate()`
-  - `toJulian()`
-  - `getMyanmarMonths()`
-- **`WesternDateLogic`**
-  - `julianToWestern()`
-  - `westernToJulian()`
-  - `westernToJulianWithTime()`
-  - `toJulian()`
-  - `getJulianDayNumberOfStartOfMonth()`
-  - `getJulianDayNumberOfEndOfMonth()`
-  - `getLengthOfMonth()`
-
-### Available Holidays Calculation
-
-- `ThingyanCalculator`
-
-  - `getMyanmarThingyanDaysFromDateTime()`
-  - `getMyanmarThingyanDays()`
-
-  ```dart
-    final thingyanHolidays = ThingyanCalculator.getMyanmarThingyanDaysFromDateTime(DateTime.now());
-  ```
-
-  - `getThingyanFromDateTime()`
-  - `getThingyan()`
-
-- `HolidayCalculator`
-  - `getHolidays()`
-  - `myanmarHolidays()`
-  - `thingyanHolidays()`
-  - `englishHolidays()`
-  - `englishAnniversaryDays()`
-  - `myanmarAnniversaryDays()`
-  - `getAnniversaries()`
-  - `otherHolidays()`
-
 ### Astrological Information
 
 ```dart
-final myanmarDate = MyanmarDateConverter.fromDateTime(DateTime.now());
-final astro = AstroConverter.convert(myanmarDate);
+final mmCalendar = MmCalendar(
+  config: MmCalendarConfig.myanmarLanguage(),
+);
+
+final myanmarDate = mmCalendar.fromDate(2023, 10, 19);
+final astro = myanmarDate.astro;
 
 // အမြိတ္တစုတ်
 final amyeittasote = astro.getAmyeittasote();

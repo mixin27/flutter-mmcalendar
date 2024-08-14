@@ -4,3 +4,5 @@ export 'lang_mon.dart';
 export 'lang_my.dart';
 export 'lang_tai.dart';
 export 'lang_zawgyi.dart';
+
+export 'language_catalog.dart';

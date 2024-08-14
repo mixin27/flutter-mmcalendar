@@ -21,8 +21,11 @@ class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
   }
 
   void getHolidays(DateTime dateTime) {
+    final mmCalendar = MmCalendar(
+      config: MmCalendarConfig.myanmarLanguage(),
+    );
     final thingyanHolidays =
-        ThingyanCalculator.getMyanmarThingyanDaysFromDateTime(dateTime);
+        mmCalendar.fromDateTime(dateTime).getMyanmarThingyanDays();
     setState(() {
       _holidays = thingyanHolidays;
     });
@@ -112,7 +115,7 @@ class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
                   title: Text(holiday.label),
                   subtitle: Text(
                     holiday.date.formatByPatternAndLanguage(
-                      languageCatalog: LanguageCatalog(),
+                      langCatalog: LanguageCatalog(),
                     ),
                   ),
                 );

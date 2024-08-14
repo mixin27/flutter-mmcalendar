@@ -1,4 +1,4 @@
-import 'language_catalog.dart';
+import '../language/language.dart';
 
 /// Convert Number to String according to [LanguageCatalog]
 ///

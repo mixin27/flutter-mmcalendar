@@ -34,7 +34,7 @@ class DateInfoNotice extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            MyanmarDateConverter.fromDateTime(date).format(),
+            date.myanmarDate.format(),
             style: Theme.of(context).textTheme.labelMedium,
           ),
         ],

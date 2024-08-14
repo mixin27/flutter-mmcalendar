@@ -1,4 +1,6 @@
-import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import 'package:flutter/foundation.dart';
+
+import '../language/language.dart';
 
 /// Myanmar date
 class MyanmarDate implements Comparable<MyanmarDate> {
@@ -14,7 +16,8 @@ class MyanmarDate implements Comparable<MyanmarDate> {
     required this.moonPhase,
     required this.weekDay,
     required this.jd,
-  }) {
+    LanguageCatalog? languageCatalog,
+  }) : _languageCatalog = languageCatalog ?? LanguageCatalog.myanmar() {
     if (myear < 0) {
       throw Exception("Myanmar year must be positive number");
     }
@@ -31,6 +34,12 @@ class MyanmarDate implements Comparable<MyanmarDate> {
       throw Exception("Moon phase must be 0 to 3");
     }
   }
+
+  /// Language config
+  final LanguageCatalog _languageCatalog;
+
+  /// Current [LanguageCatalog] instance.
+  LanguageCatalog get languageCatalog => _languageCatalog;
 
   /// Myanmar year
   final int myear;
@@ -142,198 +151,49 @@ class MyanmarDate implements Comparable<MyanmarDate> {
   }
 }
 
-const List<String> mma = [
-  "First Waso",
-  "Tagu",
-  "Kason",
-  "Nayon",
-  "Waso",
-  "Wagaung",
-  "Tawthalin",
-  "Thadingyut",
-  "Tazaungmon",
-  "Nadaw",
-  "Pyatho",
-  "Tabodwe",
-  "Tabaung"
-];
+/// Myanmar Months List for Specific Myanmar Year
+class MyanmarMonths {
+  const MyanmarMonths({
+    required this.indices,
+    required this.monthNameList,
+    required this.currentIndex,
+  });
 
-/// New Moon mean Dark moon
-const List<String> msa = ["waxing", "full moon", "waning", "new moon"];
+  /// Month index list
+  final List<int> indices;
 
-/// Week days
-const List<String> wda = [
-  "Saturday",
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday"
-];
+  /// Myanmar month name list
+  final List<String> monthNameList;
 
-extension MyanmarDateX on MyanmarDate {
-  /// Get `buddhistEra` string.
-  String getBuddhistEraByLanguage(LanguageCatalog languageCatalog) {
-    return convertNumberToLanguage(myear + 1182, languageCatalog);
-  }
+  /// Current index of the list
+  final int currentIndex;
 
-  /// Get `buddhistEra` string.
-  String getBuddhistEra() {
-    return getBuddhistEraByLanguage(LanguageCatalog.instance);
-  }
-
-  /// Get `year` string.
-  String getYearByLanguage(LanguageCatalog languageCatalog) {
-    return convertNumberToLanguage(myear.toDouble(), languageCatalog);
-  }
-
-  /// Get `year` string.
-  String getYear() {
-    return getYearByLanguage(LanguageCatalog.instance);
-  }
-
-  /// Get `month` value.
-  String _getMnt(LanguageCatalog languageCatalog) {
-    // 0=common, 1=little watat, 2=big watat
-    String str = '';
-    if (monthType > 0) {
-      str += languageCatalog.translate("Late");
-    }
-
-    if (yearType > 0 && mmonth == 4) {
-      str += languageCatalog.translate("Second");
-    }
-
-    return str;
-  }
-
-  /// Get `month` value.
-  String getMnt() {
-    return _getMnt(LanguageCatalog.instance);
-  }
-
-  /// Get `month` name.
-  String getMonthNameByLanguage(LanguageCatalog languageCatalog) {
-    return getMnt() + languageCatalog.translate(mma[mmonth]);
-  }
-
-  /// Get `month` name.
-  String getMonthName() {
-    return getMonthNameByLanguage(LanguageCatalog.instance);
-  }
-
-  /// Get `moonPhase` string.
-  String getMoonPhaseByLanguage(LanguageCatalog languageCatalog) {
-    return languageCatalog.translate(msa[moonPhase]);
-  }
-
-  /// Get `moonPhase` string.
-  String getMoonPhase() {
-    return getMoonPhaseByLanguage(LanguageCatalog.instance);
-  }
-
-  /// Get `fortnightDay` string by [LanguageCatalog]
-  String getFortnightDayByLanguage(LanguageCatalog languageCatalog) {
-    return ((moonPhase % 2) == 0)
-        ? convertNumberToLanguage(fortnightDay.toDouble(), languageCatalog)
-        : "";
-  }
-
-  /// Get `fortnightDay` string.
-  String getFortnightDay() =>
-      getFortnightDayByLanguage(LanguageCatalog.instance);
-
-  /// Get `weekday` string by [LanguageCatalog]
-  String getWeekDayByLanguage(LanguageCatalog languageCatalog) {
-    return languageCatalog.translate(wda[weekDay]);
-  }
-
-  /// Get `weekday` string
-  String getWeekDay() => getWeekDayByLanguage(LanguageCatalog.instance);
-
-  /// Check is `weekend`
-  bool isWeekend() => weekDay == 0 || weekDay == 1;
-
-  /// Format [MyanmarDate] by pattern
-  ///
-  /// `pattern` - Pattern to be formatted.
-  String format([
-    String pattern = CalendarConstants.simpleMyanmarDateFormatPattern,
-  ]) =>
-      formatByPatternAndLanguage(
-        pattern: pattern,
-        languageCatalog: LanguageCatalog.instance,
-      );
-
-  /// Format [MyanmarDate] by pattern
-  ///
-  /// `pattern` - Pattern to be formatted.
-  ///
-  /// `languageCatalog` - Language catalog to be translated.
-  String formatByPatternAndLanguage({
-    String pattern = CalendarConstants.simpleMyanmarDateFormatPattern,
-    required LanguageCatalog languageCatalog,
+  MyanmarMonths copyWith({
+    List<int>? indices,
+    List<String>? monthNameList,
+    int? currentIndex,
   }) {
-    if (pattern.isEmpty) {
-      throw Exception('Pattern cannot not be empty.');
-    }
-
-    final charArray = List<String>.empty(growable: true);
-    for (var rune in pattern.runes) {
-      var character = String.fromCharCode(rune);
-      charArray.add(character);
-    }
-
-    String str = '';
-
-    for (var i = 0; i < charArray.length; i++) {
-      switch (charArray[i]) {
-        case MyanmarDateFormat.sasanaYear:
-          str += languageCatalog.translate("Sasana Year");
-          break;
-        case MyanmarDateFormat.buddhistEra:
-          str += getBuddhistEraByLanguage(languageCatalog);
-          break;
-        case MyanmarDateFormat.burmeseYear:
-          str += languageCatalog.translate("Myanmar Year");
-          break;
-        case MyanmarDateFormat.myanmarYear:
-          str += getYearByLanguage(languageCatalog);
-          break;
-        case MyanmarDateFormat.ku:
-          str += languageCatalog.translate("Ku");
-          break;
-        case MyanmarDateFormat.monthInYear:
-          str += getMonthNameByLanguage(languageCatalog);
-          break;
-        case MyanmarDateFormat.moonPhase:
-          str += getMoonPhaseByLanguage(languageCatalog);
-          break;
-        case MyanmarDateFormat.fortnightDay:
-          str += getFortnightDayByLanguage(languageCatalog);
-          break;
-        case MyanmarDateFormat.dayNameInWeek:
-          str += getWeekDayByLanguage(languageCatalog);
-          break;
-        case MyanmarDateFormat.nay:
-          if (languageCatalog.language == Language.english) {
-            str += " ${languageCatalog.translate("Nay")}";
-          } else {
-            str += languageCatalog.translate("Nay");
-          }
-          break;
-        case MyanmarDateFormat.yat:
-          if (getFortnightDay().isNotEmpty) {
-            str += languageCatalog.translate("Yat");
-          }
-          break;
-        default:
-          str += charArray[i];
-          break;
-      }
-    }
-
-    return str;
+    return MyanmarMonths(
+      indices: indices ?? this.indices,
+      monthNameList: monthNameList ?? this.monthNameList,
+      currentIndex: currentIndex ?? this.currentIndex,
+    );
   }
+
+  @override
+  String toString() =>
+      'MyanmarMonths(indices: $indices, monthNameList: $monthNameList, currentIndex: $currentIndex)';
+
+  @override
+  bool operator ==(covariant MyanmarMonths other) {
+    if (identical(this, other)) return true;
+
+    return listEquals(other.indices, indices) &&
+        listEquals(other.monthNameList, monthNameList) &&
+        other.currentIndex == currentIndex;
+  }
+
+  @override
+  int get hashCode =>
+      indices.hashCode ^ monthNameList.hashCode ^ currentIndex.hashCode;
 }

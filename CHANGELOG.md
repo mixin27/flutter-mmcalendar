@@ -1,3 +1,9 @@
+## 1.1.0
+
+**BREAKING CHANGES**
+
+- Remove `MmCalendarConfig.initDefault()`.
+
 ## 1.0.1
 
 - Fixed `fortnightDay` wrong for some year.

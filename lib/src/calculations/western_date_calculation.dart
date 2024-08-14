@@ -1,9 +1,10 @@
-import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import '../config/mm_calendar_config.dart';
+import '../models/models.dart';
 
 /// Converting logic for [WesternDate].
 ///
 /// Core Calculation and Algorithm for Western Date
-class WesternDateLogic {
+class WesternDateCalculation {
   /// Convert `julian` to `western`.
   ///
   /// Julian date to Western date Credit4 Gregorian date: http://pmyers.pcug.org.au/General/JulianDates.htm
@@ -11,22 +12,22 @@ class WesternDateLogic {
   ///
   /// `julianDay` - Julian day
   ///
-  /// `calendarType` - [CalendarType]
+  /// `config` - [MmCalendarConfig]
   ///
   /// `sg` - Beginning of Gregorian calendar in JDN `Optional argument: (default=2361222)]`
   static WesternDate julianToWestern({
     required double julianDay,
-    CalendarType? calendarType,
+    MmCalendarConfig? config,
     double sg = 0,
   }) {
     // ct=ct||0;
     int calType;
-    if (calendarType == null) {
-      calType = MmCalendarConfig.instance.calendaryType.number < 0
+    if (config == null) {
+      calType = MmCalendarConfig.defaultConfig().calendarType.number < 0
           ? 0
-          : MmCalendarConfig.instance.calendaryType.number;
+          : MmCalendarConfig.defaultConfig().calendarType.number;
     } else {
-      calType = calendarType.number < 0 ? 0 : calendarType.number;
+      calType = config.calendarType.number < 0 ? 0 : config.calendarType.number;
     }
 
     // SG= SG || 2361222;
@@ -92,17 +93,17 @@ class WesternDateLogic {
     required int year,
     required int month,
     required int day,
-    CalendarType? calendarType,
+    MmCalendarConfig? config,
     double sg = 0,
   }) {
     // ct=ct||0;
     int calType;
-    if (calendarType == null) {
-      calType = MmCalendarConfig.instance.calendaryType.number < 0
+    if (config == null) {
+      calType = MmCalendarConfig.defaultConfig().calendarType.number < 0
           ? 0
-          : MmCalendarConfig.instance.calendaryType.number;
+          : MmCalendarConfig.defaultConfig().calendarType.number;
     } else {
-      calType = calendarType.number < 0 ? 0 : calendarType.number;
+      calType = config.calendarType.number < 0 ? 0 : config.calendarType.number;
     }
 
     // SG= SG || 2361222;
@@ -150,7 +151,7 @@ class WesternDateLogic {
     required int hour,
     required int minute,
     required int second,
-    CalendarType? calendarType,
+    MmCalendarConfig? config,
     double sg = 0,
   }) {
     double fractionOfDay = timeToDay(
@@ -162,7 +163,7 @@ class WesternDateLogic {
           year: year,
           month: month,
           day: day,
-          calendarType: calendarType,
+          config: config,
           sg: sg,
         ) +
         fractionOfDay;
@@ -174,7 +175,7 @@ class WesternDateLogic {
   /// http://www.cs.utsa.edu/~cs1063/projects/Spring2011/Project1/jdn-explanation.html
   static double toJulian({
     required WesternDate westernDate,
-    CalendarType? calendarType,
+    MmCalendarConfig? config,
     double sg = 0,
   }) {
     return westernToJulianWithTime(
@@ -184,7 +185,7 @@ class WesternDateLogic {
       hour: westernDate.hour,
       minute: westernDate.minute,
       second: westernDate.second,
-      calendarType: calendarType,
+      config: config,
       sg: sg,
     );
   }
@@ -197,13 +198,13 @@ class WesternDateLogic {
   static int getJulianDayNumberOfStartOfMonth(
     int year,
     int month, {
-    CalendarType? calendarType,
+    MmCalendarConfig? config,
   }) {
     return westernToJulian(
       year: year,
       month: month,
       day: 1,
-      calendarType: calendarType,
+      config: config,
       sg: 0,
     ).toInt();
   }
@@ -212,17 +213,17 @@ class WesternDateLogic {
   static int getJulianDayNumberOfEndOfMonth(
     int year,
     int month, {
-    CalendarType? calendarType,
+    MmCalendarConfig? config,
   }) {
     final julianStart = getJulianDayNumberOfStartOfMonth(
       year,
       month,
-      calendarType: calendarType,
+      config: config,
     );
     int eml = getLengthOfMonth(
       year,
       month,
-      calendarType: calendarType,
+      config: config,
     );
 
     return julianStart + eml - 1;
@@ -232,15 +233,15 @@ class WesternDateLogic {
   static int getLengthOfMonth(
     int year,
     int month, {
-    CalendarType? calendarType,
+    MmCalendarConfig? config,
   }) {
     int calType;
-    if (calendarType == null) {
-      calType = MmCalendarConfig.instance.calendaryType.number < 0
+    if (config == null) {
+      calType = MmCalendarConfig.defaultConfig().calendarType.number < 0
           ? 0
-          : MmCalendarConfig.instance.calendaryType.number;
+          : MmCalendarConfig.defaultConfig().calendarType.number;
     } else {
-      calType = calendarType.number < 0 ? 0 : calendarType.number;
+      calType = config.calendarType.number < 0 ? 0 : config.calendarType.number;
     }
 
     int leap = 0;
