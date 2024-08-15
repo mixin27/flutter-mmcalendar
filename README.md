@@ -40,30 +40,30 @@ import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 Sample Usage:
 
 ```dart
-  // Default
-  final mmCalendar = MmCalendar(
-    config: MmCalendarConfig.defaultConfig(),
-  );
+// Default
+final mmCalendar = MmCalendar(
+  config: MmCalendarConfig.defaultConfig(),
+);
 
-  // English language config
-  final mmCalendar = MmCalendar(
-    config: MmCalendarConfig.englishLanguage(),
-  );
+// English language config
+final mmCalendar = MmCalendar(
+  config: MmCalendarConfig.englishLanguage(),
+);
 
-  // Specific language and calendar type
-  final mmCalendar = MmCalendar(
-    config: const MmCalendarConfig(
-      calendarType: CalendarType.gregorian,
-      language: Language.myanmar,
-    ),
-  );
+// Specific language and calendar type
+final mmCalendar = MmCalendar(
+  config: const MmCalendarConfig(
+    calendarType: CalendarType.gregorian,
+    language: Language.myanmar,
+  ),
+);
 ```
 
 And use it
 
 ```dart
-  // Get MyanmarDate by year, month and day
-  final myanmarDate = mmCalendar.fromDate(2023, 10, 19);
+// Get MyanmarDate by year, month and day
+final myanmarDate = mmCalendar.fromDate(2023, 10, 19);
 ```
 
 Available configs:
@@ -88,41 +88,68 @@ Available languages:
 Other usages:
 
 ```dart
-  // Date conversion methods.
-  final myanmarDate = mmCalendar.fromDateTime(DateTime.now());
-  mmCalendar.fromDate(2023, 7, 27);
-  mmCalendar.fromDateAndTime(2023, 7, 27, 10, 30, 01);
-  mmCalendar.fromJulian(2456599);
-  final westernDate = mmCalendar.getWesternDateFromJulianDay(2456599);
+// Date conversion methods.
+final myanmarDate = mmCalendar.fromDateTime(DateTime.now());
+mmCalendar.fromDate(2023, 7, 27);
+mmCalendar.fromDateAndTime(2023, 7, 27, 10, 30, 01);
+mmCalendar.fromJulian(2456599);
+final westernDate = mmCalendar.getWesternDateFromJulianDay(2456599);
 
-  /// Astrological information
-  final astro = myanmarDate.astro;
-  final astroByLanguage = myanmarDate.getAstro(
-    languageCatalog: LanguageCatalog.myanmar(),
-  );
-  astro.getMahabote();
+/// Astrological information
+final astro = myanmarDate.astro;
+final astroByLanguage = myanmarDate.getAstro(
+  languageCatalog: LanguageCatalog.myanmar(),
+);
+astro.getMahabote();
 
-  // All Holidays
-  List<String> holidays = myanmarDate.holidays;
+// All Holidays
+List<String> holidays = myanmarDate.holidays;
 
-  final resultStr = myanmarDate.formatByPatternAndLanguage(
-    pattern: MyanmarDateFormat.simple,
-    langCatalog: mmCalendar.languageCatalog,
-  );
-  // Output: သာသနာနှစ် ၂၅၆၇ ခု, မြန်မာနှစ် ၁၃၈၅ ခု, သီတင်းကျွတ် လပြည့်  ရက် တနင်္ဂနွေနေ့
-  // (or)
+final resultStr = myanmarDate.formatByPatternAndLanguage(
+  pattern: MyanmarDateFormat.simple,
+  langCatalog: mmCalendar.languageCatalog,
+);
+// Output: သာသနာနှစ် ၂၅၆၇ ခု, မြန်မာနှစ် ၁၃၈၅ ခု, သီတင်းကျွတ် လပြည့်  ရက် တနင်္ဂနွေနေ့
+// (or)
 
-  final resultStr = myanmarDate.formatByPatternAndLanguage(
-      pattern: 'S s k, B y k, M p f r En',
-      langCatalog: LanguageCatalog(language: Language.english),
-  );
-  // Output: Sasana Year 2567 , Myanmar Year 1385 , Thadingyut full moon   Sunday
+final resultStr = myanmarDate.formatByPatternAndLanguage(
+    pattern: 'S s k, B y k, M p f r En',
+    langCatalog: LanguageCatalog(language: Language.english),
+);
+// Output: Sasana Year 2567 , Myanmar Year 1385 , Thadingyut full moon   Sunday
 ```
 
 #### Myanmar Date Patterns
 
 Myanmar Date formats are specified by date pattern strings.
 The following pattern letters are defined ('S', 's', 'B', 'y', 'k', 'M', 'p', 'f', 'E', 'n', 'r', are reserved):
+
+```dart
+// S s k, B y k, M p f r En
+MyanmarDateFormat.simple
+// S
+MyanmarDateFormat.sasanaYear
+// s
+MyanmarDateFormat.buddhistEra
+// B
+MyanmarDateFormat.burmeseYear
+// y
+MyanmarDateFormat.myanmarYear
+// k
+MyanmarDateFormat.ku
+// M
+MyanmarDateFormat.monthInYear
+// p
+MyanmarDateFormat.moonPhase
+// f
+MyanmarDateFormat.fortnightDay
+// E
+MyanmarDateFormat.dayNameInWeek
+// n
+MyanmarDateFormat.nay
+// r
+MyanmarDateFormat.yat
+```
 
 | Letter | Date Component   | Examples Myanmar | Examples English |
 | ------ | ---------------- | ---------------- | ---------------- |
@@ -205,6 +232,15 @@ Example:
 ```dart
 // It will return true or false
 final isAmyeittasote = astro.isAmyeittasote;
+```
+
+### Moon Phase Widget
+
+```dart
+MoonPhaseWidget(
+  date: DateTime.now(),
+  size: 50,
+),
 ```
 
 ### Concept reference resources

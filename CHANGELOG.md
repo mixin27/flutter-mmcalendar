@@ -1,3 +1,8 @@
+## 1.1.1
+
+- Add `MoonPhaseWidget`
+- Fixed language does not change while config change
+
 ## 1.1.0
 
 **BREAKING CHANGES**

@@ -1,6 +1,7 @@
 import 'package:example/pages/astro_info_page.dart';
 import 'package:example/pages/holidays_page.dart';
 import 'package:example/pages/language_sample_page.dart';
+import 'package:example/pages/moon_phase_page.dart';
 import 'package:example/pages/thingyan_holidays_page.dart';
 import 'package:flutter/material.dart';
 
@@ -58,6 +59,16 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: const Text('Thingyan Holidays'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MoonPhasePage(),
+                  ),
+                );
+              },
+              child: const Text('Moon Phase'),
             ),
             const SizedBox(height: 20),
           ],

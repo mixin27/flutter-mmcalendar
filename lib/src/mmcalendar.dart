@@ -28,7 +28,10 @@ class MmCalendar {
 
   /// Get [MyanmarDate] from `julian` day.
   MyanmarDate fromJulian(double julianDay) {
-    return convertByLanguage(MyanmarDateCalculation.fromJulianDay(julianDay));
+    return convertByLanguage(
+      MyanmarDateCalculation.fromJulianDay(julianDay),
+      languageCatalog: LanguageCatalog(language: _config.language),
+    );
   }
 
   /// Get [MyanmarDate] from [DateTime].
