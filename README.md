@@ -3,7 +3,9 @@
 [![License: MIT][license_badge]][license_link]
 ![Pub Version (including pre-releases)](https://img.shields.io/pub/v/flutter_mmcalendar?style=flat-square&color=3297D1&link=https%3A%2F%2Fpub.dev%2Fpackages%2Fflutter_mmcalendar)
 
-**Myanmar Calendar** package for `Flutter` applications.
+Package to get **Myanmar** calendar information with `Burmese Astrological Information`, `Holidays` and `Moon phase` widget.
+
+You can check [Myanmar Calendar App](https://github.com/mixin27/mmcalendar) using `flutter_mmcalendar`.
 
 ## Installation 💻
 
@@ -28,6 +30,7 @@ flutter packages get
 - `Western Date`
 - `Astrological Information`
 - `Holidays` - Myanmar Thingyan holidays and other holidays.
+- `MoonPhase` widget.
 
 ## Usage
 
