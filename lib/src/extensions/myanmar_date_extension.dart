@@ -289,8 +289,10 @@ extension MyanmarDateExtension on MyanmarDate {
   }
 
   /// Get [Astro] from [MyanmarDate].
+  ///
+  /// `langCatalog` - [LanguageCatalog]. If it is null, it will use from [MyanmarDate].
   Astro getAstro({
-    LanguageCatalog? languageCatalog,
+    LanguageCatalog? langCatalog,
   }) {
     return AstroCalculation.getAstro(
       mmonth: mmonth,
@@ -298,14 +300,21 @@ extension MyanmarDateExtension on MyanmarDate {
       monthDay: monthDay,
       weekDay: weekDay,
       myear: myear,
-      languageCatalog: languageCatalog,
+      languageCatalog: langCatalog ?? languageCatalog,
     );
   }
 
   /// Get [Astro] from [MyanmarDate].
-  Astro get astro => getAstro();
+  Astro get astro => getAstro(langCatalog: languageCatalog);
 
   /// Get all holidays
-  List<String> get holidays =>
-      HolidaysCalculation.getHolidays(this, languageCatalog: languageCatalog);
+  ///
+  /// `langCatalog` - [LanguageCatalog]. If it is null, it will use from [MyanmarDate].
+  List<String> getHolidays({LanguageCatalog? langCatalog}) {
+    return HolidaysCalculation.getHolidays(this,
+        languageCatalog: langCatalog ?? languageCatalog);
+  }
+
+  /// Get all holidays
+  List<String> get holidays => getHolidays();
 }

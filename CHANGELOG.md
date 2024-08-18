@@ -1,3 +1,8 @@
+## 1.1.2
+
+- `Calculation` classes are now available to use.
+- Documentation update
+
 ## 1.1.1
 
 - Add `MoonPhaseWidget`
