@@ -67,7 +67,7 @@ class MyanmarDateFormat {
   static const String yat = 'r';
 
   /// Simple date format `pattern` for `Myanmar` calendar.
-  static const String simple = "S s k, B y k, M p f r En";
+  static const String simple = "S s k, B y k, M p f r, En";
 }
 
 const List<String> mma = [

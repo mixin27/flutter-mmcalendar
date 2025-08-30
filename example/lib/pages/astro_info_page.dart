@@ -213,7 +213,10 @@ class AstroInfoItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor
             ? Theme.of(context).colorScheme.inversePrimary
-            : Theme.of(context).colorScheme.inversePrimary.withOpacity(0.6),
+            : Theme.of(context)
+                .colorScheme
+                .inversePrimary
+                .withValues(alpha: 0.6),
         border: Border(
           bottom: BorderSide(
             // color: backgroundColor
