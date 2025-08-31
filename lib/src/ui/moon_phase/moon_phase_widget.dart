@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mmcalendar/src/ui/moon_phase/moon_painter.dart';
 
-import 'moon_painter.dart';
-
-/// Moon phase widget for showing angles between `new moon` and `full moon`.
+/// A widget that displays the moon phase for a given [DateTime].
+///
+/// Wraps a [CustomPaint] that uses [MoonPainter] to render the moon.
+/// Useful for embedding moon icons in calendar apps, astronomy widgets,
+/// or night-sky themed UIs.
+///
+/// Example:
+/// ```dart
+/// MoonPhaseWidget(
+///   date: DateTime.now(),
+///   size: 48,
+///   resolution: 120,
+///   lightColor: Colors.yellowAccent,
+///   darkColor: Colors.black,
+/// )
+/// ```
 class MoonPhaseWidget extends StatelessWidget {
+  /// Creates a widget to display the moon phase for the given [date].
   const MoonPhaseWidget({
     super.key,
     required this.date,
@@ -13,45 +28,34 @@ class MoonPhaseWidget extends StatelessWidget {
     this.darkColor = Colors.black87,
   });
 
-  /// DateTime to show.
-  /// Even hour, minutes, and seconds are calculated for MoonWidget
+  /// The date for which the moon phase should be displayed.
   final DateTime date;
 
-  ///Decide the container size for the MoonWidget
+  /// The width and height of the widget.
   final double size;
 
-  ///Resolution will be the moon radius.
-  ///Large resolution needs more math operation makes widget heavy.
-  ///Enter a small number if it is sufficient to mark it small,
-  ///such as an icon or marker.
+  /// The rendering resolution for the moon shading.
   final double resolution;
 
-  ///Color of light side of moon
+  /// The color of the illuminated part of the moon.
   final Color lightColor;
 
-  ///Color of dark side of moon
+  /// The color of the dark side of the moon.
   final Color darkColor;
 
   @override
   Widget build(BuildContext context) {
-    final scale = size / (resolution * 2);
-
     return SizedBox(
       width: size,
       height: size,
-      child: Center(
-        child: Transform.scale(
-          scale: scale,
-          child: CustomPaint(
-            painter: MoonPainter(
-              date: date,
-              size: size,
-              resolution: resolution,
-              lightColor: lightColor,
-              darkColor: darkColor,
-            ),
-          ),
+      child: CustomPaint(
+        painter: MoonPainter(
+          date: date,
+          resolution: resolution,
+          lightColor: lightColor,
+          darkColor: darkColor,
         ),
+        size: Size(size, size),
       ),
     );
   }

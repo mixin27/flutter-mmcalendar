@@ -1,12 +1,33 @@
-import '../language/language.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_mmcalendar/src/models/enums.dart';
 
-/// Astrological
-class Astro {
-  Astro({
-    required this.sabbath,
-    required this.sabbatheve,
+/// Astro model representing astrological information of a day.
+class Astro extends Equatable {
+  final int yatyaza;
+  final int pyathada;
+  final int sabbatheve;
+  final int sabbath;
+  final int thamanyo;
+  final int amyeittasote;
+  final int warameittugyi;
+  final int warameittunge;
+  final int yatpote;
+  final int thamaphyu;
+  final int nagapor;
+  final int yatyotema;
+  final int mahayatkyan;
+  final int shanyat;
+
+  final int nagahle; // 0=West,1=North,2=East,3=South
+  final int mahabote; // 0-6
+  final int nakhat; // 0-2
+  final int yearName; // 0-11
+
+  const Astro({
     required this.yatyaza,
     required this.pyathada,
+    required this.sabbatheve,
+    required this.sabbath,
     required this.thamanyo,
     required this.amyeittasote,
     required this.warameittugyi,
@@ -21,130 +42,49 @@ class Astro {
     required this.mahabote,
     required this.nakhat,
     required this.yearName,
-    LanguageCatalog? languageCatalog,
-  }) : _languageCatalog = languageCatalog ?? LanguageCatalog.myanmar();
+  });
 
-  /// Language config
-  final LanguageCatalog _languageCatalog;
+  /// Get all active events as a Set for easy iteration.
+  Set<AstroEvent> get activeEvents {
+    final events = <AstroEvent>{};
+    if (yatyaza > 0) events.add(AstroEvent.yatyaza);
+    if (pyathada == 1) events.add(AstroEvent.pyathada);
+    if (pyathada == 2) events.add(AstroEvent.afternoonPyathada);
+    if (sabbatheve > 0) events.add(AstroEvent.sabbatheve);
+    if (sabbath > 0) events.add(AstroEvent.sabbatheve); // optional if needed
+    if (thamanyo > 0) events.add(AstroEvent.thamanyo);
+    if (amyeittasote > 0) events.add(AstroEvent.amyeittasote);
+    if (warameittugyi > 0) events.add(AstroEvent.warameittugyi);
+    if (warameittunge > 0) events.add(AstroEvent.warameittunge);
+    if (yatpote > 0) events.add(AstroEvent.yatpote);
+    if (thamaphyu > 0) events.add(AstroEvent.thamaphyu);
+    if (nagapor > 0) events.add(AstroEvent.nagapor);
+    if (yatyotema > 0) events.add(AstroEvent.yatyotema);
+    if (mahayatkyan > 0) events.add(AstroEvent.mahayatkyan);
+    if (shanyat > 0) events.add(AstroEvent.shanyat);
 
-  /// Public [LanguageCatalog] instance.
-  LanguageCatalog get languageCatalog => _languageCatalog;
-
-  final int sabbath;
-  final int sabbatheve;
-  final int yatyaza;
-  final int pyathada;
-  final int thamanyo;
-  final int amyeittasote;
-  final int warameittugyi;
-  final int warameittunge;
-  final int yatpote;
-  final int thamaphyu;
-  final int nagapor;
-  final int yatyotema;
-  final int mahayatkyan;
-  final int shanyat;
-  // 0 = west, 1 = north, 2 = east, 3 = south
-  final int nagahle;
-  // 0 = Binga, 1 = Atun, 2 = Yaza, 3 = Adipati, 4 = Marana, 5 = Thike, 6 = Puti
-  final int mahabote;
-  /* 0 = orc, 1 = elf, 2 = human */
-  final int nakhat;
-  // {"ပုဿနှစ်","မာခနှစ်","ဖ္လကိုန်သံဝစ္ဆိုဝ်ရနှစ်","စယ်နှစ်",
-  // "ပိသျက်နှစ်","စိဿနှစ်","အာသတ်နှစ်","သရဝန်နှစ်",
-  // "ဘဒ္ဒြသံဝစ္ဆုံရ်နှစ်","အာသိန်နှစ်","ကြတိုက်နှစ်","မြိက္ကသိုဝ်နှစ်"}
-  final int yearName;
-
-  Astro copyWith({
-    int? sabbath,
-    int? sabbatheve,
-    int? yatyaza,
-    int? pyathada,
-    int? thamanyo,
-    int? amyeittasote,
-    int? warameittugyi,
-    int? warameittunge,
-    int? yatpote,
-    int? thamaphyu,
-    int? nagapor,
-    int? yatyotema,
-    int? mahayatkyan,
-    int? shanyat,
-    int? nagahle,
-    int? mahabote,
-    int? nakhat,
-    int? yearName,
-  }) {
-    return Astro(
-      sabbath: sabbath ?? this.sabbath,
-      sabbatheve: sabbatheve ?? this.sabbatheve,
-      yatyaza: yatyaza ?? this.yatyaza,
-      pyathada: pyathada ?? this.pyathada,
-      thamanyo: thamanyo ?? this.thamanyo,
-      amyeittasote: amyeittasote ?? this.amyeittasote,
-      warameittugyi: warameittugyi ?? this.warameittugyi,
-      warameittunge: warameittunge ?? this.warameittunge,
-      yatpote: yatpote ?? this.yatpote,
-      thamaphyu: thamaphyu ?? this.thamaphyu,
-      nagapor: nagapor ?? this.nagapor,
-      yatyotema: yatyotema ?? this.yatyotema,
-      mahayatkyan: mahayatkyan ?? this.mahayatkyan,
-      shanyat: shanyat ?? this.shanyat,
-      nagahle: nagahle ?? this.nagahle,
-      mahabote: mahabote ?? this.mahabote,
-      nakhat: nakhat ?? this.nakhat,
-      yearName: yearName ?? this.yearName,
-    );
+    return events;
   }
 
   @override
-  String toString() {
-    return 'Astro(sabbath: $sabbath, sabbatheve: $sabbatheve, yatyaza: $yatyaza, pyathada: $pyathada, thamanyo: $thamanyo, amyeittasote: $amyeittasote, warameittugyi: $warameittugyi, warameittunge: $warameittunge, yatpote: $yatpote, thamaphyu: $thamaphyu, nagapor: $nagapor, yatyotema: $yatyotema, mahayatkyan: $mahayatkyan, shanyat: $shanyat, nagahle: $nagahle, mahabote: $mahabote, nakhat: $nakhat, yearName: $yearName)';
-  }
-
-  @override
-  bool operator ==(covariant Astro other) {
-    if (identical(this, other)) return true;
-
-    return other.sabbath == sabbath &&
-        other.sabbatheve == sabbatheve &&
-        other.yatyaza == yatyaza &&
-        other.pyathada == pyathada &&
-        other.thamanyo == thamanyo &&
-        other.amyeittasote == amyeittasote &&
-        other.warameittugyi == warameittugyi &&
-        other.warameittunge == warameittunge &&
-        other.yatpote == yatpote &&
-        other.thamaphyu == thamaphyu &&
-        other.nagapor == nagapor &&
-        other.yatyotema == yatyotema &&
-        other.mahayatkyan == mahayatkyan &&
-        other.shanyat == shanyat &&
-        other.nagahle == nagahle &&
-        other.mahabote == mahabote &&
-        other.nakhat == nakhat &&
-        other.yearName == yearName;
-  }
-
-  @override
-  int get hashCode {
-    return sabbath.hashCode ^
-        sabbatheve.hashCode ^
-        yatyaza.hashCode ^
-        pyathada.hashCode ^
-        thamanyo.hashCode ^
-        amyeittasote.hashCode ^
-        warameittugyi.hashCode ^
-        warameittunge.hashCode ^
-        yatpote.hashCode ^
-        thamaphyu.hashCode ^
-        nagapor.hashCode ^
-        yatyotema.hashCode ^
-        mahayatkyan.hashCode ^
-        shanyat.hashCode ^
-        nagahle.hashCode ^
-        mahabote.hashCode ^
-        nakhat.hashCode ^
-        yearName.hashCode;
-  }
+  List<Object?> get props => [
+    yatyaza,
+    pyathada,
+    sabbatheve,
+    sabbath,
+    thamanyo,
+    amyeittasote,
+    warameittugyi,
+    warameittunge,
+    yatpote,
+    thamaphyu,
+    nagapor,
+    yatyotema,
+    mahayatkyan,
+    shanyat,
+    nagahle,
+    mahabote,
+    nakhat,
+    yearName,
+  ];
 }

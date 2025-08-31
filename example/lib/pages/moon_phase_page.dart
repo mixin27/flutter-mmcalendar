@@ -15,9 +15,7 @@ class _MoonPhasePageState extends State<MoonPhasePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MoonPhase Widget'),
-      ),
+      appBar: AppBar(title: const Text('MoonPhase Widget')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,10 +44,7 @@ class _MoonPhasePageState extends State<MoonPhasePage> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 20),
-            MoonPhaseWidget(
-              date: _date,
-              size: 100,
-            ),
+            MoonPhaseWidget(date: _date, size: 90),
           ],
         ),
       ),

@@ -21,11 +21,10 @@ class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
   }
 
   void getHolidays(DateTime dateTime) {
-    final mmCalendar = MmCalendar(
-      config: MmCalendarConfig.myanmarLanguage(),
-    );
-    final thingyanHolidays =
-        mmCalendar.fromDateTime(dateTime).getMyanmarThingyanDays();
+    final mmCalendar = MmCalendar();
+    final thingyanHolidays = mmCalendar
+        .fromDateTime(dateTime)
+        .getMyanmarThingyanDays();
     setState(() {
       _holidays = thingyanHolidays;
     });
@@ -72,10 +71,7 @@ class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
                         });
                         getHolidays(_selectedDate);
                       },
-                      icon: const Icon(
-                        Icons.chevron_left,
-                        size: 35,
-                      ),
+                      icon: const Icon(Icons.chevron_left, size: 35),
                     ),
                     Expanded(
                       child: TextButton.icon(
@@ -93,10 +89,7 @@ class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
                         });
                         getHolidays(_selectedDate);
                       },
-                      icon: const Icon(
-                        Icons.chevron_right,
-                        size: 35,
-                      ),
+                      icon: const Icon(Icons.chevron_right, size: 35),
                     ),
                   ],
                 ),
@@ -113,11 +106,7 @@ class _ThingyanHolidaysPageState extends State<ThingyanHolidaysPage> {
 
                 return ListTile(
                   title: Text(holiday.label),
-                  subtitle: Text(
-                    holiday.date.formatByPatternAndLanguage(
-                      langCatalog: LanguageCatalog(),
-                    ),
-                  ),
+                  subtitle: Text(holiday.date.format()),
                 );
               },
               separatorBuilder: (_, __) => const Divider(),

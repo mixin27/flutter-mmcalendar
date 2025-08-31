@@ -44,9 +44,7 @@ Sample Usage:
 
 ```dart
 // Default
-final mmCalendar = MmCalendar(
-  config: MmCalendarConfig.defaultConfig(),
-);
+final mmCalendar = MmCalendar();
 
 // English language config
 final mmCalendar = MmCalendar(
@@ -67,6 +65,10 @@ And use it
 ```dart
 // Get MyanmarDate by year, month and day
 final myanmarDate = mmCalendar.fromDate(2023, 10, 19);
+
+// Get MyanmarDate from DateTime
+final today = DateTime.now();
+final myanmarDate = mmCalendar.fromDateTime(tody);
 ```
 
 Available configs:
@@ -82,47 +84,71 @@ Available configs:
 Available languages:
 
 - `english`
-- `myanmar` - myanmar unicode
-- `zawgyi` - myanmar zawgyi
+- `myanmar` - Myanmar Unicode
+- `zawgyi` - Myanmar Zawgyi
 - `mon`
 - `karen`
 - `tai`
 
+> **NOTE:** I am not gaurantee all of the languages are properply translated well. If you find out some translations are wrong, you can contact the developer via Email or you can contribute the github repository for translation accuracy.
+
+### Changing calendar config settings
+
+You can call the following methods from your app settings. It will change globally.
+
+```dart
+// Calendar type
+GlobalCalendarConfig().setCalendarType(CalendarType.julian);
+// Language
+GlobalCalendarConfig().setLanguage(Language.english);
+```
+
 Other usages:
 
 ```dart
+final mmCalendar = MmCalendar();
+
 // Date conversion methods.
-final myanmarDate = mmCalendar.fromDateTime(DateTime.now());
+// From built-in DateTime
+mmCalendar.fromDateTime(DateTime.now());
+
+// From a specified date
 mmCalendar.fromDate(2023, 7, 27);
+
+// From a specified date and time
 mmCalendar.fromDateAndTime(2023, 7, 27, 10, 30, 01);
+
+// From julian day
 mmCalendar.fromJulian(2456599);
+
+// Get WesternDate from julian day
 final westernDate = mmCalendar.getWesternDateFromJulianDay(2456599);
 
 /// Astrological information
-final astro = myanmarDate.astro;
-final astroByLanguage = myanmarDate.getAstro(
-  languageCatalog: LanguageCatalog.myanmar(),
-);
+final date = DateTime.now();
+final astro = mmCalendar.getAstro(date);
+
+// or you can get Astro from MyanmarDate
+final astro = myanmarDate.astrol
+
 astro.getMahabote();
 
 // All Holidays
+List<String> holidays = mmCalendar.getHolidays(DateTime.now());
+List<String> anniversaries = mmCalendar.getAnniversaries(DateTime.now());
+List<String> thingyanDays = mmCalendar.getThingyanDays(DateTime.now());
+
+// or
 List<String> holidays = myanmarDate.holidays;
 
-final resultStr = myanmarDate.formatByPatternAndLanguage(
-  pattern: MyanmarDateFormat.simple,
-  langCatalog: mmCalendar.languageCatalog,
-);
-// Output: သာသနာနှစ် ၂၅၆၇ ခု, မြန်မာနှစ် ၁၃၈၅ ခု, သီတင်းကျွတ် လပြည့်  ရက် တနင်္ဂနွေနေ့
-// (or)
-
-final resultStr = myanmarDate.formatByPatternAndLanguage(
-    pattern: 'S s k, B y k, M p f r En',
-    langCatalog: LanguageCatalog(language: Language.english),
-);
-// Output: Sasana Year 2567 , Myanmar Year 1385 , Thadingyut full moon   Sunday
+// Formatting
+// Default
+final mmDateStr = myanmarDate.format();
+// Custom pattern
+final mmDateStr = myanmarDate.format("S s k, B y k, M p f r, En.");
 ```
 
-#### Myanmar Date Patterns
+#### Myanmar Date Format Patterns
 
 Myanmar Date formats are specified by date pattern strings.
 The following pattern letters are defined ('S', 's', 'B', 'y', 'k', 'M', 'p', 'f', 'E', 'n', 'r', are reserved):
@@ -171,12 +197,13 @@ MyanmarDateFormat.yat
 ### Astrological Information
 
 ```dart
-final mmCalendar = MmCalendar(
-  config: MmCalendarConfig.myanmarLanguage(),
-);
+final mmCalendar = MmCalendar();
 
 final myanmarDate = mmCalendar.fromDate(2023, 10, 19);
 final astro = myanmarDate.astro;
+
+// or
+final astro = mmCalendar.getAstro(DateTime(2023, 10, 19))
 
 // အမြိတ္တစုတ်
 final amyeittasote = astro.getAmyeittasote();
@@ -242,7 +269,7 @@ final isAmyeittasote = astro.isAmyeittasote;
 ```dart
 MoonPhaseWidget(
   date: DateTime.now(),
-  size: 50,
+  size: 90,
 ),
 ```
 

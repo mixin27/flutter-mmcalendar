@@ -46,9 +46,7 @@ class _AstroInfoPageState extends State<AstroInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Astrological Information'),
-      ),
+      appBar: AppBar(title: const Text('Astrological Information')),
       body: ListView(
         children: [
           Padding(
@@ -67,10 +65,7 @@ class _AstroInfoPageState extends State<AstroInfoPage> {
                         });
                         getData(_selectedDate);
                       },
-                      icon: const Icon(
-                        Icons.chevron_left,
-                        size: 35,
-                      ),
+                      icon: const Icon(Icons.chevron_left, size: 35),
                     ),
                     Expanded(
                       child: TextButton.icon(
@@ -88,10 +83,7 @@ class _AstroInfoPageState extends State<AstroInfoPage> {
                         });
                         getData(_selectedDate);
                       },
-                      icon: const Icon(
-                        Icons.chevron_right,
-                        size: 35,
-                      ),
+                      icon: const Icon(Icons.chevron_right, size: 35),
                     ),
                   ],
                 ),
@@ -206,17 +198,13 @@ class AstroInfoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 14,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: backgroundColor
             ? Theme.of(context).colorScheme.inversePrimary
-            : Theme.of(context)
-                .colorScheme
-                .inversePrimary
-                .withValues(alpha: 0.6),
+            : Theme.of(
+                context,
+              ).colorScheme.inversePrimary.withValues(alpha: 0.6),
         border: Border(
           bottom: BorderSide(
             // color: backgroundColor
@@ -231,18 +219,12 @@ class AstroInfoItem extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            child: Text(label, style: Theme.of(context).textTheme.labelLarge),
           ),
           const SizedBox(width: 20),
           Expanded(
             flex: 4,
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            child: Text(value, style: Theme.of(context).textTheme.labelLarge),
           ),
         ],
       ),

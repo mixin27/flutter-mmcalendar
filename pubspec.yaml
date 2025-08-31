@@ -1,13 +1,11 @@
 name: flutter_mmcalendar
 description: Myanmar calendar library for flutter application with many utility methods and calculations.
-version: 1.1.2
+version: 2.0.0
 homepage: https://github.com/mixin27/flutter-mmcalendar
 issue_tracker: https://github.com/mixin27/flutter-mmcalendar/issues
 funding:
   - https://www.buymeacoffee.com/kyawzayartun98
 screenshots:
-  - description: "Language sample."
-    path: language_sample.png
   - description: "Astrological information sample."
     path: astrological_information.png
   - description: "Myanmar Thingyan holidays sample."
@@ -16,32 +14,17 @@ screenshots:
     path: moon_phase.png
 
 environment:
-  sdk: ">=3.1.2 <4.0.0"
+  sdk: ^3.9.0
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
-
-# This package supports all platforms listed below.
-platforms:
-  android:
-  ios:
-  linux:
-  macos:
-  web:
-  windows:
-
-topics:
-  - calendar
-  - myanmar
-  - myanmar-calendar
-  - utility
-  - datetime

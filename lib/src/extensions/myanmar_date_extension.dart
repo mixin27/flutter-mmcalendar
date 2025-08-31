@@ -1,13 +1,17 @@
-import '../calculations/calculations.dart';
-import '../config/mm_calendar_config.dart';
-import '../constants/constants.dart';
-import '../language/language.dart';
-import '../models/models.dart';
-import '../utils/calendar_utils.dart';
+import 'package:flutter_mmcalendar/src/config/calendar_config.dart';
+import 'package:flutter_mmcalendar/src/core/calculations.dart';
+import 'package:flutter_mmcalendar/src/core/constants.dart';
+import 'package:flutter_mmcalendar/src/language/language_catalog.dart';
+import 'package:flutter_mmcalendar/src/language/language_extension.dart';
+import 'package:flutter_mmcalendar/src/models/astro.dart';
+import 'package:flutter_mmcalendar/src/models/date.dart';
+import 'package:flutter_mmcalendar/src/models/thingyan.dart';
+import 'package:flutter_mmcalendar/src/utils/utils.dart';
 
-/// Utility extension of [MyanmarDate]
+/// Utility extension for [MyanmarDate].
+/// Uses global config for language and calendar settings.
 extension MyanmarDateExtension on MyanmarDate {
-  /// Get `julian` day from [MyanmarDate].
+  /// Julian day number.
   double toJulianDay() {
     return MyanmarDateCalculation.toJulian(
       year: myear,
@@ -18,303 +22,192 @@ extension MyanmarDateExtension on MyanmarDate {
     );
   }
 
-  /// Get [WesternDate] from [MyanmarDate].
-  WesternDate toWesternDate({
-    MmCalendarConfig? config,
-    double sg = 0,
-  }) {
+  /// Convert to Western date.
+  WesternDate toWesternDate({double? sg}) {
     final jd = toJulianDay();
-    return WesternDateCalculation.julianToWestern(
-      julianDay: jd,
-      config: config,
-      sg: sg,
-    );
+    return WesternDateCalculation.julianToWestern(julianDay: jd);
   }
 
-  /// Get `buddhistEra` string.
-  String getBuddhistEraByLanguage(LanguageCatalog languageCatalog) {
-    return convertNumberToLanguage(myear + 1182, languageCatalog);
-  }
+  /// Buddhist era string.
+  String getBuddhistEra() => convertNumberToLanguage(myear + 1182);
 
-  /// Get `buddhistEra` string.
-  String getBuddhistEra() {
-    return getBuddhistEraByLanguage(languageCatalog);
-  }
+  /// Myanmar year string.
+  String getYear() => convertNumberToLanguage(myear.toDouble());
 
-  /// Get `year` string.
-  String getYearByLanguage(LanguageCatalog languageCatalog) {
-    return convertNumberToLanguage(myear.toDouble(), languageCatalog);
-  }
-
-  /// Get `year` string.
-  String getYear() {
-    return getYearByLanguage(languageCatalog);
-  }
-
-  /// Get `month` value.
-  String _getMnt(LanguageCatalog languageCatalog) {
-    // 0=common, 1=little watat, 2=big watat
+  /// Month type prefix (Late/Second).
+  String _getMnt() {
     String str = '';
-    if (monthType > 0) {
-      str += languageCatalog.translate("Late");
-    }
-
-    if (yearType > 0 && mmonth == 4) {
-      str += languageCatalog.translate("Second");
-    }
-
+    if (monthType > 0) str += LanguageCatalog.tr("Late");
+    if (yearType > 0 && mmonth == 4) str += LanguageCatalog.tr("Second");
     return str;
   }
 
-  /// Get `month` value.
-  String getMnt() {
-    return _getMnt(languageCatalog);
-  }
+  /// Month name string.
+  String getMonthName() => _getMnt() + LanguageCatalog.tr(mma[mmonth]);
 
-  /// Get `month` name.
-  String getMonthNameByLanguage(LanguageCatalog languageCatalog) {
-    return getMnt() + languageCatalog.translate(mma[mmonth]);
-  }
+  /// Moon phase string.
+  String getMoonPhase() => LanguageCatalog.tr(msa[moonPhase]);
 
-  /// Get `month` name.
-  String getMonthName() {
-    return getMonthNameByLanguage(languageCatalog);
-  }
+  /// Fortnight day string.
+  String getFortnightDay() => ((moonPhase % 2) == 0)
+      ? convertNumberToLanguage(fortnightDay.toDouble())
+      : '';
 
-  /// Get `moonPhase` string.
-  String getMoonPhaseByLanguage(LanguageCatalog languageCatalog) {
-    return languageCatalog.translate(msa[moonPhase]);
-  }
+  /// Weekday string.
+  String getWeekDay() => LanguageCatalog.tr(wda[weekDay]);
 
-  /// Get `moonPhase` string.
-  String getMoonPhase() {
-    return getMoonPhaseByLanguage(languageCatalog);
-  }
-
-  /// Get `fortnightDay` string by [LanguageCatalog]
-  String getFortnightDayByLanguage(LanguageCatalog languageCatalog) {
-    return ((moonPhase % 2) == 0)
-        ? convertNumberToLanguage(fortnightDay.toDouble(), languageCatalog)
-        : "";
-  }
-
-  /// Get `fortnightDay` string.
-  String getFortnightDay() => getFortnightDayByLanguage(languageCatalog);
-
-  /// Get `weekday` string by [LanguageCatalog]
-  String getWeekDayByLanguage(LanguageCatalog languageCatalog) {
-    return languageCatalog.translate(wda[weekDay]);
-  }
-
-  /// Get `weekday` string
-  String getWeekDay() => getWeekDayByLanguage(languageCatalog);
-
-  /// Check is `weekend`
+  /// Check if weekend.
   bool isWeekend() => weekDay == 0 || weekDay == 1;
 
-  /// Format [MyanmarDate] by pattern
-  ///
-  /// `pattern` - Pattern to be formatted.
-  String format([
-    String pattern = MyanmarDateFormat.simple,
-    LanguageCatalog? langCatalog,
-  ]) =>
-      formatByPatternAndLanguage(
-        pattern: pattern,
-        langCatalog: langCatalog ?? languageCatalog,
-      );
+  /// Format MyanmarDate with pattern.
+  String format([String pattern = MyanmarDateFormat.simple]) => formatByPattern(
+    pattern,
+    langCode: GlobalCalendarConfig().config.language.toLanguageCode(),
+  );
 
-  /// Format [MyanmarDate] by pattern
-  ///
-  /// `pattern` - Pattern to be formatted.
-  ///
-  /// `languageCatalog` - Language catalog to be translated.
-  String formatByPatternAndLanguage({
-    String pattern = MyanmarDateFormat.simple,
-    required LanguageCatalog langCatalog,
-  }) {
-    if (pattern.isEmpty) {
-      throw Exception('Pattern cannot not be empty.');
-    }
+  String formatByPattern(String pattern, {LanguageCode? langCode}) {
+    if (pattern.isEmpty) throw Exception('Pattern cannot be empty.');
 
-    final charArray = List<String>.empty(growable: true);
-    for (var rune in pattern.runes) {
-      var character = String.fromCharCode(rune);
-      charArray.add(character);
-    }
+    final language =
+        langCode?.toLanguage() ?? GlobalCalendarConfig().config.language;
+    final buffer = StringBuffer();
+    final charArray = pattern.runes.map((r) => String.fromCharCode(r)).toList();
 
-    String str = '';
-
-    for (var i = 0; i < charArray.length; i++) {
-      switch (charArray[i]) {
+    for (var char in charArray) {
+      switch (char) {
         case MyanmarDateFormat.sasanaYear:
-          str += langCatalog.translate("Sasana Year");
+          buffer.write(LanguageCatalog.tr("Sasana Year", langCode: langCode));
           break;
         case MyanmarDateFormat.buddhistEra:
-          str += getBuddhistEraByLanguage(langCatalog);
+          buffer.write(getBuddhistEra());
           break;
         case MyanmarDateFormat.burmeseYear:
-          str += langCatalog.translate("Myanmar Year");
+          buffer.write(LanguageCatalog.tr("Myanmar Year", langCode: langCode));
           break;
         case MyanmarDateFormat.myanmarYear:
-          str += getYearByLanguage(langCatalog);
+          buffer.write(getYear());
           break;
         case MyanmarDateFormat.ku:
-          str += langCatalog.translate("Ku");
+          buffer.write(LanguageCatalog.tr("Ku", langCode: langCode));
           break;
         case MyanmarDateFormat.monthInYear:
-          str += getMonthNameByLanguage(langCatalog);
+          buffer.write(getMonthName());
           break;
         case MyanmarDateFormat.moonPhase:
-          str += getMoonPhaseByLanguage(langCatalog);
+          buffer.write(getMoonPhase());
           break;
         case MyanmarDateFormat.fortnightDay:
-          str += getFortnightDayByLanguage(langCatalog);
+          buffer.write(getFortnightDay());
           break;
         case MyanmarDateFormat.dayNameInWeek:
-          str += getWeekDayByLanguage(langCatalog);
+          buffer.write(getWeekDay());
           break;
         case MyanmarDateFormat.nay:
-          if (langCatalog.language == Language.english) {
-            str += " ${langCatalog.translate("Nay")}";
-          } else {
-            str += langCatalog.translate("Nay");
-          }
+          buffer.write(LanguageCatalog.tr("Nay", langCode: langCode));
           break;
         case MyanmarDateFormat.yat:
           if (getFortnightDay().isNotEmpty) {
-            str += langCatalog.translate("Yat");
+            buffer.write(LanguageCatalog.tr("Yat", langCode: langCode));
           }
           break;
-        default:
-          str += charArray[i];
+        case ",":
+          buffer.write(language.punctuationMark);
           break;
+        case ".":
+          buffer.write(language.punctuation);
+          break;
+        default:
+          buffer.write(char);
       }
     }
-
-    return str;
+    return buffer.toString();
   }
 
-  /// Get [MyanmarThingyan] list by [MyanmarDate].
+  /// Thingyan days.
   List<MyanmarThingyan> getMyanmarThingyanDays() {
-    List<MyanmarThingyan> thingyanDays = List.empty(growable: true);
     final thingyan = getThingyan();
+    final days = <MyanmarThingyan>[];
 
-    final akyoDay = MyanmarThingyan(
-      label: languageCatalog.translate('Thingyan Akyo'),
-      jdn: thingyan.akyo.toDouble(),
-      date: thingyan.akyoDate,
+    days.add(
+      MyanmarThingyan(
+        label: LanguageCatalog.tr('Thingyan Akyo'),
+        jdn: thingyan.akyo.toDouble(),
+        date: thingyan.akyoDate,
+      ),
     );
-    thingyanDays.add(akyoDay);
 
-    final akyaDay = MyanmarThingyan(
-      label: languageCatalog.translate('Thingyan Akya'),
-      jdn: thingyan.akya.toDouble(),
-      date: thingyan.akyaDate,
+    days.add(
+      MyanmarThingyan(
+        label: LanguageCatalog.tr('Thingyan Akya'),
+        jdn: thingyan.akya.toDouble(),
+        date: thingyan.akyaDate,
+      ),
     );
-    thingyanDays.add(akyaDay);
 
-    for (var i = 0; i < thingyan.akyat.length; i++) {
-      final akyatDay = MyanmarThingyan(
-        label: languageCatalog.translate('Thingyan Akyat'),
-        jdn: thingyan.akyat[i].toDouble(),
-        date: thingyan.akyatDates[i],
+    for (int i = 0; i < thingyan.akyat.length; i++) {
+      days.add(
+        MyanmarThingyan(
+          label: LanguageCatalog.tr('Thingyan Akyat'),
+          jdn: thingyan.akyat[i].toDouble(),
+          date: thingyan.akyatDates[i],
+        ),
       );
-      thingyanDays.add(akyatDay);
     }
 
-    final atatDay = MyanmarThingyan(
-      label: languageCatalog.translate('Thingyan Atat'),
-      jdn: thingyan.atat.toDouble(),
-      date: thingyan.atatDate,
+    days.add(
+      MyanmarThingyan(
+        label: LanguageCatalog.tr('Thingyan Atat'),
+        jdn: thingyan.atat.toDouble(),
+        date: thingyan.atatDate,
+      ),
     );
-    thingyanDays.add(atatDay);
 
-    final newYearDay = MyanmarThingyan(
-      label: languageCatalog.translate('Myanmar New Year Day'),
-      jdn: thingyan.myanmarNewYearDay.toDouble(),
-      date: thingyan.myanmarNewYearDate,
+    days.add(
+      MyanmarThingyan(
+        label: LanguageCatalog.tr('Myanmar New Year Day'),
+        jdn: thingyan.myanmarNewYearDay.toDouble(),
+        date: thingyan.myanmarNewYearDate,
+      ),
     );
-    thingyanDays.add(newYearDay);
 
-    return thingyanDays;
+    return days;
   }
 
-  /// Get [Thingyan] holiday from [MyanmarDate]
+  /// Thingyan calculation.
   Thingyan getThingyan() {
     final my = myear;
     final mm = mmonth;
     final mmt = (mm / 13).floor();
-
-    // solar year (365.2587565)
     double sy = 1577917828.0 / 4320000.0;
-
-    // beginning of 0 ME
     double mo = 1954168.050623;
 
-    // // start of Thingyan and third era
     int se3 = 1312;
-    double atatTime = sy * (my + mmt) + mo; // atat time
-    double akyaTime;
+    double atatTime = sy * (my + mmt) + mo;
+    double akyaTime = (my >= se3) ? atatTime - 2.169918982 : atatTime - 2.1675;
 
-    if (my >= se3) {
-      akyaTime = atatTime - 2.169918982; // akya time
-    } else {
-      akyaTime = atatTime - 2.1675;
-    }
-
-    // Akya
     int akn = akyaTime.round();
-    // Atat
     int atn = atatTime.round();
-    // Akyo
     int akyo = akn - 1;
 
-    // Akyat start day
+    List<int> akyats = [];
     int akyat = akn + 1;
-
-    /// Akyat days
-    List<int> akyats = List.empty(growable: true);
     while (akyat < atn) {
       akyats.add(akyat);
       akyat++;
     }
 
-    return Thingyan(
-      akyo: akyo,
-      akya: akn,
-      akyat: akyats,
-      atat: atn,
-    );
+    return Thingyan(akyo: akyo, akya: akn, akyat: akyats, atat: atn);
   }
 
-  /// Get [Astro] from [MyanmarDate].
-  ///
-  /// `langCatalog` - [LanguageCatalog]. If it is null, it will use from [MyanmarDate].
-  Astro getAstro({
-    LanguageCatalog? langCatalog,
-  }) {
-    return AstroCalculation.getAstro(
-      mmonth: mmonth,
-      monthLength: monthLength,
-      monthDay: monthDay,
-      weekDay: weekDay,
-      myear: myear,
-      languageCatalog: langCatalog ?? languageCatalog,
-    );
-  }
+  /// Astro information.
+  Astro get astro => AstroCalculation.getAstro(
+    mmonth: mmonth,
+    monthLength: monthLength,
+    monthDay: monthDay,
+    weekDay: weekDay,
+    myear: myear,
+  );
 
-  /// Get [Astro] from [MyanmarDate].
-  Astro get astro => getAstro(langCatalog: languageCatalog);
-
-  /// Get all holidays
-  ///
-  /// `langCatalog` - [LanguageCatalog]. If it is null, it will use from [MyanmarDate].
-  List<String> getHolidays({LanguageCatalog? langCatalog}) {
-    return HolidaysCalculation.getHolidays(this,
-        languageCatalog: langCatalog ?? languageCatalog);
-  }
-
-  /// Get all holidays
-  List<String> get holidays => getHolidays();
+  /// Holidays.
+  List<String> get holidays => HolidaysCalculation.getHolidays(this);
 }

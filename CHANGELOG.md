@@ -1,3 +1,11 @@
+## 2.0.0
+
+> Breaking Changes
+
+- `MmCalendarConfig` improvement for calendar language translation.
+- Refactor code base for cleaness
+- Remove some unnecessay helper functions and files
+
 ## 1.1.2
 
 - `Calculation` classes are now available to use.

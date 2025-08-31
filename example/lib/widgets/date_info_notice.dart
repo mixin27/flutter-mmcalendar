@@ -9,11 +9,11 @@ class DateInfoNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mmCalendar = MmCalendar();
+    final myanmarDate = mmCalendar.fromDateTime(date);
+
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 10,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.inversePrimary,
         border: Border.all(
@@ -27,14 +27,13 @@ class DateInfoNotice extends StatelessWidget {
         children: [
           Text(
             'Selected Date - ${formattedDateString(date)}',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
           Text(
-            date.myanmarDate.format(),
+            myanmarDate.format(),
             style: Theme.of(context).textTheme.labelMedium,
           ),
         ],

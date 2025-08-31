@@ -22,9 +22,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
   }
 
   void getHolidays(DateTime dateTime) {
-    final mmCalendar = MmCalendar(
-      config: MmCalendarConfig.defaultConfig(),
-    );
+    final mmCalendar = MmCalendar();
 
     final myanmarDate = mmCalendar.fromDateTime(dateTime);
     final holidays = myanmarDate.holidays;
@@ -52,9 +50,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Holidays'),
-      ),
+      appBar: AppBar(title: const Text('Holidays')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -74,10 +70,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
                         });
                         getHolidays(_selectedDate);
                       },
-                      icon: const Icon(
-                        Icons.chevron_left,
-                        size: 35,
-                      ),
+                      icon: const Icon(Icons.chevron_left, size: 35),
                     ),
                     Expanded(
                       child: TextButton.icon(
@@ -95,10 +88,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
                         });
                         getHolidays(_selectedDate);
                       },
-                      icon: const Icon(
-                        Icons.chevron_right,
-                        size: 35,
-                      ),
+                      icon: const Icon(Icons.chevron_right, size: 35),
                     ),
                   ],
                 ),
@@ -120,9 +110,7 @@ class _HolidaysPageState extends State<HolidaysPage> {
                     separatorBuilder: (context, index) => const Divider(),
                     itemBuilder: (context, index) {
                       final holiday = _holidays[index];
-                      return ListTile(
-                        title: Text(holiday),
-                      );
+                      return ListTile(title: Text(holiday));
                     },
                   ),
           ),
