@@ -1,7 +1,7 @@
 name: example
 description: "Example flutter application for flutter_mmcalendar"
 publish_to: 'none'
-version: 2.0.0+200
+version: 2.0.1+201
 
 environment:
   sdk: ^3.9.0
@@ -13,7 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   intl: ^0.20.2
   flutter_mmcalendar:
-    path: ../../flutter_mmcalendar
+    path: ../
 
 dev_dependencies:
   flutter_test:

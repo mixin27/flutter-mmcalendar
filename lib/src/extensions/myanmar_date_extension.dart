@@ -43,10 +43,26 @@ extension MyanmarDateExtension on MyanmarDate {
   }
 
   /// Month name string.
-  String getMonthName() => _getMnt() + LanguageCatalog.tr(mma[mmonth]);
+  String getMonthName() => "${_getMnt()} ${LanguageCatalog.tr(mma[mmonth])}";
 
   /// Moon phase string.
   String getMoonPhase() => LanguageCatalog.tr(msa[moonPhase]);
+
+  /// Check moon phase - Waxing
+  bool get isWaxingMoon =>
+      moonPhase == 0; // ["waxing", "full moon", "waning", "new moon"]
+
+  /// Check moon phase - Full Moon
+  bool get isFullMoon =>
+      moonPhase == 1; // ["waxing", "full moon", "waning", "new moon"]
+
+  /// Check moon phase - Waning
+  bool get isWaningMoon =>
+      moonPhase == 2; // ["waxing", "full moon", "waning", "new moon"]
+
+  /// Check moon phase - New Moon
+  bool get isNewMoon =>
+      moonPhase == 3; // ["waxing", "full moon", "waning", "new moon"]
 
   /// Fortnight day string.
   String getFortnightDay() => ((moonPhase % 2) == 0)
