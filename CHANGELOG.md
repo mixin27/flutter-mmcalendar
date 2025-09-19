@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Added `puntuation` and `puntuation` translation.
+
 ## 2.0.0
 
 > Breaking Changes
