@@ -398,9 +398,11 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
       height: 48,
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: _theme.backgroundColor.withValues(alpha: 0.2),
+        color: _theme.headerBackgroundColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFB71C1C)),
+        border: Border.all(
+          color: _theme.headerBackgroundColor.withValues(alpha: 0.2),
+        ),
       ),
       child: TabBar(
         controller: _tabController,
@@ -409,8 +411,8 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
           fontSize: 14,
           fontWeight: FontWeight.normal,
         ),
-        labelColor: _theme.dateCellTextColor,
-        unselectedLabelColor: _theme.disabledDateTextColor,
+        labelColor: _theme.headerTextColor,
+        unselectedLabelColor: _theme.dateCellTextColor,
         indicator: BoxDecoration(
           color: _theme.headerBackgroundColor,
           borderRadius: BorderRadius.all(Radius.circular(6)),
@@ -545,7 +547,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
             itemCount: 12,
             itemBuilder: (context, index) {
               final month = index + 1;
-              final monthDate = DateTime(currentYear, month, 1);
+              // final monthDate = DateTime(currentYear, month, 1);
               final isSelected =
                   _selectedDate != null &&
                   _selectedDate!.year == currentYear &&
@@ -557,7 +559,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
               return GestureDetector(
                 onTap: () {
                   setState(() {
-                    _currentDate = monthDate;
+                    _currentDate = DateTime(_currentDate.year, month);
                   });
                   _tabController.animateTo(0); // Switch to calendar tab
                 },
@@ -620,7 +622,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
               Text(
                 '$startYear - ${startYear + 9}',
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: _theme.dateCellTextColor,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -666,30 +668,37 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
                 child: Container(
                   decoration: isSelected
                       ? BoxDecoration(
-                          color: Color(0xFFB71C1C),
+                          color: _theme.headerBackgroundColor,
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                         )
                       : BoxDecoration(
-                          border: Border.all(color: const Color(0xFFB71C1C)),
+                          border: Border.all(
+                            color: _theme.headerBackgroundColor,
+                          ),
                           borderRadius: BorderRadius.circular(8),
-                          color: const Color(0xFFFFFDE7),
+                          color: _theme.headerBackgroundColor.withValues(
+                            alpha: 0.2,
+                          ),
                         ),
                   child: Center(
                     child: Text(
                       year.toString(),
                       style: isSelected
                           ? TextStyle(
-                              color: Color(0xFFFFFDE7),
+                              color: _theme.headerTextColor,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             )
                           : isSelectable
                           ? TextStyle(
-                              color: Color(0xFF212121),
+                              color: _theme.dateCellTextColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             )
-                          : TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
+                          : TextStyle(
+                              color: _theme.dateCellTextColor,
+                              fontSize: 16,
+                            ),
                     ),
                   ),
                 ),
@@ -733,7 +742,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
             child: Text(
               _currentDate.year.toString(),
               style: TextStyle(
-                color: Color(0xFF212121),
+                color: _theme.dateCellTextColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 decoration: TextDecoration.underline,
@@ -772,25 +781,29 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
                 child: Container(
                   decoration: isSelected
                       ? BoxDecoration(
-                          color: Color(0xFF90CAF9),
+                          color: _theme.headerBackgroundColor,
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                         )
                       : BoxDecoration(
-                          border: Border.all(color: Colors.grey[600]!),
+                          border: Border.all(
+                            color: _theme.headerBackgroundColor,
+                          ),
                           borderRadius: BorderRadius.circular(8),
-                          color: const Color(0xFF2E2E2E),
+                          color: _theme.headerBackgroundColor.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                   child: Center(
                     child: Text(
                       monthName,
                       style: isSelected
                           ? TextStyle(
-                              color: Color(0xFF000000),
+                              color: _theme.headerTextColor,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             )
                           : TextStyle(
-                              color: Color(0xFFFFFDE7),
+                              color: _theme.dateCellTextColor,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
@@ -828,8 +841,8 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
                 OutlinedButton(
                   onPressed: _onTodayPressed,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFFFFC107),
-                    side: const BorderSide(color: Color(0xFFFFC107)),
+                    foregroundColor: _theme.headerBackgroundColor,
+                    side: BorderSide(color: _theme.headerBackgroundColor),
                   ),
                   child: Text(
                     TranslationService.translate('Today'),
@@ -843,10 +856,10 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
               if (widget.showClearButton) ...[
                 OutlinedButton(
                   onPressed: _selectedDate != null ? _onClearPressed : null,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF757575),
-                    side: const BorderSide(color: Color(0xFF757575)),
-                  ),
+                  // style: OutlinedButton.styleFrom(
+                  //   foregroundColor: const Color(0xFF757575),
+                  //   side: const BorderSide(color: Color(0xFF757575)),
+                  // ),
                   child: Text(
                     TranslationService.translate('Clear'),
                     style: TextStyle(fontSize: 12),
@@ -873,8 +886,8 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
                 TextButton(
                   onPressed: _selectedDate != null ? _onConfirmPressed : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB71C1C),
-                    foregroundColor: const Color(0xFFFFFDE7),
+                    backgroundColor: _theme.headerBackgroundColor,
+                    foregroundColor: _theme.headerTextColor,
                   ),
                   child: Text(
                     widget.confirmText ?? TranslationService.translate('OK'),

@@ -1,10 +1,10 @@
 /// Constants used throughout the Myanmar calendar calculations
 class CalendarConstants {
-  // Solar year (365.2587565)
-  static const double solarYear = 1577917828.0 / 4320000.0;
+  // Solar year (365.2587565) - 1577917828.0 / 4320000.0
+  static const double solarYear = 365.2587564814815;
 
-  // Lunar month (29.53058795)
-  static const double lunarMonth = 1577917828.0 / 53433336.0;
+  // Lunar month (29.53058795) - 1577917828.0 / 53433336.0
+  static const double lunarMonth = 29.53058794607172;
 
   // Beginning of 0 ME for MMT
   static const double myanmarEpoch = 1954168.050623;

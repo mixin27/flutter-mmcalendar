@@ -675,16 +675,16 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
                       spacing: 2,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (isInCurrentMonth)
-                          Text(
-                            _formatMoonPhase(completeDate.moonPhase),
-                            style:
-                                (_theme.dateCellSecondaryTextStyle ??
-                                        _theme.dateCellTextStyle)
-                                    .copyWith(
-                                      color: textColor.withValues(alpha: 0.6),
-                                    ),
-                          ),
+                        // if (isInCurrentMonth)
+                        //   Text(
+                        //     _formatMoonPhase(completeDate.moonPhase),
+                        //     style:
+                        //         (_theme.dateCellSecondaryTextStyle ??
+                        //                 _theme.dateCellTextStyle)
+                        //             .copyWith(
+                        //               color: textColor.withValues(alpha: 0.6),
+                        //             ),
+                        //   ),
                         if (!(isFullMoon || isNewMoon))
                           Text(
                             CalendarUtils.convertNumberToLanguage(
@@ -762,10 +762,10 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     );
   }
 
-  String _formatMoonPhase(int moonPhase) {
-    final str = TranslationService.getMoonPhaseName(moonPhase);
-    return str.length > 5 ? str.substring(1, 6) : str.substring(1, 5);
-  }
+  // String _formatMoonPhase(int moonPhase) {
+  //   final str = TranslationService.getMoonPhaseName(moonPhase);
+  //   return str.length > 5 ? str.substring(1, 6) : str.substring(1, 5);
+  // }
 
   /// Show month/year picker
   void _showMonthYearPicker() {

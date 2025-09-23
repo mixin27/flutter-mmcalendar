@@ -398,7 +398,7 @@ class CompleteDate {
   }
 
   /// Helper method to get weekday name
-  String _getWeekdayName(int weekday) {
+  String _getWeekdayName(int weekdayIndex) {
     const weekdays = [
       'Saturday',
       'Sunday',
@@ -408,7 +408,8 @@ class CompleteDate {
       'Thursday',
       'Friday',
     ];
-    return weekdays[weekday % 7];
+
+    return weekdays[weekdayIndex % 7];
   }
 
   /// Helper method to get moon phase name
