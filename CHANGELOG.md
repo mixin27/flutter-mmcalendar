@@ -1,3 +1,50 @@
+## 3.0.0-dev.1
+
+### Breaking Changes
+
+- Complete rewrite of core date calculation engine
+- Restructured API for better consistency and type safety
+- Renamed and consolidated various utility methods
+
+### New Features
+
+- 📅 **Complete Myanmar Calendar System**: Full support for Myanmar calendar with accurate date conversions
+- 🌙 **Astrological Calculations**: Buddhist era, sabbath days, moon phases, yatyaza, pyathada, and more
+- 🎯 **Multi-language Support**: Myanmar, English, Mon, Shan, Karen, and Zawgyi scripts
+- 🎨 **Beautiful UI Components**: Pre-built calendar widgets and date pickers
+- 🌐 **Holiday Support**: Myanmar public holidays, religious days, and cultural events
+- ⚙️ **Highly Configurable**: Customizable themes, date formats, and display options
+- 📱 **Responsive Design**: Works perfectly on mobile, tablet, and desktop
+- 🔄 **Date Arithmetic**: Easy date calculations and manipulations
+- 🛡️ **Type Safe**: Full null safety support with comprehensive error handling
+
+### Improvements
+
+- Optimized performance for date conversions
+- Comprehensive documentation and examples
+- Calendar and picker widgets with theme customization options
+- Improved error handling and validation
+
+### Documentation
+
+- Added detailed API documentation
+- New example applications
+- Comprehensive README with usage examples
+- Added contributing guidelines
+- Improved inline code documentation
+
+### Dependencies
+
+- Requires Flutter 3.0.0 or higher
+- Dart SDK ">=3.0.0 <4.0.0"
+
+### Internal Changes
+
+- Restructured project architecture
+- Added comprehensive test suite
+- New build and deployment pipeline
+- Improved code organization and modularity
+
 ## 2.0.1
 
 - Added `puntuation` and `puntuation` translation.
