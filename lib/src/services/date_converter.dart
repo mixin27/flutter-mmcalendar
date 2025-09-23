@@ -76,12 +76,14 @@ class DateConverter {
 
     // Add time fraction
     final timeFraction = _timeToFraction(hour, minute, second);
-    return jd + timeFraction - _config.timezoneOffset / 24.0;
+    // should not depend on timezoneOffset while calculating julian
+    // return jd + timeFraction - _config.timezoneOffset / 24.0;
+    return jd + timeFraction;
   }
 
   /// Convert Julian Day Number to Western date
   WesternDate julianToWestern(double julianDayNumber) {
-    final localJdn = julianDayNumber + _config.timezoneOffset / 24.0;
+    final localJdn = julianDayNumber;
     final calType = _config.calendarType;
     final gregorianStart = _config.gregorianStart.toDouble();
 
@@ -146,7 +148,7 @@ class DateConverter {
       minute: n,
       second: s,
       weekday: weekday,
-      julianDayNumber: julianDayNumber,
+      julianDayNumber: localJdn,
     );
   }
 
@@ -221,7 +223,7 @@ class DateConverter {
   MyanmarDate julianToMyanmar(double julianDayNumber) {
     final jdn = julianDayNumber.round();
 
-    // Calculate Myanmar year using proven method
+    // Calculate Myanmar year
     final myYear =
         ((jdn - 0.5 - CalendarConstants.myanmarEpoch) /
                 CalendarConstants.solarYear)
@@ -272,7 +274,7 @@ class DateConverter {
       yearType: yearInfo["myt"]!.toInt(),
       moonPhase: moonPhase,
       fortnightDay: fortnightDay,
-      weekday: weekDay,
+      weekday: weekDay.toInt(),
       julianDayNumber: julianDayNumber,
       sasanaYear: sasanaYear,
       monthLength: monthLength,

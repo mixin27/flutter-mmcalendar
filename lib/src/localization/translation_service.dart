@@ -107,6 +107,30 @@ class TranslationService {
     return monthIndex.toString();
   }
 
+  /// Get month name by index (0-14)
+  static String getShortWesternMonthName(int monthIndex, [Language? language]) {
+    language ??= _currentLanguage;
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    if (monthIndex >= 0 && monthIndex < months.length) {
+      return translateTo(months[monthIndex], language);
+    }
+    return monthIndex.toString();
+  }
+
   /// Get weekday name by index (0-6)
   static String getWeekdayName(int weekdayIndex, [Language? language]) {
     language ??= _currentLanguage;
@@ -119,6 +143,17 @@ class TranslationService {
       'Thursday',
       'Friday',
     ];
+
+    if (weekdayIndex >= 0 && weekdayIndex < weekdays.length) {
+      return translateTo(weekdays[weekdayIndex], language);
+    }
+    return weekdayIndex.toString();
+  }
+
+  /// Get short weekday name by index (0-6)
+  static String getShortWeekdayName(int weekdayIndex, [Language? language]) {
+    language ??= _currentLanguage;
+    const weekdays = ['wSat', 'wSun', 'wMon', 'wTue', 'wWed', 'wThu', 'wFri'];
 
     if (weekdayIndex >= 0 && weekdayIndex < weekdays.length) {
       return translateTo(weekdays[weekdayIndex], language);
@@ -457,6 +492,94 @@ class TranslationService {
       Language.shan: 'တီႇသႅမ်ႇပႃႇ',
       Language.karen: 'ဒံၣ်စ့ဘၢၣ်',
     },
+    'Jan': {
+      Language.english: 'Jan',
+      Language.myanmar: 'ဇန်',
+      Language.zawgyi: 'ဇန္',
+      Language.mon: 'Jan',
+      Language.shan: 'Jan',
+      Language.karen: 'Jan',
+    },
+    'Feb': {
+      Language.english: 'Feb',
+      Language.myanmar: 'ဖေ',
+      Language.zawgyi: "ေဖ",
+      Language.mon: 'Feb',
+      Language.shan: 'Feb',
+      Language.karen: 'Feb',
+    },
+    'Mar': {
+      Language.english: 'Mar',
+      Language.myanmar: 'မတ်',
+      Language.zawgyi: 'မတ္',
+      Language.mon: 'မာတ်ချ်',
+      Language.shan: 'မျၢတ်ႉၶျ်',
+      Language.karen: 'မၢ်ၡး',
+    },
+    'Apr': {
+      Language.english: 'Apr',
+      Language.myanmar: 'ဧပြီ',
+      Language.zawgyi: 'ဧၿပီ',
+      Language.mon: 'ဨပြေယ်လ်',
+      Language.shan: 'ဢေႇပရႄႇ',
+      Language.karen: 'အ့ဖြ့ၣ်',
+    },
+    'Jun': {
+      Language.english: 'Jun',
+      Language.myanmar: 'ဇွန်',
+      Language.zawgyi: 'ဇြန္',
+      Language.mon: 'ဂျုန်',
+      Language.shan: 'ၵျုၼ်ႇ',
+      Language.karen: 'ယူၤ',
+    },
+    'Jul': {
+      Language.english: 'Jul',
+      Language.myanmar: 'ဇူ',
+      Language.zawgyi: 'ဇူ',
+      Language.mon: 'ဂျူ',
+      Language.shan: 'Jul',
+      Language.karen: 'Jul',
+    },
+    'Aug': {
+      Language.english: 'Aug',
+      Language.myanmar: 'ဩ',
+      Language.zawgyi: 'ဩ',
+      Language.mon: 'အဝ်ဂါတ်',
+      Language.shan: 'ဢေႃးၵၢတ်ႉ',
+      Language.karen: 'အီကူး',
+    },
+    'Sep': {
+      Language.english: 'Sep',
+      Language.myanmar: 'စက်',
+      Language.zawgyi: 'စက္',
+      Language.mon: 'Sep',
+      Language.shan: 'Sep',
+      Language.karen: 'Sep',
+    },
+    'Oct': {
+      Language.english: 'Oct',
+      Language.myanmar: 'အောက်',
+      Language.zawgyi: "ေအာက္",
+      Language.mon: 'Oct',
+      Language.shan: 'Oct',
+      Language.karen: 'Oct',
+    },
+    'Nov': {
+      Language.english: 'Nov',
+      Language.myanmar: 'နို',
+      Language.zawgyi: 'ႏို',
+      Language.mon: 'Nov',
+      Language.shan: 'Nov',
+      Language.karen: 'Nov',
+    },
+    'Dec': {
+      Language.english: 'Dec',
+      Language.myanmar: 'ဒီ',
+      Language.zawgyi: 'ဒီ',
+      Language.mon: 'Dec',
+      Language.shan: 'Dec',
+      Language.karen: 'Dec',
+    },
     // Weekday names
     'Sunday': {
       Language.english: 'Sunday',
@@ -513,6 +636,62 @@ class TranslationService {
       Language.mon: 'တ္ၚဲသ္ၚိသဝ်',
       Language.shan: 'ဝၼ်းသဝ်',
       Language.karen: 'မုၢ်ဘူၣ်',
+    },
+    'wSun': {
+      Language.english: 'Sun',
+      Language.myanmar: 'နွေ',
+      Language.zawgyi: 'ေႏြ',
+      Language.mon: 'Sun',
+      Language.shan: 'Sun',
+      Language.karen: 'Sun',
+    },
+    'wMon': {
+      Language.english: 'Mon',
+      Language.myanmar: 'လာ',
+      Language.zawgyi: 'လာ',
+      Language.mon: 'Mon',
+      Language.shan: 'Mon',
+      Language.karen: 'Mon',
+    },
+    'wTue': {
+      Language.english: 'Tue',
+      Language.myanmar: 'ဂါ',
+      Language.zawgyi: 'ဂါ',
+      Language.mon: 'Tue',
+      Language.shan: 'Tue',
+      Language.karen: 'Tue',
+    },
+    'wWed': {
+      Language.english: 'Wed',
+      Language.myanmar: 'ဟူး',
+      Language.zawgyi: 'ဟူး',
+      Language.mon: 'Wed',
+      Language.shan: 'Wed',
+      Language.karen: 'Wed',
+    },
+    'wThu': {
+      Language.english: 'Thu',
+      Language.myanmar: 'တေး',
+      Language.zawgyi: 'ေတး',
+      Language.mon: 'Thu',
+      Language.shan: 'Thu',
+      Language.karen: 'Thu',
+    },
+    'wFri': {
+      Language.english: 'Fri',
+      Language.myanmar: 'သော',
+      Language.zawgyi: "ေသာ",
+      Language.mon: 'Fri',
+      Language.shan: 'Fri',
+      Language.karen: 'Fri',
+    },
+    'wSat': {
+      Language.english: 'Sat',
+      Language.myanmar: 'နေ',
+      Language.zawgyi: 'ေန',
+      Language.mon: 'Sat',
+      Language.shan: 'Sat',
+      Language.karen: 'Sat',
     },
 
     // Year types
