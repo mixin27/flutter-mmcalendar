@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/src/core/calendar_config.dart';
+import 'package:flutter_mmcalendar/src/core/myanmar_calendar_theme.dart';
 import 'package:flutter_mmcalendar/src/localization/language.dart';
 import 'package:flutter_mmcalendar/src/localization/translation_service.dart';
 import 'package:flutter_mmcalendar/src/models/complete_date.dart';
 import 'package:flutter_mmcalendar/src/services/myanmar_calendar_service.dart';
+import 'package:flutter_mmcalendar/src/utils/calendar_utils.dart';
 import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
 
 /// A comprehensive Myanmar Calendar widget for Flutter applications
@@ -67,6 +69,9 @@ class MyanmarCalendarWidget extends StatefulWidget {
 
   /// Whether to show weekday headers
   final bool showWeekdayHeaders;
+
+  /// Whether to use weekday short name
+  final bool useWeekdayShort;
 
   /// Whether to show month/year header
   final bool showHeader;
@@ -134,6 +139,7 @@ class MyanmarCalendarWidget extends StatefulWidget {
     this.showWesternDates = true,
     this.showMyanmarDates = true,
     this.showWeekdayHeaders = true,
+    this.useWeekdayShort = true,
     this.showHeader = true,
     this.showNavigation = true,
     this.enableSelection = true,
@@ -400,7 +406,22 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
       width: widget.width,
       padding: widget.padding ?? const EdgeInsets.all(8.0),
       margin: widget.margin,
-      decoration: _theme.calendarDecoration,
+      decoration: BoxDecoration(
+        color: _theme.backgroundColor,
+        borderRadius: BorderRadius.circular(_theme.borderRadius),
+        border: _theme.borderWidth > 0
+            ? Border.all(color: _theme.borderColor, width: _theme.borderWidth)
+            : null,
+        boxShadow: _theme.elevation > 0
+            ? [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: _theme.elevation,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
+      ),
       child: Column(
         children: [
           if (widget.showHeader) _buildHeader(),
@@ -415,7 +436,13 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
   Widget _buildHeader() {
     return Container(
       height: PackageConstants.getDimension('headerHeight'),
-      decoration: _theme.headerDecoration,
+      decoration: BoxDecoration(
+        color: _theme.headerBackgroundColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(_theme.borderRadius),
+          topRight: Radius.circular(_theme.borderRadius),
+        ),
+      ),
       child:
           widget.headerBuilder?.call(context, _currentMonth) ??
           Row(
@@ -446,7 +473,9 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
                   pattern: '&y &M',
                   language: widget.language,
                 ),
-                style: _theme.headerTextStyle,
+                style: _theme.headerTextStyle.copyWith(
+                  color: _theme.headerTextColor,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -461,7 +490,9 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
                   pattern: '%M %yyyy',
                   language: widget.language,
                 ),
-                style: _theme.headerSubTextStyle,
+                style: _theme.headerSubtitleStyle?.copyWith(
+                  color: _theme.headerTextColor.withValues(alpha: 0.8),
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -476,7 +507,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     return IconButton(
       icon: Icon(
         isPrevious ? Icons.chevron_left : Icons.chevron_right,
-        color: _theme.navigationIconColor,
+        color: _theme.headerTextColor,
         size: PackageConstants.getDimension('iconSize'),
       ),
       onPressed: isPrevious ? _goToPreviousMonth : _goToNextMonth,
@@ -489,8 +520,9 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
   /// Build weekday headers
   Widget _buildWeekdayHeaders() {
     return Container(
-      height: 40,
-      decoration: _theme.weekdayHeaderDecoration,
+      height: widget.useWeekdayShort ? 40 : 50,
+      color: _theme.weekdayHeaderBackgroundColor,
+      padding: _theme.weekdayHeaderPadding,
       child: Row(
         children: List.generate(7, (index) {
           final myanmarWeekdayIndex = (widget.firstDayOfWeek + index) % 7;
@@ -500,41 +532,28 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
             widget.language,
           );
 
-          // Improved abbreviation logic
-          String abbreviation = _getWeekdayAbbreviation(weekdayName);
+          if (widget.useWeekdayShort) {
+            weekdayName = TranslationService.getShortWeekdayName(
+              myanmarWeekdayIndex,
+              widget.language,
+            );
+          }
 
           return Expanded(
             child: Container(
               alignment: Alignment.center,
-              child: Text(abbreviation, style: _theme.weekdayTextStyle),
+              child: Text(
+                weekdayName,
+                textAlign: TextAlign.center,
+                style: _theme.weekdayHeaderTextStyle.copyWith(
+                  color: _theme.weekdayHeaderTextColor,
+                ),
+              ),
             ),
           );
         }),
       ),
     );
-  }
-
-  /// Get weekday abbreviation with better logic
-  String _getWeekdayAbbreviation(String weekdayName) {
-    // Handle different languages appropriately
-    switch (widget.language) {
-      case Language.myanmar:
-      case Language.zawgyi:
-        // For Myanmar script, use first 3 characters or less if shorter
-        return weekdayName.length > 3
-            ? weekdayName.substring(0, 3)
-            : weekdayName;
-      case Language.english:
-        // For English, use standard 3-letter abbreviations
-        return weekdayName.length > 3
-            ? weekdayName.substring(0, 3)
-            : weekdayName;
-      default:
-        // For other languages, use first 3 characters or the whole name if shorter
-        return weekdayName.length > 3
-            ? weekdayName.substring(0, 3)
-            : weekdayName;
-    }
   }
 
   /// Build calendar grid
@@ -574,97 +593,178 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     final isToday = _isToday(date);
     final isSelected = _isSelected(date);
     final isInCurrentMonth = _isInCurrentMonth(date);
+    // ignore: unused_local_variable
     final isWeekend = _isWeekend(date);
     final isSelectable = _isDateSelectable(date);
+    final isFullMoon = completeDate.isFullMoon;
+    final isNewMoon = completeDate.isNewMoon;
 
-    // Determine cell style
-    BoxDecoration? decoration;
-    TextStyle? textStyle = _theme.dateTextStyle;
+    // Determine colors and styles
+    Color backgroundColor = _theme.dateCellBackgroundColor;
+    Color textColor = _theme.dateCellTextColor;
+    Color? borderColor;
 
-    if (isSelected) {
-      decoration = _theme.selectedDateDecoration;
-      textStyle = _theme.selectedDateTextStyle;
+    if (!isSelectable) {
+      backgroundColor = _theme.disabledDateBackgroundColor;
+      textColor = _theme.disabledDateTextColor;
+    }
+    // else if (isWeekend) {
+    //   backgroundColor = _theme.holidayIndicatorColor.withValues(alpha: 0.3);
+    //   textColor = _theme.holidayIndicatorColor;
+    // }
+    else if (isSelected) {
+      backgroundColor = _theme.selectedDateBackgroundColor;
+      textColor = _theme.selectedDateTextColor;
+      borderColor = _theme.selectedDateBorderColor;
     } else if (isToday && widget.highlightToday) {
-      decoration = _theme.todayDecoration;
-      textStyle = _theme.todayTextStyle;
-    } else if (completeDate.hasHolidays && widget.showHolidays) {
-      decoration = _theme.holidayDecoration;
-      textStyle = _theme.holidayTextStyle;
-    } else if (completeDate.hasAstrologicalDays && widget.showAstrology) {
-      decoration = _theme.astrologicalDecoration;
-      textStyle = _theme.astrologicalTextStyle;
-    } else if (isWeekend && widget.highlightWeekends) {
-      decoration = _theme.weekendDecoration;
-      textStyle = _theme.weekendTextStyle;
+      backgroundColor = _theme.todayBackgroundColor;
+      textColor = _theme.todayTextColor;
+      borderColor = _theme.todayBorderColor;
+    }
+    // else if (completeDate.isSabbath) {
+    //   backgroundColor = _theme.sabbathBackgroundColor;
+    //   textColor = _theme.sabbathTextColor;
+    // }
+
+    if (isFullMoon) {
+      backgroundColor = _theme.fullMoonBackgroundColor;
+      textColor = _theme.fullMoonTextColor;
+    }
+    if (isNewMoon) {
+      backgroundColor = _theme.newMoonBackgroundColor;
+      textColor = _theme.newMoonTextColor;
     }
 
     if (!isInCurrentMonth) {
-      textStyle = textStyle.copyWith(
-        color: textStyle.color?.withValues(alpha: 0.4),
-      );
-    }
-
-    if (!isSelectable) {
-      textStyle = textStyle.copyWith(
-        color: textStyle.color?.withValues(alpha: 0.3),
-      );
+      backgroundColor = _theme.disabledDateBackgroundColor;
+      textColor = _theme.dateCellTextColor.withValues(alpha: 0.4);
     }
 
     return GestureDetector(
-      onTap: () => _onDateTap(date),
+      onTap: isSelectable ? () => _onDateTap(date) : null,
       child: Container(
-        margin: const EdgeInsets.all(1),
-        decoration: decoration,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        margin: _theme.dateCellMargin,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(_theme.dateCellBorderRadius),
+          border: borderColor != null
+              ? Border.all(color: borderColor, width: 2.0)
+              : null,
+        ),
+        child: Stack(
           children: [
-            // Western date
-            if (widget.showWesternDates) ...[
-              Text(date.day.toString(), style: textStyle),
-            ],
+            // Main date content
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Western date
+                  if (widget.showWesternDates)
+                    Text(
+                      date.day.toString(),
 
-            // Myanmar date
-            if (widget.showMyanmarDates) ...[
-              Text(
-                _formatMyanmarDay(completeDate.myanmarDay),
-                style: textStyle.copyWith(
-                  fontSize: (textStyle.fontSize ?? 14) * 0.8,
-                ),
+                      style: _theme.dateCellTextStyle.copyWith(
+                        color: textColor,
+                        fontWeight: isToday ? FontWeight.bold : null,
+                      ),
+                    ),
+
+                  // Myanmar date
+                  if (widget.showMyanmarDates)
+                    Row(
+                      spacing: 2,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (isInCurrentMonth)
+                          Text(
+                            _formatMoonPhase(completeDate.moonPhase),
+                            style:
+                                (_theme.dateCellSecondaryTextStyle ??
+                                        _theme.dateCellTextStyle)
+                                    .copyWith(
+                                      color: textColor.withValues(alpha: 0.6),
+                                    ),
+                          ),
+                        if (!(isFullMoon || isNewMoon))
+                          Text(
+                            CalendarUtils.convertNumberToLanguage(
+                              completeDate.fortnightDay.toDouble(),
+                            ),
+                            style:
+                                (_theme.dateCellSecondaryTextStyle ??
+                                        _theme.dateCellTextStyle)
+                                    .copyWith(
+                                      color: textColor.withValues(alpha: 0.6),
+                                    ),
+                          ),
+                      ],
+                    ),
+                ],
               ),
-            ],
+            ),
 
             // Holiday indicator
-            if (widget.showHolidays && completeDate.hasHolidays) ...[
-              Container(
-                width: 4,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: _theme.holidayIndicatorColor,
-                  shape: BoxShape.circle,
+            if (widget.showHolidays && completeDate.hasHolidays)
+              Positioned(
+                top: 2,
+                right: 2,
+                child: Icon(
+                  Icons.weekend,
+                  size: 8,
+                  color: _theme.holidayIndicatorColor.withValues(alpha: 0.7),
                 ),
+                // child: Container(
+                //   width: 6,
+                //   height: 6,
+                //   decoration: BoxDecoration(
+                //     color: _theme.holidayIndicatorColor,
+                //     shape: BoxShape.circle,
+                //   ),
+                // ),
               ),
-            ],
 
             // Astrological indicator
-            if (widget.showAstrology && completeDate.hasAstrologicalDays) ...[
-              Container(
-                width: 4,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: _theme.astrologicalIndicatorColor,
-                  shape: BoxShape.circle,
+            if (widget.showAstrology && completeDate.hasAstrologicalDays)
+              Positioned(
+                top: 2,
+                left: 2,
+                child: Icon(
+                  Icons.star,
+                  size: 8,
+                  color: _theme.astroIndicatorColor.withValues(alpha: 0.7),
+                ),
+                // child: Container(
+                //   width: 4,
+                //   height: 4,
+                //   decoration: BoxDecoration(
+                //     color: _theme.astroIndicatorColor,
+                //     shape: BoxShape.circle,
+                //   ),
+                // ),
+              ),
+
+            // Moon phase indicator (if implemented)
+            if (isFullMoon || isNewMoon)
+              Positioned(
+                bottom: 2,
+                right: 2,
+                child: Icon(
+                  Icons.brightness_1,
+                  size: 8,
+                  color: isFullMoon
+                      ? _theme.fullMoonTextColor
+                      : _theme.newMoonTextColor,
                 ),
               ),
-            ],
           ],
         ),
       ),
     );
   }
 
-  /// Format Myanmar day with localization
-  String _formatMyanmarDay(int day) {
-    return TranslationService.translate(day.toString());
+  String _formatMoonPhase(int moonPhase) {
+    final str = TranslationService.getMoonPhaseName(moonPhase);
+    return str.length > 5 ? str.substring(1, 6) : str.substring(1, 5);
   }
 
   /// Show month/year picker
@@ -691,300 +791,6 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
 // ============================================================================
 // MYANMAR CALENDAR THEME
 // ============================================================================
-
-/// Theme configuration for Myanmar Calendar Widget
-class MyanmarCalendarTheme {
-  final BoxDecoration? calendarDecoration;
-  final BoxDecoration? headerDecoration;
-  final BoxDecoration? weekdayHeaderDecoration;
-  final BoxDecoration? selectedDateDecoration;
-  final BoxDecoration? todayDecoration;
-  final BoxDecoration? holidayDecoration;
-  final BoxDecoration? astrologicalDecoration;
-  final BoxDecoration? weekendDecoration;
-
-  final TextStyle headerTextStyle;
-  final TextStyle headerSubTextStyle;
-  final TextStyle weekdayTextStyle;
-  final TextStyle dateTextStyle;
-  final TextStyle selectedDateTextStyle;
-  final TextStyle todayTextStyle;
-  final TextStyle holidayTextStyle;
-  final TextStyle astrologicalTextStyle;
-  final TextStyle weekendTextStyle;
-
-  final Color navigationIconColor;
-  final Color holidayIndicatorColor;
-  final Color astrologicalIndicatorColor;
-
-  const MyanmarCalendarTheme({
-    this.calendarDecoration,
-    this.headerDecoration,
-    this.weekdayHeaderDecoration,
-    this.selectedDateDecoration,
-    this.todayDecoration,
-    this.holidayDecoration,
-    this.astrologicalDecoration,
-    this.weekendDecoration,
-    required this.headerTextStyle,
-    required this.headerSubTextStyle,
-    required this.weekdayTextStyle,
-    required this.dateTextStyle,
-    required this.selectedDateTextStyle,
-    required this.todayTextStyle,
-    required this.holidayTextStyle,
-    required this.astrologicalTextStyle,
-    required this.weekendTextStyle,
-    required this.navigationIconColor,
-    required this.holidayIndicatorColor,
-    required this.astrologicalIndicatorColor,
-  });
-
-  /// Default theme
-  static MyanmarCalendarTheme defaultTheme() {
-    return MyanmarCalendarTheme(
-      calendarDecoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      headerDecoration: BoxDecoration(
-        color: Colors.blue[600],
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-      ),
-      weekdayHeaderDecoration: BoxDecoration(
-        color: Colors.grey[100],
-        border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
-      ),
-      selectedDateDecoration: BoxDecoration(
-        color: Colors.blue[600],
-        shape: BoxShape.circle,
-      ),
-      todayDecoration: BoxDecoration(
-        border: Border.all(color: Colors.blue[600]!, width: 2),
-        shape: BoxShape.circle,
-      ),
-      holidayDecoration: BoxDecoration(
-        color: Colors.red[100],
-        shape: BoxShape.circle,
-      ),
-      astrologicalDecoration: BoxDecoration(
-        color: Colors.orange[100],
-        shape: BoxShape.circle,
-      ),
-      weekendDecoration: BoxDecoration(
-        color: Colors.grey[100],
-        shape: BoxShape.circle,
-      ),
-      headerTextStyle: const TextStyle(
-        color: Colors.white,
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-      ),
-      headerSubTextStyle: const TextStyle(color: Colors.white70, fontSize: 12),
-      weekdayTextStyle: TextStyle(
-        color: Colors.grey[600],
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-      ),
-      dateTextStyle: const TextStyle(color: Colors.black87, fontSize: 14),
-      selectedDateTextStyle: const TextStyle(
-        color: Colors.white,
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-      todayTextStyle: TextStyle(
-        color: Colors.blue[600],
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-      holidayTextStyle: TextStyle(
-        color: Colors.red[700],
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-      ),
-      astrologicalTextStyle: TextStyle(
-        color: Colors.orange[700],
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-      ),
-      weekendTextStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
-      navigationIconColor: Colors.white,
-      holidayIndicatorColor: Colors.red[600]!,
-      astrologicalIndicatorColor: Colors.orange[600]!,
-    );
-  }
-
-  /// Traditional Myanmar theme
-  static MyanmarCalendarTheme traditional() {
-    return MyanmarCalendarTheme(
-      calendarDecoration: BoxDecoration(
-        color: const Color(0xFFFFFDE7), // Cream
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFB71C1C), width: 2),
-      ),
-      headerDecoration: const BoxDecoration(
-        color: Color(0xFFB71C1C), // Deep red
-        borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-      ),
-      weekdayHeaderDecoration: BoxDecoration(
-        color: const Color(0xFFFFC107).withValues(alpha: 0.3), // Gold tint
-        border: const Border(
-          bottom: BorderSide(color: Color(0xFFB71C1C), width: 1),
-        ),
-      ),
-      selectedDateDecoration: const BoxDecoration(
-        color: Color(0xFFB71C1C),
-        shape: BoxShape.circle,
-      ),
-      todayDecoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFFFC107), width: 2),
-        shape: BoxShape.circle,
-      ),
-      holidayDecoration: BoxDecoration(
-        color: const Color(0xFFB71C1C).withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-      ),
-      astrologicalDecoration: BoxDecoration(
-        color: const Color(0xFF2E7D32).withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-      ),
-      weekendDecoration: BoxDecoration(
-        color: const Color(0xFFFFC107).withValues(alpha: 0.1),
-        shape: BoxShape.circle,
-      ),
-      headerTextStyle: const TextStyle(
-        color: Color(0xFFFFFDE7),
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-      ),
-      headerSubTextStyle: const TextStyle(
-        color: Color(0xFFFFC107),
-        fontSize: 12,
-      ),
-      weekdayTextStyle: const TextStyle(
-        color: Color(0xFFB71C1C),
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-      ),
-      dateTextStyle: const TextStyle(color: Color(0xFF212121), fontSize: 14),
-      selectedDateTextStyle: const TextStyle(
-        color: Color(0xFFFFFDE7),
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-      todayTextStyle: const TextStyle(
-        color: Color(0xFFFFC107),
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-      holidayTextStyle: const TextStyle(
-        color: Color(0xFFB71C1C),
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-      ),
-      astrologicalTextStyle: const TextStyle(
-        color: Color(0xFF2E7D32),
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-      ),
-      weekendTextStyle: const TextStyle(color: Color(0xFF757575), fontSize: 14),
-      navigationIconColor: const Color(0xFFFFFDE7),
-      holidayIndicatorColor: const Color(0xFFB71C1C),
-      astrologicalIndicatorColor: const Color(0xFF2E7D32),
-    );
-  }
-
-  /// Dark theme
-  static MyanmarCalendarTheme dark() {
-    return MyanmarCalendarTheme(
-      calendarDecoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      headerDecoration: const BoxDecoration(
-        color: Color(0xFF90CAF9),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-      ),
-      weekdayHeaderDecoration: BoxDecoration(
-        color: const Color(0xFF2E2E2E),
-        border: Border(bottom: BorderSide(color: Colors.grey[600]!)),
-      ),
-      selectedDateDecoration: const BoxDecoration(
-        color: Color(0xFF90CAF9),
-        shape: BoxShape.circle,
-      ),
-      todayDecoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF81C784), width: 2),
-        shape: BoxShape.circle,
-      ),
-      holidayDecoration: BoxDecoration(
-        color: const Color(0xFFCF6679).withValues(alpha: 0.3),
-        shape: BoxShape.circle,
-      ),
-      astrologicalDecoration: BoxDecoration(
-        color: const Color(0xFFFFAB40).withValues(alpha: 0.3),
-        shape: BoxShape.circle,
-      ),
-      weekendDecoration: BoxDecoration(
-        color: const Color(0xFF424242).withValues(alpha: 0.5),
-        shape: BoxShape.circle,
-      ),
-      headerTextStyle: const TextStyle(
-        color: Color(0xFF000000),
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-      ),
-      headerSubTextStyle: const TextStyle(
-        color: Color(0xFF424242),
-        fontSize: 12,
-      ),
-      weekdayTextStyle: const TextStyle(
-        color: Color(0xFFBDBDBD),
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-      ),
-      dateTextStyle: const TextStyle(color: Color(0xFFFFFFFF), fontSize: 14),
-      selectedDateTextStyle: const TextStyle(
-        color: Color(0xFF000000),
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-      todayTextStyle: const TextStyle(
-        color: Color(0xFF81C784),
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-      holidayTextStyle: const TextStyle(
-        color: Color(0xFFCF6679),
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-      ),
-      astrologicalTextStyle: const TextStyle(
-        color: Color(0xFFFFAB40),
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-      ),
-      weekendTextStyle: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
-      navigationIconColor: const Color(0xFF000000),
-      holidayIndicatorColor: const Color(0xFFCF6679),
-      astrologicalIndicatorColor: const Color(0xFFFFAB40),
-    );
-  }
-}
 
 // ============================================================================
 // MONTH/YEAR PICKER DIALOG
