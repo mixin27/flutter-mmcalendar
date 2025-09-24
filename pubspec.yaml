@@ -36,3 +36,17 @@ topics:
   - myanmar-datetime
   - utility
   - myanmar-calendar-view
+
+screenshots:
+  - description: Myanmar calendar widget demo.
+    path: screenshots/myanmar_calendar_widget.png
+  - description: Myanmar date picker widget demo.
+    path: screenshots/myanmar_date_picker.png
+  - description: Astrological information demo.
+    path: screenshots/astrological_information.png
+  - description: Holiday information demo.
+    path: screenshots/holiday_information.png
+  - description: Date converter demo.
+    path: screenshots/date_converter.png
+  - description: Date utilities demo.
+    path: screenshots/date_utilities.png
