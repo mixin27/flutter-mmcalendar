@@ -31,7 +31,7 @@ git checkout -b feature/your-feature-name
 
 ### Code Style
 
-- Follow the [Flutter style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo)
+- Follow the [Flutter style guide](https://github.com/flutter/flutter/blob/master/docs/contributing/Style-guide-for-Flutter-repo.md)
 - Use proper Dart formatting:
 
 ```bash

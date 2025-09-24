@@ -47,10 +47,18 @@ class MyanmarCalendarService {
   /// Get calendar configuration
   CalendarConfig get config => _config;
 
+  /// Get [DateConverter] instance.
+  DateConverter get dateConverter => _dateConverter;
+
   /// Convert Western date to Myanmar date
   MyanmarDate westernToMyanmar(DateTime dateTime) {
     final westernDate = WesternDate.fromDateTime(dateTime);
     return _dateConverter.julianToMyanmar(westernDate.julianDayNumber);
+  }
+
+  /// Convert julian day number to Western date.
+  WesternDate julianToWestern(double julianDayNumber) {
+    return _dateConverter.julianToWestern(julianDayNumber);
   }
 
   /// Convert Myanmar date to Western date
@@ -191,6 +199,7 @@ class MyanmarCalendarService {
       currentDate = _dateConverter.julianToMyanmar(jdn);
     }
 
+    // log("Months: ${dates.join(',')}");
     return dates;
   }
 

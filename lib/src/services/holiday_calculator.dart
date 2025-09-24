@@ -276,33 +276,28 @@ class HolidayCalculator {
   ) {
     final solarYear = CalendarConstants.solarYear;
     final myanmarEpoch = CalendarConstants.myanmarEpoch;
-    const beginThingyan = 1100; // ME
-    const thirdEra = 1312; // ME
+    const beginThingyan = 1100;
+    const thirdEra = 1312;
 
     if (date.year >= beginThingyan) {
-      // Calculate month type
-      final monthType = (date.month / 13).floor();
-
-      // Calculate Atat time (Myanmar New Year)
+      final monthType = date.monthType;
       final atatTime = solarYear * (date.year + monthType) + myanmarEpoch;
 
-      // Calculate Akya time (start of water throwing)
-      double akyaTime;
-      if (date.year >= thirdEra) {
-        akyaTime = atatTime - 2.169918982;
-      } else {
-        akyaTime = atatTime - 2.1675;
-      }
+      final akyaTime = (date.year >= thirdEra)
+          ? atatTime - 2.169918982
+          : atatTime - 2.1675;
 
+      final atatJdn = atatTime.roundToDouble();
       final akyaJdn = akyaTime.round();
-      final atatJdn = atatTime.round();
+      final akyoJdn = akyaJdn - 1;
+      final newYearJdn = atatJdn + 1;
       final currentJdn = date.julianDayNumber.round();
 
       // Myanmar New Year's Day
-      if (currentJdn == (atatJdn + 1)) {
-        publicHolidays.add(TranslationService.translate('Myanmar'));
-        publicHolidays.add(TranslationService.translate("New Year's"));
-        publicHolidays.add(TranslationService.translate('Day'));
+      if (currentJdn == newYearJdn) {
+        publicHolidays.add(
+          TranslationService.translate("Myanmar New Year's Day"),
+        );
       }
       // Thingyan Atat
       else if (currentJdn == atatJdn) {
@@ -320,7 +315,7 @@ class HolidayCalculator {
         culturalHolidays.add(TranslationService.translate('Akya'));
       }
       // Thingyan Akyo
-      else if (currentJdn == (akyaJdn - 1)) {
+      else if (currentJdn == akyoJdn) {
         culturalHolidays.add(TranslationService.translate('Thingyan'));
         culturalHolidays.add(TranslationService.translate('Akyo'));
       }

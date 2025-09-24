@@ -613,6 +613,6 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
 
 ## Support
 
-- 📧 Email: [kyawzayartun.contact@gmail.com](kyawzayartun.contact@gmail.com)
+- 📧 Email: [kyawzayartun.contact@gmail.com](mailto:kyawzayartun.contact@gmail.com)
 - 🐛 Issues: [GitHub Issues](https://github.com/mixin27/flutter-mmcalendar/issues)
 - 💬 Discussions: [GitHub Discussions](https://github.com/mixin27/flutter-mmcalendar/discussions)

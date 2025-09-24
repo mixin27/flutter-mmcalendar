@@ -19,6 +19,24 @@ class DateConverter {
   /// Get current calendar config.
   CalendarConfig get config => _config;
 
+  /// Convert JDN to readable date for debugging
+  static String jdnToGregorianDate(int jdn) {
+    // Simple JDN to Gregorian conversion for debugging
+    // JDN 2461147 should be around April 2024
+    final a = jdn + 32044;
+    final b = (4 * a + 3) ~/ 146097;
+    final c = a - (146097 * b) ~/ 4;
+    final d = (4 * c + 3) ~/ 1461;
+    final e = c - (1461 * d) ~/ 4;
+    final m = (5 * e + 2) ~/ 153;
+
+    final day = e - (153 * m + 2) ~/ 5 + 1;
+    final month = m + 3 - 12 * (m ~/ 10);
+    final year = 100 * b + d - 4800 + (m ~/ 10);
+
+    return '$year-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+  }
+
   // ============================================================================
   // WESTERN DATE CONVERSIONS
   // ============================================================================
@@ -76,8 +94,6 @@ class DateConverter {
 
     // Add time fraction
     final timeFraction = _timeToFraction(hour, minute, second);
-    // should not depend on timezoneOffset while calculating julian
-    // return jd + timeFraction - _config.timezoneOffset / 24.0;
     return jd + timeFraction;
   }
 
@@ -278,6 +294,7 @@ class DateConverter {
       julianDayNumber: julianDayNumber,
       sasanaYear: sasanaYear,
       monthLength: monthLength,
+      monthType: monthType,
     );
   }
 
