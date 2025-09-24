@@ -1,6 +1,6 @@
 name: flutter_mmcalendar
 description: "A comprehensive Flutter package for Myanmar calendar with date conversions, astrological calculations, and multi-language support"
-version: 3.0.0-dev.1
+version: 3.0.0-dev.2
 homepage: https://github.com/mixin27/flutter-mmcalendar
 repository: https://github.com/mixin27/flutter-mmcalendar
 issue_tracker: https://github.com/mixin27/flutter-mmcalendar/issues
@@ -36,3 +36,17 @@ topics:
   - myanmar-datetime
   - utility
   - myanmar-calendar-view
+
+screenshots:
+  - description: Myanmar calendar widget demo.
+    path: screenshots/myanmar_calendar_widget.png
+  - description: Myanmar date picker widget demo.
+    path: screenshots/myanmar_date_picker.png
+  - description: Astrological information demo.
+    path: screenshots/astrological_information.png
+  - description: Holiday information demo.
+    path: screenshots/holiday_information.png
+  - description: Date converter demo.
+    path: screenshots/date_converter.png
+  - description: Date utilities demo.
+    path: screenshots/date_utilities.png

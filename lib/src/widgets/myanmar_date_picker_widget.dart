@@ -360,7 +360,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: _theme.borderColor.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -570,7 +570,9 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
                           borderRadius: BorderRadius.circular(8),
                         )
                       : BoxDecoration(
-                          border: Border.all(color: Colors.grey[300]!),
+                          border: Border.all(
+                            color: _theme.borderColor.withValues(alpha: 0.3),
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                   child: Center(
@@ -578,12 +580,12 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
                       monthName,
                       style: isSelected
                           ? TextStyle(
-                              color: Colors.white,
+                              color: _theme.headerTextColor,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             )
                           : TextStyle(
-                              color: Colors.black87,
+                              color: _theme.dateCellTextColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -673,12 +675,10 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
                         )
                       : BoxDecoration(
                           border: Border.all(
-                            color: _theme.headerBackgroundColor,
+                            color: _theme.borderColor.withValues(alpha: 0.3),
                           ),
                           borderRadius: BorderRadius.circular(8),
-                          color: _theme.headerBackgroundColor.withValues(
-                            alpha: 0.2,
-                          ),
+                          color: _theme.backgroundColor,
                         ),
                   child: Center(
                     child: Text(
@@ -696,7 +696,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
                               fontWeight: FontWeight.w600,
                             )
                           : TextStyle(
-                              color: _theme.dateCellTextColor,
+                              color: _theme.disabledDateTextColor,
                               fontSize: 16,
                             ),
                     ),
@@ -710,8 +710,14 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
         // Back button
         Container(
           padding: const EdgeInsets.all(16),
-          child: ElevatedButton(
+          child: FilledButton(
             onPressed: _showCalendarView,
+            style: FilledButton.styleFrom(
+              backgroundColor: _theme.headerBackgroundColor.withValues(
+                alpha: 0.1,
+              ),
+              foregroundColor: _theme.headerBackgroundColor,
+            ),
             child: Text(TranslationService.translate('Back to Calendar')),
           ),
         ),
@@ -819,8 +825,14 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
         // Back button
         Container(
           padding: const EdgeInsets.all(16),
-          child: ElevatedButton(
+          child: FilledButton(
             onPressed: _showCalendarView,
+            style: FilledButton.styleFrom(
+              backgroundColor: _theme.headerBackgroundColor.withValues(
+                alpha: 0.1,
+              ),
+              foregroundColor: _theme.headerBackgroundColor,
+            ),
             child: Text(TranslationService.translate('Back to Calendar')),
           ),
         ),

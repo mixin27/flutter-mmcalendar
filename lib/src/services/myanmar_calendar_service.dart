@@ -50,6 +50,15 @@ class MyanmarCalendarService {
   /// Get [DateConverter] instance.
   DateConverter get dateConverter => _dateConverter;
 
+  /// Get [AstroCalculator] instance.
+  AstroCalculator get astroCalculator => _astroCalculator;
+
+  /// Get [HolidayCalculator] instance.
+  HolidayCalculator get holidayCalculator => _holidayCalculator;
+
+  /// Get [FormatService] instance.
+  FormatService get formatService => _formatService;
+
   /// Convert Western date to Myanmar date
   MyanmarDate westernToMyanmar(DateTime dateTime) {
     final westernDate = WesternDate.fromDateTime(dateTime);
@@ -197,9 +206,9 @@ class MyanmarCalendarService {
       dates.add(currentDate);
       jdn += 1;
       currentDate = _dateConverter.julianToMyanmar(jdn);
+      // log('Date for $month - ${currentDate.toString()}');
     }
 
-    // log("Months: ${dates.join(',')}");
     return dates;
   }
 
