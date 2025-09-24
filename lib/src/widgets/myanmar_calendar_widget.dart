@@ -415,7 +415,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
         boxShadow: _theme.elevation > 0
             ? [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
+                  color: _theme.borderColor.withValues(alpha: 0.1),
                   blurRadius: _theme.elevation,
                   offset: const Offset(0, 2),
                 ),
@@ -838,12 +838,15 @@ class _MonthYearPickerDialogState extends State<_MonthYearPickerDialog> {
       child: Container(
         width: 300,
         height: 400,
+        color: widget.theme.backgroundColor,
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             Text(
               TranslationService.translate('Select Month and Year'),
-              style: widget.theme.headerTextStyle.copyWith(color: Colors.black),
+              style: widget.theme.headerTextStyle.copyWith(
+                color: widget.theme.dateCellTextColor,
+              ),
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -860,6 +863,9 @@ class _MonthYearPickerDialogState extends State<_MonthYearPickerDialog> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: widget.theme.headerBackgroundColor,
+                  ),
                   child: Text(TranslationService.translate('Cancel')),
                 ),
                 const SizedBox(width: 8),
@@ -868,6 +874,10 @@ class _MonthYearPickerDialogState extends State<_MonthYearPickerDialog> {
                     widget.onDateSelected(_selectedDate);
                     Navigator.of(context).pop();
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: widget.theme.headerBackgroundColor,
+                    foregroundColor: widget.theme.headerTextColor,
+                  ),
                   child: Text(TranslationService.translate('OK')),
                 ),
               ],
@@ -884,6 +894,7 @@ class _MonthYearPickerDialogState extends State<_MonthYearPickerDialog> {
       children: [
         IconButton(
           icon: const Icon(Icons.chevron_left),
+          color: widget.theme.dateCellTextColor,
           onPressed: () {
             setState(() {
               _selectedDate = DateTime(
@@ -895,10 +906,15 @@ class _MonthYearPickerDialogState extends State<_MonthYearPickerDialog> {
         ),
         Text(
           _selectedDate.year.toString(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: widget.theme.dateCellTextColor,
+          ),
         ),
         IconButton(
           icon: const Icon(Icons.chevron_right),
+          color: widget.theme.dateCellTextColor,
           onPressed: () {
             setState(() {
               _selectedDate = DateTime(
@@ -936,15 +952,19 @@ class _MonthYearPickerDialogState extends State<_MonthYearPickerDialog> {
             child: Container(
               margin: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.blue : null,
+                color: isSelected ? widget.theme.headerBackgroundColor : null,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!),
+                border: Border.all(
+                  color: widget.theme.dateCellTextColor.withValues(alpha: 0.1),
+                ),
               ),
               child: Center(
                 child: Text(
                   monthName,
                   style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black,
+                    color: isSelected
+                        ? widget.theme.headerTextColor
+                        : widget.theme.dateCellTextColor,
                     fontWeight: isSelected
                         ? FontWeight.bold
                         : FontWeight.normal,
