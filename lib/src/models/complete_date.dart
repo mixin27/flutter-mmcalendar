@@ -370,6 +370,7 @@ class CompleteDate {
         julianDayNumber: myanmarMap['julianDayNumber'] as double,
         sasanaYear: myanmarMap['sasanaYear'] as int,
         monthLength: myanmarMap['monthLength'] as int,
+        monthType: myanmarMap['monthType'] as int,
       ),
       astro: AstroInfo(
         astrologicalDays: List<String>.from(

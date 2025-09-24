@@ -708,19 +708,19 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
               Positioned(
                 top: 2,
                 right: 2,
-                child: Icon(
-                  Icons.weekend,
-                  size: 8,
-                  color: _theme.holidayIndicatorColor.withValues(alpha: 0.7),
-                ),
-                // child: Container(
-                //   width: 6,
-                //   height: 6,
-                //   decoration: BoxDecoration(
-                //     color: _theme.holidayIndicatorColor,
-                //     shape: BoxShape.circle,
-                //   ),
+                // child: Icon(
+                //   Icons.weekend,
+                //   size: 8,
+                //   color: _theme.holidayIndicatorColor.withValues(alpha: 0.7),
                 // ),
+                child: Container(
+                  width: 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: _theme.holidayIndicatorColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
               ),
 
             // Astrological indicator
@@ -728,19 +728,19 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
               Positioned(
                 top: 2,
                 left: 2,
-                child: Icon(
-                  Icons.star,
-                  size: 8,
-                  color: _theme.astroIndicatorColor.withValues(alpha: 0.7),
-                ),
-                // child: Container(
-                //   width: 4,
-                //   height: 4,
-                //   decoration: BoxDecoration(
-                //     color: _theme.astroIndicatorColor,
-                //     shape: BoxShape.circle,
-                //   ),
+                // child: Icon(
+                //   Icons.star,
+                //   size: 8,
+                //   color: _theme.astroIndicatorColor.withValues(alpha: 0.7),
                 // ),
+                child: Container(
+                  width: 4,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: _theme.astroIndicatorColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
               ),
 
             // Moon phase indicator (if implemented)

@@ -282,7 +282,10 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
               borderRadius: BorderRadius.circular(4),
               border: Border.all(color: color.withValues(alpha: 0.3)),
             ),
-            child: Text(holiday, style: TextStyle(color: color)),
+            child: Text(
+              TranslationService.translate(holiday),
+              style: TextStyle(color: color),
+            ),
           ),
         ),
       ],
@@ -734,10 +737,9 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
 
     if (selected != null) {
       setState(() {
-        _selectedDate = MyanmarDateTime.fromMyanmarDate(selected.myanmar);
-        // _selectedDate = MyanmarDateTime.fromDateTime(
-        //   selected.western.toDateTime(),
-        // );
+        _selectedDate = MyanmarDateTime.fromDateTime(
+          selected.western.toDateTime(),
+        );
         _selectedYear = _selectedDate.myanmarYear;
         _loadHolidaysForYear();
       });

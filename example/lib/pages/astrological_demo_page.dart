@@ -657,17 +657,6 @@ class _AstrologicalDemoPageState extends State<AstrologicalDemoPage> {
 
     if (selected != null) {
       setState(() {
-        // _selectedDate = MyanmarDateTime.fromMyanmarDate(selected.myanmar);
-
-        // todo(mixin27): there is a slight miss calculation
-        // Expected:
-        //  MyanmarDate(year: 1387, month: 7, day: 15, yearType: 0,
-        //    moonPhase: 1, fortnightDay: 15, weekday: 2, julianDayNumber: 2460955.0,
-        //    sasanaYear: 2569, monthLength: 29)
-        // Result:
-        // MyanmarDate(year: 1387, month: 7, day: 14, yearType: 0,
-        //  moonPhase: 0, fortnightDay: 14, weekday: 1, julianDayNumber: 2460954.2291666665,
-        //  sasanaYear: 2569, monthLength: 29)
         _selectedDate = MyanmarDateTime.fromDateTime(
           selected.western.toDateTime(),
         );

@@ -1511,11 +1511,11 @@ class TranslationService {
       Language.shan: 'Tabaung Pwe',
       Language.karen: 'Tabaung Pwe',
     },
-    "Myanmar New Year Day": {
-      Language.english: "Myanmar New Year Day",
-      Language.myanmar: 'Myanmar New Year Day',
-      Language.zawgyi: 'Myanmar New Year Day',
-      Language.mon: 'Myanmar New Year Day',
+    "Myanmar New Year's Day": {
+      Language.english: "Myanmar New Year's Day",
+      Language.myanmar: 'နှစ်ဆန်းတစ်ရက်',
+      Language.zawgyi: 'နွစ္ဆန္း တစ္ရက္',
+      Language.mon: 'တ္ၚဲသၞာံတၟိ',
       Language.shan: 'Myanmar New Year Day',
       Language.karen: 'Myanmar New Year Day',
     },

@@ -33,6 +33,9 @@ class MyanmarDate {
   /// Length of the month (29 or 30 days)
   final int monthLength;
 
+  /// Type of the month
+  final int monthType;
+
   const MyanmarDate({
     required this.year,
     required this.month,
@@ -44,6 +47,7 @@ class MyanmarDate {
     required this.julianDayNumber,
     required this.sasanaYear,
     required this.monthLength,
+    required this.monthType,
   });
 
   /// Creates a copy with modified values
@@ -58,6 +62,7 @@ class MyanmarDate {
     double? julianDayNumber,
     int? sasanaYear,
     int? monthLength,
+    int? monthType,
   }) {
     return MyanmarDate(
       year: year ?? this.year,
@@ -70,12 +75,13 @@ class MyanmarDate {
       julianDayNumber: julianDayNumber ?? this.julianDayNumber,
       sasanaYear: sasanaYear ?? this.sasanaYear,
       monthLength: monthLength ?? this.monthLength,
+      monthType: monthType ?? this.monthType,
     );
   }
 
   @override
   String toString() {
-    return 'MyanmarDate(year: $year, month: $month, day: $day, yearType: $yearType, moonPhase: $moonPhase, fortnightDay: $fortnightDay, weekday: $weekday, julianDayNumber: $julianDayNumber, sasanaYear: $sasanaYear, monthLength: $monthLength)';
+    return 'MyanmarDate(year: $year, month: $month, day: $day, yearType: $yearType, moonPhase: $moonPhase, fortnightDay: $fortnightDay, weekday: $weekday, julianDayNumber: $julianDayNumber, sasanaYear: $sasanaYear, monthLength: $monthLength, monthType: $monthType)';
   }
 
   @override
@@ -91,7 +97,8 @@ class MyanmarDate {
         other.weekday == weekday &&
         other.julianDayNumber == julianDayNumber &&
         other.sasanaYear == sasanaYear &&
-        other.monthLength == monthLength;
+        other.monthLength == monthLength &&
+        other.monthType == monthType;
   }
 
   @override
@@ -105,6 +112,7 @@ class MyanmarDate {
         weekday.hashCode ^
         julianDayNumber.hashCode ^
         sasanaYear.hashCode ^
-        monthLength.hashCode;
+        monthLength.hashCode ^
+        monthType.hashCode;
   }
 }
