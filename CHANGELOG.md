@@ -1,3 +1,9 @@
+## 3.0.0-dev.2
+
+- Fixed: Widget theme color
+- Update example application
+- Minor improvements
+
 ## 3.0.0-dev.1
 
 ### Breaking Changes
