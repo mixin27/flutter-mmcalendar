@@ -1,3 +1,21 @@
+/// ------------------------------------------------------------
+/// Translation service.
+///
+/// Based on original algorithms by: [Dr Yan Naing Aye]
+/// Source: https://github.com/yan9a/mmcal
+/// Language: [Original Language, e.g. CPP/JavaScript]
+/// License: [License type, MIT]
+///
+/// Dart/Flutter conversion and adaptations by: Kyaw Zayar Tun
+/// Website: https://github.com/mixin27
+///
+/// Notes:
+/// - Most of translations originate from the above source.
+/// - This implementation is a re-creation in Dart, with
+///   modifications and optimizations for Flutter usage.
+/// ------------------------------------------------------------
+library;
+
 import 'language.dart';
 
 /// Service for translating text between different languages

@@ -3,6 +3,11 @@
 /// A comprehensive Flutter package for Myanmar calendar with date conversions,
 /// astrological calculations, holiday information, and multi-language support.
 ///
+/// Author: Kyaw Zayar Tun
+/// Website: https://www.kyawzayartun.com
+/// GitHub:  https://github.com/mixin27/flutter-mmcalendar
+/// License: MIT
+///
 /// ## Features
 ///
 /// - **Date Conversions**: Bidirectional conversion between Myanmar and Western calendars
