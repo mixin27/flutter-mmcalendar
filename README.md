@@ -595,6 +595,12 @@ print('Supported Languages: ${diagnostics['supportedLanguages']}');
 MyanmarCalendar.reset();
 ```
 
+## Acknowledgements
+
+The calculation algorithms are based on the original work by
+[Dr Yan Naing Aye](https://github.com/yan9a/mmcal) in Javascript and C++.
+I converted and adapted the implementation for Dart/Flutter.
+
 ## API Reference
 
 For complete API documentation, visit [pub.dev documentation](https://pub.dev/documentation/flutter_mmcalendar/latest/).
