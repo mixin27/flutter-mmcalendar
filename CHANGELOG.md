@@ -1,3 +1,8 @@
+## 3.0.0-dev.3
+
+- Added more getter values like `isToday` in `CompleteDate`.
+- Fixed wrong information in document comments
+
 ## 3.0.0-dev.2
 
 - Fixed: Widget theme color

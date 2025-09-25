@@ -132,14 +132,23 @@ class CompleteDate {
   /// Checks if this date is a sabbath day
   bool get isSabbath => astro.sabbath == 'Sabbath';
 
+  /// Get sabbath
+  String get sabbath => astro.sabbath;
+
   /// Checks if this date is a sabbath eve
   bool get isSabbathEve => astro.sabbath == 'Sabbath Eve';
 
   /// Checks if this date is a Yatyaza day (inauspicious)
   bool get isYatyaza => astro.yatyaza == 'Yatyaza';
 
+  /// Get yatyaza
+  String get yatyaza => astro.yatyaza;
+
   /// Checks if this date has Pyathada (inauspicious time)
   bool get hasPyathada => astro.pyathada.isNotEmpty;
+
+  /// Get pyathada
+  String get pyathada => astro.pyathada;
 
   /// Checks if this date is in a watat (intercalary) year
   bool get isWatatYear => myanmar.yearType > 0;
@@ -149,6 +158,9 @@ class CompleteDate {
 
   /// Checks if this date is in a little watat year
   bool get isLittleWatatYear => myanmar.yearType == 1;
+
+  /// Checks if it is today.
+  bool get isToday => westernDay == DateTime.now().day;
 
   /// Gets all holidays as a combined list
   List<String> get allHolidays => holidays.allHolidays;
