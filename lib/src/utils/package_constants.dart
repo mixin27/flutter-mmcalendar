@@ -17,7 +17,7 @@ class PackageConstants {
   static const String packageName = 'flutter_mmcalendar';
 
   /// Package version
-  static const String version = '1.0.0';
+  static const String version = '3.0.0';
 
   /// Package description
   static const String description =
@@ -41,7 +41,8 @@ class PackageConstants {
       'https://github.com/mixin27/flutter-mmcalendar/issues';
 
   /// Homepage URL
-  static const String homepage = 'https://flutter-mmcalendar.dev';
+  static const String homepage =
+      'https://github.com/mixin27/flutter-mmcalendar';
 
   // ============================================================================
   // DEFAULT CONFIGURATION

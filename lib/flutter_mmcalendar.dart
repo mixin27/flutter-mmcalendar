@@ -17,7 +17,7 @@
 /// ## Quick Start
 ///
 /// ```dart
-/// import 'package:myanmar_calendar/myanmar_calendar.dart';
+/// import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 ///
 /// // Get today's Myanmar date
 /// final today = MyanmarCalendar.today();
@@ -51,7 +51,7 @@
 /// );
 /// ```
 ///
-/// For detailed documentation and examples, visit: https://pub.dev/packages/myanmar_calendar
+/// For detailed documentation and examples, visit: https://pub.dev/packages/flutter_mmcalendar
 library;
 
 import 'src/core/calendar_config.dart';
