@@ -46,6 +46,7 @@ class _CalendarDemoPageState extends State<CalendarDemoPage> {
                 showAstrology: _showAstrology,
                 showWesternDates: _showWesternDates,
                 showMyanmarDates: _showMyanmarDates,
+                isCompactWeekday: true,
                 onDateSelected: (date) {
                   setState(() {
                     _selectedDate = date;

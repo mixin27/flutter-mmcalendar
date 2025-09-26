@@ -3,7 +3,7 @@
 ///
 /// Based on original algorithms by: [Dr Yan Naing Aye]
 /// Source: https://github.com/yan9a/mmcal
-/// Language: [Original Language, e.g. CPP/JavaScript]
+/// Language: [Original Language, JavaScript, CPP]
 /// License: [License type, MIT]
 ///
 /// Dart/Flutter conversion and adaptations by: Kyaw Zayar Tun
@@ -23,12 +23,7 @@ import 'package:flutter_mmcalendar/src/models/western_date.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_constants.dart';
 import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
 
-/// Corrected Myanmar Date Converter based on proven algorithms
-///
-/// This implementation is based on the well-tested algorithms from:
-/// - Yan Naing Aye's Myanmar Calendar (yan9a/mmcal)
-/// - Chan Mrate Ko Ko's implementation (chanmratekoko/mmcalendar)
-/// - Cool Emerald's documented algorithm
+/// Date converter core
 class DateConverter {
   final CalendarConfig _config;
 
@@ -39,8 +34,6 @@ class DateConverter {
 
   /// Convert JDN to readable date for debugging
   static String jdnToGregorianDate(int jdn) {
-    // Simple JDN to Gregorian conversion for debugging
-    // JDN 2461147 should be around April 2024
     final a = jdn + 32044;
     final b = (4 * a + 3) ~/ 146097;
     final c = a - (146097 * b) ~/ 4;
@@ -201,7 +194,7 @@ class DateConverter {
   ]) {
     _validateMyanmarDate(year, month, day);
 
-    // Get Myanmar year info using the proven algorithm
+    // Get Myanmar year info
     final yearInfo = _getMyanmarYearInfo(year);
 
     // Calculate month type (0=normal, 1=watat)
@@ -253,7 +246,7 @@ class DateConverter {
     return jd + timeFraction;
   }
 
-  /// Convert Julian Day Number to Myanmar date - Using proven algorithm
+  /// Convert Julian Day Number to Myanmar date
   MyanmarDate julianToMyanmar(double julianDayNumber) {
     final jdn = julianDayNumber.round();
 
@@ -320,7 +313,7 @@ class DateConverter {
   // MYANMAR YEAR CALCULATIONS
   // ============================================================================
 
-  /// Get Myanmar year information using the proven algorithm
+  /// Get Myanmar year information
   Map<String, double> _getMyanmarYearInfo(int myear) {
     int offset = 0;
     Map<String, double> prevYearInfo;

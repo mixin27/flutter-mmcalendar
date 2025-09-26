@@ -105,7 +105,7 @@ export 'src/localization/translation_service.dart';
 export 'src/utils/calendar_utils.dart';
 export 'src/utils/package_constants.dart';
 export 'src/utils/calendar_constants.dart';
-export 'src/utils/complete_date_extension.dart';
+export 'src/utils/date_extension.dart';
 
 // Widgets
 export 'src/widgets/myanmar_calendar_widget.dart';
