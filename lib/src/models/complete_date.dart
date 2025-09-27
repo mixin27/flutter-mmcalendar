@@ -160,7 +160,10 @@ class CompleteDate {
   bool get isLittleWatatYear => myanmar.yearType == 1;
 
   /// Checks if it is today.
-  bool get isToday => westernDay == DateTime.now().day;
+  bool get isToday {
+    final now = DateTime.now();
+    return now.year == now.year && now.month == now.month && now.day == now.day;
+  }
 
   /// Gets all holidays as a combined list
   List<String> get allHolidays => holidays.allHolidays;
