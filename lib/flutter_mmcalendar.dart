@@ -110,6 +110,8 @@ export 'src/utils/date_extension.dart';
 // Widgets
 export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';
+export 'src/widgets/moon/moon_phase_painter.dart';
+export 'src/widgets/moon/moon_phase_widgets.dart';
 
 // ============================================================================
 // MAIN MYANMAR CALENDAR CLASS
