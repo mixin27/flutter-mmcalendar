@@ -155,7 +155,7 @@ class CalendarUtils {
     final monthLength = getMonthLength(newMonth, service.getYearType(newYear));
     final newDay = math.min(date.day, monthLength);
 
-    final newJdn = service.myanmarToJulian(newYear, newMonth, newDay, 12, 0, 0);
+    final newJdn = service.myanmarToJulian(newYear, newMonth, newDay);
     return service.julianToMyanmar(newJdn);
   }
 
@@ -265,8 +265,8 @@ class CalendarUtils {
     final dates = <MyanmarDate>[];
 
     // Start from the beginning of the year
-    final startJdn = service.myanmarToJulian(year, 1, 1, 12, 0, 0);
-    final endJdn = service.myanmarToJulian(year + 1, 1, 1, 12, 0, 0);
+    final startJdn = service.myanmarToJulian(year, 1, 1);
+    final endJdn = service.myanmarToJulian(year + 1, 1, 1);
 
     var currentJdn = startJdn;
     while (currentJdn < endJdn) {
@@ -392,7 +392,7 @@ class CalendarUtils {
     final validation = service.validateMyanmarDate(year, month, day);
 
     if (validation.isValid) {
-      final jdn = service.myanmarToJulian(year, month, day, 12, 0, 0);
+      final jdn = service.myanmarToJulian(year, month, day);
       return service.julianToMyanmar(jdn);
     }
 

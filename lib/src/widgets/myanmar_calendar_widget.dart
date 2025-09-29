@@ -127,6 +127,7 @@ class MyanmarCalendarWidget extends StatefulWidget {
   /// Whether to show animations
   final bool enableAnimations;
 
+  /// Create a new Myanmar calendar widget
   const MyanmarCalendarWidget({
     super.key,
     this.initialDate,
@@ -200,7 +201,6 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     _currentMonth = DateTime(
       (widget.initialDate ?? DateTime.now()).year,
       (widget.initialDate ?? DateTime.now()).month,
-      1,
     );
 
     // Initialize selected date
@@ -271,11 +271,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
 
   /// Get dates for current month view
   List<DateTime> _getCalendarDates() {
-    final firstDayOfMonth = DateTime(
-      _currentMonth.year,
-      _currentMonth.month,
-      1,
-    );
+    final firstDayOfMonth = DateTime(_currentMonth.year, _currentMonth.month);
     final lastDayOfMonth = DateTime(
       _currentMonth.year,
       _currentMonth.month + 1,
@@ -360,7 +356,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
   /// Navigate to previous month
   void _goToPreviousMonth() {
     setState(() {
-      _currentMonth = DateTime(_currentMonth.year, _currentMonth.month - 1, 1);
+      _currentMonth = DateTime(_currentMonth.year, _currentMonth.month - 1);
     });
     widget.onMonthChanged?.call(_currentMonth);
     _animateTransition();
@@ -369,7 +365,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
   /// Navigate to next month
   void _goToNextMonth() {
     setState(() {
-      _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + 1, 1);
+      _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + 1);
     });
     widget.onMonthChanged?.call(_currentMonth);
     _animateTransition();
@@ -579,7 +575,6 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
-        childAspectRatio: 1.0,
       ),
       itemCount: dates.length,
       itemBuilder: (context, index) {
@@ -785,7 +780,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
         theme: _theme,
         onDateSelected: (selectedDate) {
           setState(() {
-            _currentMonth = DateTime(selectedDate.year, selectedDate.month, 1);
+            _currentMonth = DateTime(selectedDate.year, selectedDate.month);
           });
           widget.onMonthChanged?.call(_currentMonth);
           _animateTransition();

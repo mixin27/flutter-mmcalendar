@@ -570,7 +570,7 @@ class CalendarController extends ChangeNotifier {
    // Ensure proper font support for Myanmar text
    MaterialApp(
      theme: ThemeData(
-       fontFamily: 'Myanmar3', // Use Myanmar-compatible font
+       fontFamily: 'Pyidaungsu', // Use Myanmar-compatible font
      ),
    )
    ```

@@ -4,10 +4,16 @@ import 'package:flutter/material.dart';
 
 /// Simple moon phase painter for the app bar
 class MoonPhasePainter extends CustomPainter {
+  /// Moon phase
   final int moonPhase;
+
+  /// Fortnight day
   final int fortnightDay;
+
+  /// Color
   final Color color;
 
+  /// Create a new moon phase painter
   MoonPhasePainter({
     required this.moonPhase,
     required this.fortnightDay,
@@ -59,10 +65,16 @@ class MoonPhasePainter extends CustomPainter {
 
 /// Detailed moon phase painter for the main section
 class DetailedMoonPhasePainter extends CustomPainter {
+  /// Moon phase
   final int moonPhase;
+
+  /// Fortnight day
   final int fortnightDay;
+
+  /// Color
   final Color color;
 
+  /// Create a new detailed moon phase painter
   DetailedMoonPhasePainter({
     required this.moonPhase,
     required this.fortnightDay,
@@ -184,11 +196,19 @@ class DetailedMoonPhasePainter extends CustomPainter {
 
 /// Moon phase information data class
 class MoonPhaseInfo {
+  /// Name
   final String name;
+
+  /// Emoji
   final String emoji;
+
+  /// Color
   final Color color;
+
+  /// Description
   final String description;
 
+  /// Create a new moon phase info
   const MoonPhaseInfo({
     required this.name,
     required this.emoji,

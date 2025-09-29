@@ -1,9 +1,15 @@
 /// Contains holiday information for a given date
 class HolidayInfo {
+  /// Public holidays
   final List<String> publicHolidays;
+
+  /// Religious holidays
   final List<String> religiousHolidays;
+
+  /// Cultural holidays
   final List<String> culturalHolidays;
 
+  /// Create a new holiday info
   const HolidayInfo({
     required this.publicHolidays,
     required this.religiousHolidays,

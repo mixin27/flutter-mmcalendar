@@ -36,6 +36,7 @@ class MyanmarDate {
   /// Type of the month
   final int monthType;
 
+  /// Create a new myanmar date
   const MyanmarDate({
     required this.year,
     required this.month,

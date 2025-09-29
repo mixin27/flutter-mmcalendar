@@ -52,6 +52,7 @@ class MyanmarDatePickerFormField extends StatefulWidget {
   /// Custom theme for date picker
   final MyanmarCalendarTheme? theme;
 
+  /// Create a new myanmar date picker form field
   const MyanmarDatePickerFormField({
     super.key,
     this.labelText,
@@ -216,6 +217,7 @@ class MyanmarDateField extends StatelessWidget {
   /// Custom theme for date picker
   final MyanmarCalendarTheme? theme;
 
+  /// Create a myanmar date field
   const MyanmarDateField({
     super.key,
     required this.value,

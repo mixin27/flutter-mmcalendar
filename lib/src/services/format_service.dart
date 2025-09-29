@@ -265,7 +265,7 @@ class FormatService {
         monthName = 'Second $monthName';
       }
       final name = monthName.split(' ');
-      return name.map((s) => TranslationService.translate(s)).join('');
+      return name.map((s) => TranslationService.translate(s)).join();
     }
     return monthIndex.toString();
   }
