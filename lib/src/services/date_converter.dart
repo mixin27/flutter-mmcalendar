@@ -3,7 +3,7 @@
 ///
 /// Based on original algorithms by: [Dr Yan Naing Aye]
 /// Source: https://github.com/yan9a/mmcal
-/// Language: [Original Language, e.g. CPP/JavaScript]
+/// Language: [Original Language, JavaScript, CPP]
 /// License: [License type, MIT]
 ///
 /// Dart/Flutter conversion and adaptations by: Kyaw Zayar Tun
@@ -23,12 +23,9 @@ import 'package:flutter_mmcalendar/src/models/western_date.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_constants.dart';
 import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
 
-/// Corrected Myanmar Date Converter based on proven algorithms
-///
-/// This implementation is based on the well-tested algorithms from:
-/// - Yan Naing Aye's Myanmar Calendar (yan9a/mmcal)
-/// - Chan Mrate Ko Ko's implementation (chanmratekoko/mmcalendar)
-/// - Cool Emerald's documented algorithm
+import '../utils/myanmar_year_constants.dart';
+
+/// Date converter core
 class DateConverter {
   final CalendarConfig _config;
 
@@ -39,8 +36,6 @@ class DateConverter {
 
   /// Convert JDN to readable date for debugging
   static String jdnToGregorianDate(int jdn) {
-    // Simple JDN to Gregorian conversion for debugging
-    // JDN 2461147 should be around April 2024
     final a = jdn + 32044;
     final b = (4 * a + 3) ~/ 146097;
     final c = a - (146097 * b) ~/ 4;
@@ -201,11 +196,11 @@ class DateConverter {
   ]) {
     _validateMyanmarDate(year, month, day);
 
-    // Get Myanmar year info using the proven algorithm
+    // Get Myanmar year info
     final yearInfo = _getMyanmarYearInfo(year);
 
     // Calculate month type (0=normal, 1=watat)
-    final monthType = (month / 13).floor();
+    final monthType = month ~/ 13;
     final normalizedMonth = month % 13 + monthType;
 
     // Year type adjustments
@@ -253,7 +248,7 @@ class DateConverter {
     return jd + timeFraction;
   }
 
-  /// Convert Julian Day Number to Myanmar date - Using proven algorithm
+  /// Convert Julian Day Number to Myanmar date
   MyanmarDate julianToMyanmar(double julianDayNumber) {
     final jdn = julianDayNumber.round();
 
@@ -320,7 +315,7 @@ class DateConverter {
   // MYANMAR YEAR CALCULATIONS
   // ============================================================================
 
-  /// Get Myanmar year information using the proven algorithm
+  /// Get Myanmar year information
   Map<String, double> _getMyanmarYearInfo(int myear) {
     int offset = 0;
     Map<String, double> prevYearInfo;
@@ -351,15 +346,10 @@ class DateConverter {
   /// Check watat (intercalary month) using the exact proven algorithm
   Map<String, double> _checkWatat(int myear) {
     // Find the appropriate era for this year
-    int i = _eraList.length - 1;
-    while (i > 0) {
-      if (myear >= _eraList[i].begin) break;
-      i--;
-    }
+    Map<String, double> era = MyanmarYearConstants.getMyConst(myear);
 
-    final era = _eraList[i];
-    final int nm = era.nm;
-    final double wo = era.wo;
+    final double nm = era['NM']!;
+    final double wo = era['WO']!;
 
     double ta =
         (CalendarConstants.solarYear / 12 - CalendarConstants.lunarMonth) *
@@ -377,9 +367,9 @@ class DateConverter {
                 wo)
             .round()
             .toDouble();
-    double watat = 0;
+    int watat = 0;
 
-    if (era.eid >= 2) {
+    if (era['EI']! >= 2) {
       final tw =
           CalendarConstants.lunarMonth -
           (CalendarConstants.solarYear / 12 - CalendarConstants.lunarMonth) *
@@ -388,143 +378,14 @@ class DateConverter {
     } else {
       watat = (myear * 7 + 2) % 19;
       if (watat < 0) watat += 19;
-      watat = (watat / 12).floorToDouble();
+      watat = (watat / 12).floor();
     }
 
     // Apply watat exceptions from era data
-    final wteIndex = _search2DArray(myear, era.wte);
-    if (wteIndex >= 0) {
-      watat = era.wte[wteIndex][1].toDouble();
-    }
+    watat ^= era['EW']!.toInt();
 
-    // Apply full moon exceptions from era data
-    if (watat > 0) {
-      final fmeIndex = _search2DArray(myear, era.fme);
-      if (fmeIndex >= 0) {
-        fm += era.fme[fmeIndex][1];
-      }
-    }
-
-    return {"fm": fm, "watat": watat};
+    return {"fm": fm, "watat": watat.toDouble()};
   }
-
-  /// Get era information for a Myanmar year using exact era list
-  _Era _getEraInfo(int year) {
-    int i = _eraList.length - 1;
-    while (i > 0) {
-      if (year >= _eraList[i].begin) break;
-      i--;
-    }
-    return _eraList[i];
-  }
-
-  /// Search 2D array for a year (binary search equivalent)
-  int _search2DArray(int year, List<List<int>> array) {
-    for (int i = 0; i < array.length; i++) {
-      if (array[i][0] == year) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  // ============================================================================
-  // ERA DATA - Exact from your implementation
-  // ============================================================================
-
-  /// Era data class
-  static const List<_Era> _eraList = [
-    _Era(
-      eid: 1.1,
-      begin: -999,
-      end: 797,
-      wo: -1.1,
-      nm: -1,
-      fme: [
-        [205, 1],
-        [246, 1],
-        [471, 1],
-        [572, -1],
-        [651, 1],
-        [653, 2],
-        [656, 1],
-        [672, 1],
-        [729, 1],
-        [767, -1],
-      ],
-      wte: [],
-    ),
-    _Era(
-      eid: 1.2,
-      begin: 798,
-      end: 1099,
-      wo: -1.1,
-      nm: -1,
-      fme: [
-        [813, -1],
-        [849, -1],
-        [851, -1],
-        [854, -1],
-        [927, -1],
-        [933, -1],
-        [936, -1],
-        [938, -1],
-        [949, -1],
-        [952, -1],
-        [963, -1],
-        [968, -1],
-        [1039, -1],
-      ],
-      wte: [],
-    ),
-    _Era(
-      eid: 1.3,
-      begin: 1100,
-      end: 1216,
-      wo: -0.85,
-      nm: -1,
-      fme: [
-        [1120, 1],
-        [1126, -1],
-        [1150, 1],
-        [1172, -1],
-        [1207, 1],
-      ],
-      wte: [
-        [1201, 1],
-        [1202, 0],
-      ],
-    ),
-    _Era(
-      eid: 2,
-      begin: 1217,
-      end: 1311,
-      wo: -1,
-      nm: 4,
-      fme: [
-        [1234, 1],
-        [1261, -1],
-      ],
-      wte: [
-        [1263, 1],
-        [1264, 0],
-      ],
-    ),
-    _Era(
-      eid: 3,
-      begin: 1312,
-      end: 9999,
-      wo: -0.5,
-      nm: 8,
-      fme: [
-        [1377, 1],
-      ],
-      wte: [
-        [1344, 1],
-        [1345, 0],
-      ],
-    ),
-  ];
 
   // ============================================================================
   // LUNAR CALCULATIONS
@@ -663,7 +524,6 @@ class DateConverter {
   /// Get complete year information
   Map<String, dynamic> getYearInfo(int myanmarYear) {
     final yearInfo = _getMyanmarYearInfo(myanmarYear);
-    final eraInfo = _getEraInfo(myanmarYear);
 
     return {
       'year': myanmarYear,
@@ -671,18 +531,7 @@ class DateConverter {
       'isWatat': yearInfo['myt']! > 0,
       'firstDayJdn': yearInfo['tg1']!.toInt(),
       'fullMoonJdn': yearInfo['fm']!.toInt(),
-      'era': eraInfo.eid,
-      'eraName': _getEraName(eraInfo.eid),
     };
-  }
-
-  /// Get era name from era ID
-  String _getEraName(double eraId) {
-    if (eraId >= 3.0) return 'Independence Era';
-    if (eraId >= 2.0) return 'British Colonial Era';
-    if (eraId >= 1.3) return 'Thandeikta Era';
-    if (eraId >= 1.2) return 'Makaranta System 2';
-    return 'Makaranta System 1';
   }
 
   /// Test conversion accuracy
@@ -776,25 +625,4 @@ class DateConverter {
     ];
     return weekdays[weekday % 7];
   }
-}
-
-/// Era data class for Myanmar calendar calculations
-class _Era {
-  final double eid; // Era ID
-  final int begin; // Begin year
-  final int end; // End year
-  final double wo; // Watat offset
-  final int nm; // Number of months
-  final List<List<int>> fme; // Full moon exceptions [year, offset]
-  final List<List<int>> wte; // Watat exceptions [year, watat_value]
-
-  const _Era({
-    required this.eid,
-    required this.begin,
-    required this.end,
-    required this.wo,
-    required this.nm,
-    required this.fme,
-    required this.wte,
-  });
 }

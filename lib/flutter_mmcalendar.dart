@@ -105,11 +105,13 @@ export 'src/localization/translation_service.dart';
 export 'src/utils/calendar_utils.dart';
 export 'src/utils/package_constants.dart';
 export 'src/utils/calendar_constants.dart';
-export 'src/utils/complete_date_extension.dart';
+export 'src/utils/date_extension.dart';
 
 // Widgets
 export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';
+export 'src/widgets/moon/moon_phase_painter.dart';
+export 'src/widgets/moon/moon_phase_widgets.dart';
 
 // ============================================================================
 // MAIN MYANMAR CALENDAR CLASS

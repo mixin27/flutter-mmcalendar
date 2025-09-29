@@ -3,7 +3,7 @@
 ///
 /// Based on original algorithms by: [Dr Yan Naing Aye]
 /// Source: https://github.com/yan9a/mmcal
-/// Language: [Original Language, e.g. CPP/JavaScript]
+/// Language: [Original Language, JavaScript, CPP]
 /// License: [License type, MIT]
 ///
 /// Dart/Flutter conversion and adaptations by: Kyaw Zayar Tun

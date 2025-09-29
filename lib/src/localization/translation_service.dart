@@ -75,28 +75,40 @@ class TranslationService {
   static List<String> get allKeys => _translations.keys.toList();
 
   /// Get month name by index (0-14)
-  static String getMonthName(int monthIndex, [Language? language]) {
+  static String getMonthName(
+    int monthIndex,
+    int yearType, [
+    Language? language,
+  ]) {
     language ??= _currentLanguage;
+
     const months = [
-      'First Waso',
-      'Tagu',
-      'Kason',
-      'Nayon',
-      'Waso',
-      'Wagaung',
-      'Tawthalin',
-      'Thadingyut',
-      'Tazaungmon',
-      'Nadaw',
-      'Pyatho',
-      'Tabodwe',
-      'Tabaung',
-      'Late Tagu',
-      'Late Kason',
+      'First Waso', // 0
+      'Tagu', // 1
+      'Kason', // 2
+      'Nayon', // 3
+      'Waso', // 4
+      'Wagaung', // 5
+      'Tawthalin', // 6
+      'Thadingyut', // 7
+      'Tazaungmon', // 8
+      'Nadaw', // 9
+      'Pyatho', // 10
+      'Tabodwe', // 11
+      'Tabaung', // 12
+      'Late Tagu', // 13
+      'Late Kason', // 14
     ];
 
     if (monthIndex >= 0 && monthIndex < months.length) {
-      return translateTo(months[monthIndex], language);
+      var monthName = TranslationService.translate(months[monthIndex]);
+
+      // // Handle special cases for watat years
+      if (monthIndex == 4 && yearType > 0) {
+        monthName = '${TranslationService.translate('Second')} $monthName';
+      }
+
+      return monthName;
     }
     return monthIndex.toString();
   }
@@ -235,6 +247,14 @@ class TranslationService {
       Language.mon: 'ဂိတုပသာခ်',
       Language.shan: 'ၸွမ်း',
       Language.karen: 'ဒါၩႃ',
+    },
+    'Late Kason': {
+      Language.english: 'Late Kason',
+      Language.myanmar: 'နှောင်းကဆုန်',
+      Language.zawgyi: 'ေႏွာင္းကဆုန္',
+      Language.mon: 'နှောင်းဂိတုပသာခ်',
+      Language.shan: 'ဝၢႆးၸွမ်း',
+      Language.karen: 'စဲၤဒါၩႃ',
     },
     'Nayon': {
       Language.english: 'Nayon',
@@ -657,59 +677,59 @@ class TranslationService {
     },
     'wSun': {
       Language.english: 'Sun',
-      Language.myanmar: 'နွေ',
-      Language.zawgyi: 'ေႏြ',
-      Language.mon: 'Sun',
-      Language.shan: 'Sun',
-      Language.karen: 'Sun',
+      Language.myanmar: 'န',
+      Language.zawgyi: 'န',
+      Language.mon: 'ရ',
+      Language.shan: 'ဢ',
+      Language.karen: 'တ',
     },
     'wMon': {
       Language.english: 'Mon',
-      Language.myanmar: 'လာ',
-      Language.zawgyi: 'လာ',
-      Language.mon: 'Mon',
-      Language.shan: 'Mon',
-      Language.karen: 'Mon',
+      Language.myanmar: 'လ',
+      Language.zawgyi: 'လ',
+      Language.mon: 'လ',
+      Language.shan: 'ၸ',
+      Language.karen: 'ဒ',
     },
     'wTue': {
       Language.english: 'Tue',
       Language.myanmar: 'ဂါ',
       Language.zawgyi: 'ဂါ',
-      Language.mon: 'Tue',
-      Language.shan: 'Tue',
-      Language.karen: 'Tue',
+      Language.mon: 'ဂါ',
+      Language.shan: 'ၢ',
+      Language.karen: 'ပ',
     },
     'wWed': {
       Language.english: 'Wed',
       Language.myanmar: 'ဟူး',
       Language.zawgyi: 'ဟူး',
-      Language.mon: 'Wed',
-      Language.shan: 'Wed',
-      Language.karen: 'Wed',
+      Language.mon: 'ဗု',
+      Language.shan: 'ပ',
+      Language.karen: 'ဖ',
     },
     'wThu': {
       Language.english: 'Thu',
-      Language.myanmar: 'တေး',
-      Language.zawgyi: 'ေတး',
-      Language.mon: 'Thu',
-      Language.shan: 'Thu',
-      Language.karen: 'Thu',
+      Language.myanmar: 'ကြာ',
+      Language.zawgyi: 'ၾကာ',
+      Language.mon: 'ကြာ',
+      Language.shan: 'ၽ',
+      Language.karen: 'ယ',
     },
     'wFri': {
       Language.english: 'Fri',
       Language.myanmar: 'သော',
       Language.zawgyi: "ေသာ",
-      Language.mon: 'Fri',
-      Language.shan: 'Fri',
-      Language.karen: 'Fri',
+      Language.mon: 'သ',
+      Language.shan: 'သု',
+      Language.karen: 'မ',
     },
     'wSat': {
       Language.english: 'Sat',
-      Language.myanmar: 'နေ',
-      Language.zawgyi: 'ေန',
-      Language.mon: 'Sat',
-      Language.shan: 'Sat',
-      Language.karen: 'Sat',
+      Language.myanmar: 'စ',
+      Language.zawgyi: 'စ',
+      Language.mon: 'စ',
+      Language.shan: 'သ',
+      Language.karen: 'ဆ',
     },
 
     // Year types

@@ -71,7 +71,7 @@ class MyanmarCalendarWidget extends StatefulWidget {
   final bool showWeekdayHeaders;
 
   /// Whether to use weekday short name
-  final bool useWeekdayShort;
+  final bool isCompactWeekday;
 
   /// Whether to show month/year header
   final bool showHeader;
@@ -139,7 +139,7 @@ class MyanmarCalendarWidget extends StatefulWidget {
     this.showWesternDates = true,
     this.showMyanmarDates = true,
     this.showWeekdayHeaders = true,
-    this.useWeekdayShort = true,
+    this.isCompactWeekday = false,
     this.showHeader = true,
     this.showNavigation = true,
     this.enableSelection = true,
@@ -520,7 +520,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
   /// Build weekday headers
   Widget _buildWeekdayHeaders() {
     return Container(
-      height: widget.useWeekdayShort ? 40 : 50,
+      height: widget.isCompactWeekday ? 40 : 50,
       color: _theme.weekdayHeaderBackgroundColor,
       padding: _theme.weekdayHeaderPadding,
       child: Row(
@@ -532,12 +532,16 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
             widget.language,
           );
 
-          if (widget.useWeekdayShort) {
+          if (widget.isCompactWeekday) {
             weekdayName = TranslationService.getShortWeekdayName(
               myanmarWeekdayIndex,
               widget.language,
             );
           }
+
+          final isWeekend =
+              widget.highlightWeekends &&
+              (myanmarWeekdayIndex == 0 || myanmarWeekdayIndex == 1);
 
           return Expanded(
             child: Container(
@@ -546,7 +550,10 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
                 weekdayName,
                 textAlign: TextAlign.center,
                 style: _theme.weekdayHeaderTextStyle.copyWith(
-                  color: _theme.weekdayHeaderTextColor,
+                  color: isWeekend
+                      ? _theme.headerBackgroundColor
+                      : _theme.weekdayHeaderTextColor,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -743,7 +750,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
                 ),
               ),
 
-            // Moon phase indicator (if implemented)
+            // Moon phase indicator
             if (isFullMoon || isNewMoon)
               Positioned(
                 bottom: 2,
