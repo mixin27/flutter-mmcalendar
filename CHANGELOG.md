@@ -1,3 +1,11 @@
+## 3.0.0
+
+- Fixed `isToday` calculation in `CompleteDate`
+- Fixed weekday style with compact mode flag
+- Fixed myanmar month translation
+- Added condition for special years in `getMyanmarMonth()`
+- Added `MoonPhase` painter and widget for early use. There is a plan to make more advance.
+
 ## 3.0.0-dev.3
 
 - Added more getter values like `isToday` in `CompleteDate`.

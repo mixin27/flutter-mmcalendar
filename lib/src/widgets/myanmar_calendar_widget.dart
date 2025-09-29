@@ -750,7 +750,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
                 ),
               ),
 
-            // Moon phase indicator (if implemented)
+            // Moon phase indicator
             if (isFullMoon || isNewMoon)
               Positioned(
                 bottom: 2,

@@ -260,14 +260,12 @@ class FormatService {
     ];
 
     if (monthIndex >= 0 && monthIndex < months.length) {
-      var monthName = TranslationService.translate(months[monthIndex]);
-
-      // Handle special cases for watat years
+      var monthName = months[monthIndex];
       if (monthIndex == 4 && yearType > 0) {
-        monthName = '${TranslationService.translate('Second')} $monthName';
+        monthName = 'Second $monthName';
       }
-
-      return monthName;
+      final name = monthName.split(' ');
+      return name.map((s) => TranslationService.translate(s)).join('');
     }
     return monthIndex.toString();
   }

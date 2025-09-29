@@ -442,7 +442,10 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
             ),
             FittedBox(
               child: Text(
-                TranslationService.getMonthName(holiday.myanmarMonth),
+                TranslationService.getMonthName(
+                  holiday.myanmarMonth,
+                  holiday.yearType,
+                ),
                 // _getMonthAbbreviation(holiday.myanmarMonth),
                 style: TextStyle(
                   fontSize: 12,

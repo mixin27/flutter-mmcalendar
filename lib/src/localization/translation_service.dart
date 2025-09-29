@@ -75,28 +75,40 @@ class TranslationService {
   static List<String> get allKeys => _translations.keys.toList();
 
   /// Get month name by index (0-14)
-  static String getMonthName(int monthIndex, [Language? language]) {
+  static String getMonthName(
+    int monthIndex,
+    int yearType, [
+    Language? language,
+  ]) {
     language ??= _currentLanguage;
+
     const months = [
-      'First Waso',
-      'Tagu',
-      'Kason',
-      'Nayon',
-      'Waso',
-      'Wagaung',
-      'Tawthalin',
-      'Thadingyut',
-      'Tazaungmon',
-      'Nadaw',
-      'Pyatho',
-      'Tabodwe',
-      'Tabaung',
-      'Late Tagu',
-      'Late Kason',
+      'First Waso', // 0
+      'Tagu', // 1
+      'Kason', // 2
+      'Nayon', // 3
+      'Waso', // 4
+      'Wagaung', // 5
+      'Tawthalin', // 6
+      'Thadingyut', // 7
+      'Tazaungmon', // 8
+      'Nadaw', // 9
+      'Pyatho', // 10
+      'Tabodwe', // 11
+      'Tabaung', // 12
+      'Late Tagu', // 13
+      'Late Kason', // 14
     ];
 
     if (monthIndex >= 0 && monthIndex < months.length) {
-      return translateTo(months[monthIndex], language);
+      var monthName = TranslationService.translate(months[monthIndex]);
+
+      // // Handle special cases for watat years
+      if (monthIndex == 4 && yearType > 0) {
+        monthName = '${TranslationService.translate('Second')} $monthName';
+      }
+
+      return monthName;
     }
     return monthIndex.toString();
   }
@@ -235,6 +247,14 @@ class TranslationService {
       Language.mon: 'ဂိတုပသာခ်',
       Language.shan: 'ၸွမ်း',
       Language.karen: 'ဒါၩႃ',
+    },
+    'Late Kason': {
+      Language.english: 'Late Kason',
+      Language.myanmar: 'နှောင်းကဆုန်',
+      Language.zawgyi: 'ေႏွာင္းကဆုန္',
+      Language.mon: 'နှောင်းဂိတုပသာခ်',
+      Language.shan: 'ဝၢႆးၸွမ်း',
+      Language.karen: 'စဲၤဒါၩႃ',
     },
     'Nayon': {
       Language.english: 'Nayon',

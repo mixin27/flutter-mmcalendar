@@ -197,16 +197,27 @@ class MyanmarCalendarService {
   List<MyanmarDate> getMyanmarMonth(int year, int month) {
     final dates = <MyanmarDate>[];
 
-    // Get first day of the month
-    var jdn = _dateConverter.myanmarToJulian(year, month, 1, 12, 0, 0);
-    var currentDate = _dateConverter.julianToMyanmar(jdn);
+    // get first day of myanmar month
+    final yearInfo = _dateConverter.getYearInfo(year);
+    final yearType = yearInfo['yearType'];
+    var monthLength = _dateConverter.getMonthLength(month, yearType);
 
-    // Add all days in the month
-    while (currentDate.year == year && currentDate.month == month) {
-      dates.add(currentDate);
-      jdn += 1;
-      currentDate = _dateConverter.julianToMyanmar(jdn);
-      // log('Date for $month - ${currentDate.toString()}');
+    // We don't use Late Kason, Just Kason
+    if (month == 14 && yearType == 0) {
+      return dates;
+    }
+
+    // No Tagu in special year, only Late Tagu
+    if (month == 1 && yearType == 0) {
+      return dates;
+    }
+
+    for (int day = 1; day <= monthLength; day++) {
+      var jdn = _dateConverter.myanmarToJulian(year, month, day, 12, 0, 0);
+      var convertedDate = _dateConverter.julianToMyanmar(jdn);
+      if (convertedDate.year == year && convertedDate.month == month) {
+        dates.add(convertedDate);
+      }
     }
 
     return dates;
