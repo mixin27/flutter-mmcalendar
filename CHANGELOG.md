@@ -1,4 +1,4 @@
-## 3.0.0
+## 3.1.0
 
 - Fixed myanmar `National Day` calculation.
 - Added `National Day` translation
