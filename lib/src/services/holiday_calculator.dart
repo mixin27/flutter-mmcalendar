@@ -99,11 +99,12 @@ class HolidayCalculator {
       culturalHolidays.add(TranslationService.translate('Holiday'));
     }
 
-    // National Day (since 1948 ME / 1886 CE) - Tazaungmon 17
-    if (date.year >= 1248 &&
+    // National Day - Tazaungmon waning 10
+    if (date.year >= 1282 &&
         date.month == CalendarConstants.monthTazaungmon &&
-        date.day == 17) {
-      publicHolidays.add(TranslationService.translate('National'));
+        date.moonPhase == CalendarConstants.moonPhaseWaning &&
+        date.fortnightDay == 10) {
+      publicHolidays.add(TranslationService.translate('National Day'));
     }
 
     // Karen New Year - Pyatho 1
@@ -193,8 +194,8 @@ class HolidayCalculator {
     final month = westernDate['month']!;
     final day = westernDate['day']!;
 
-    // New Year's Day
-    if (month == 1 && day == 1) {
+    // New Year's Day (since 2018)
+    if (year >= 2018 && month == 1 && day == 1) {
       publicHolidays.add(TranslationService.translate("New Year's"));
     }
 
@@ -233,45 +234,9 @@ class HolidayCalculator {
       publicHolidays.add(TranslationService.translate("Martyrs'"));
     }
 
-    // Christmas Day
-    if (month == 12 && day == 25) {
+    // Christmas Day (since 1752)
+    if (year >= 1752 && month == 12 && day == 25) {
       religiousHolidays.add(TranslationService.translate('Christmas'));
-    }
-
-    // Valentines Day
-    if (month == 2 && day == 14) {
-      culturalHolidays.add(TranslationService.translate('Valentines'));
-    }
-
-    // Earth Day (since 1970)
-    if (year >= 1970 && month == 4 && day == 22) {
-      culturalHolidays.add(TranslationService.translate('Earth'));
-    }
-
-    // April Fools' Day
-    if (month == 4 && day == 1) {
-      culturalHolidays.add(TranslationService.translate("April Fools'"));
-    }
-
-    // Red Cross Day (since 1948)
-    if (year >= 1948 && month == 5 && day == 8) {
-      culturalHolidays.add(TranslationService.translate('Red Cross'));
-    }
-
-    // World Teachers' Day (since 1994)
-    if (year >= 1994 && month == 10 && day == 5) {
-      culturalHolidays.add(TranslationService.translate('World'));
-      culturalHolidays.add(TranslationService.translate('Teachers'));
-    }
-
-    // United Nations Day (since 1947)
-    if (year >= 1947 && month == 10 && day == 24) {
-      culturalHolidays.add(TranslationService.translate('United Nations'));
-    }
-
-    // Halloween
-    if (month == 10 && day == 31) {
-      culturalHolidays.add(TranslationService.translate('Halloween'));
     }
 
     // Easter calculation
