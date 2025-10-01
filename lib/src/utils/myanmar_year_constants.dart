@@ -128,7 +128,7 @@ class MyanmarYearConstants {
     int high = arr.length - 1;
 
     while (low <= high) {
-      int mid = (low + high) ~/ 2;
+      final mid = (low + high) ~/ 2;
       if (arr[mid][0] == key) {
         return mid;
       } else if (arr[mid][0] < key) {
@@ -147,7 +147,7 @@ class MyanmarYearConstants {
     int high = arr.length - 1;
 
     while (low <= high) {
-      int mid = (low + high) ~/ 2;
+      final mid = (low + high) ~/ 2;
       if (arr[mid] == key) {
         return mid;
       } else if (arr[mid] < key) {

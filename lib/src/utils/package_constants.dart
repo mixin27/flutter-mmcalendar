@@ -236,20 +236,29 @@ class PackageConstants {
   /// Maximum year type (Big Watat)
   static const int maxYearType = 2;
 
-  /// Calendar limits and boundaries
-  static const double minJulianDay = 1000000.0; // Roughly year -2700 CE
-  static const double maxJulianDay = 5000000.0; // Roughly year 11000 CE
+  // Calendar limits and boundaries
+  /// Roughly year -2700 CE
+  static const double minJulianDay = 1000000.0;
+
+  /// Roughly year 11000 CE
+  static const double maxJulianDay = 5000000.0;
 
   /// Regular expressions for validation
   static final RegExp myanmarDatePattern = RegExp(
     r'^\d{1,4}[/\-\.]\d{1,2}[/\-\.]\d{1,2}$',
   );
+
+  /// Regular expressions for validation - western
   static final RegExp westernDatePattern = RegExp(
     r'^\d{4}[/\-\.]\d{1,2}[/\-\.]\d{1,2}$',
   );
+
+  /// Regular expressions for validation - time
   static final RegExp timePattern = RegExp(
     r'^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$',
   );
+
+  /// Regular expressions for validation - date time
   static final RegExp dateTimePattern = RegExp(
     r'^\d{4}[/\-\.]\d{1,2}[/\-\.]\d{1,2}[\sT]\d{1,2}:\d{2}(:\d{2})?$',
   );

@@ -135,6 +135,7 @@ class MyanmarDatePickerWidget extends StatefulWidget {
   /// Whether to highlight weekends
   final bool highlightWeekends;
 
+  /// Create a new myanmar date picker widget
   const MyanmarDatePickerWidget({
     super.key,
     this.initialDate,

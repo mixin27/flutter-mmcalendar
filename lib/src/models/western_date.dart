@@ -1,15 +1,33 @@
 /// Represents a Western (Gregorian/Julian) calendar date
 class WesternDate {
+  /// Year
   final int year;
+
+  /// Month
   final int month;
+
+  /// Day
   final int day;
+
+  /// Hour
   final int hour;
+
+  /// Minute
   final int minute;
+
+  /// Second
   final int second;
+
+  /// Millisecond
   final int millisecond;
-  final int weekday; // 0=Saturday, 1=Sunday, ..., 6=Friday
+
+  /// Weekday [0=Saturday, 1=Sunday, ..., 6=Friday]
+  final int weekday;
+
+  /// Julian Day Number
   final double julianDayNumber;
 
+  /// Create a new western date
   const WesternDate({
     required this.year,
     required this.month,
@@ -51,7 +69,7 @@ class WesternDate {
     final y = dateTime.year + 4800 - a;
     final m = dateTime.month + (12 * a) - 3;
 
-    var jdn =
+    final jdn =
         dateTime.day +
         ((153 * m + 2) / 5).floor() +
         (365 * y) +

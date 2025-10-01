@@ -60,16 +60,18 @@
 library;
 
 import 'src/core/calendar_config.dart';
+import 'src/core/myanmar_date_time.dart';
 import 'src/localization/language.dart';
 import 'src/localization/translation_service.dart';
 import 'src/models/astro_info.dart';
+import 'src/models/chronicle_models.dart';
 import 'src/models/complete_date.dart';
 import 'src/models/holiday_info.dart';
 import 'src/models/myanmar_date.dart';
 import 'src/models/validation_result.dart';
 import 'src/models/western_date.dart';
+import 'src/services/chronicle_service.dart';
 import 'src/services/myanmar_calendar_service.dart';
-import 'src/core/myanmar_date_time.dart';
 import 'src/utils/calendar_utils.dart';
 import 'src/utils/package_constants.dart';
 
@@ -81,37 +83,36 @@ import 'src/utils/package_constants.dart';
 export 'src/core/calendar_config.dart';
 export 'src/core/myanmar_calendar_theme.dart';
 export 'src/core/myanmar_date_time.dart';
-
+// Localization
+export 'src/localization/language.dart';
+export 'src/localization/translation_service.dart';
 // Models
 export 'src/models/astro_info.dart';
+export 'src/models/chronicle_models.dart';
 export 'src/models/complete_date.dart';
 export 'src/models/holiday_info.dart';
 export 'src/models/myanmar_date.dart';
 export 'src/models/validation_result.dart';
 export 'src/models/western_date.dart';
-
 // Services
 export 'src/services/astro_calculator.dart';
 export 'src/services/date_converter.dart';
 export 'src/services/format_service.dart';
 export 'src/services/holiday_calculator.dart';
 export 'src/services/myanmar_calendar_service.dart';
-
-// Localization
-export 'src/localization/language.dart';
-export 'src/localization/translation_service.dart';
-
+export 'src/utils/calendar_constants.dart';
 // Utils
 export 'src/utils/calendar_utils.dart';
-export 'src/utils/package_constants.dart';
-export 'src/utils/calendar_constants.dart';
+export 'src/utils/chronicle_dynasties.dart';
+export 'src/utils/chronicle_dynasty_meta.dart';
+export 'src/utils/chronicle_entries.dart';
 export 'src/utils/date_extension.dart';
-
+export 'src/utils/package_constants.dart';
+export 'src/widgets/moon/moon_phase_painter.dart';
+export 'src/widgets/moon/moon_phase_widgets.dart';
 // Widgets
 export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';
-export 'src/widgets/moon/moon_phase_painter.dart';
-export 'src/widgets/moon/moon_phase_widgets.dart';
 
 // ============================================================================
 // MAIN MYANMAR CALENDAR CLASS
@@ -148,6 +149,12 @@ class MyanmarCalendar {
   // Private static instances
   static MyanmarCalendarService? _service;
   static CalendarConfig _config = const CalendarConfig();
+
+  static ChronicleService? _chronicles;
+  static ChronicleService _chronicleInstance() {
+    _chronicles ??= ChronicleService(config: config, language: currentLanguage);
+    return _chronicles!;
+  }
 
   // Private constructor to prevent instantiation
   MyanmarCalendar._();
@@ -734,5 +741,70 @@ class MyanmarCalendar {
     _config = const CalendarConfig();
     _service = null;
     TranslationService.setLanguage(Language.english);
+  }
+
+  /// Get chronicles for [DateTime]
+  static List<ChronicleEntryData> getChronicleFor(DateTime dt) {
+    final jdn = WesternDate.fromDateTime(dt).julianDayNumber;
+    return _chronicleInstance().byJdn(jdn);
+  }
+
+  /// Get dynasty data for [DateTime]
+  static DynastyData? getDynastyFor(DateTime dt) {
+    final jdn = WesternDate.fromDateTime(dt).julianDayNumber;
+    return _chronicleInstance().dynastyForJdn(jdn);
+  }
+
+  /// Get chronicles for a Julian Day Number
+  static List<ChronicleEntryData> getChronicleForJdn(double jdn) {
+    return _chronicleInstance().byJdn(jdn);
+  }
+
+  /// Get dynasty for a Julian Day Number
+  static DynastyData? getDynastyForJdn(double jdn) {
+    return _chronicleInstance().dynastyForJdn(jdn);
+  }
+
+  /// Get chronicles for a MyanmarDate (uses its JDN)
+  static List<ChronicleEntryData> getChronicleForMyanmar(MyanmarDate date) {
+    return _chronicleInstance().byJdn(date.julianDayNumber);
+  }
+
+  /// Get dynasty for a MyanmarDate (uses its JDN)
+  static DynastyData? getDynastyForMyanmar(MyanmarDate date) {
+    return _chronicleInstance().dynastyForJdn(date.julianDayNumber);
+  }
+
+  /// Get entries for a given dynasty ID
+  static List<ChronicleEntryData> getEntriesForDynasty(String dynastyId) {
+    return _chronicleInstance().entriesForDynasty(dynastyId);
+  }
+
+  /// Get chronicle entries intersecting [start, end] (DateTime) range
+  static List<ChronicleEntryData> getChroniclesBetween(
+    DateTime start,
+    DateTime end,
+  ) {
+    final a = WesternDate.fromDateTime(start).julianDayNumber;
+    final b = WesternDate.fromDateTime(end).julianDayNumber;
+    return _chronicleInstance().betweenJdn(a, b);
+  }
+
+  /// Get chronicle entries intersecting [startJdn, endJdn]
+  static List<ChronicleEntryData> getChroniclesBetweenJdn(
+    double startJdn,
+    double endJdn,
+  ) {
+    return _chronicleInstance().betweenJdn(startJdn, endJdn);
+  }
+
+  /// List all dynasties
+  static List<DynastyData> listDynasties() {
+    return _chronicleInstance().allDynasties();
+  }
+
+  /// Lookup a dynasty by ID
+  static DynastyData? getDynastyById(String dynastyId) {
+    return _chronicleInstance().dynastyById(dynastyId);
   }
 }

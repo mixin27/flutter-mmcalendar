@@ -2,3 +2,9 @@ include: package:flutter_lints/flutter.yaml
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
+linter:
+  rules:
+    prefer_final_locals: true
+    avoid_redundant_argument_values: true
+    directives_ordering: true
+    public_member_api_docs: true

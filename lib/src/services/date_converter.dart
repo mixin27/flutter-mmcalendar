@@ -29,6 +29,7 @@ import '../utils/myanmar_year_constants.dart';
 class DateConverter {
   final CalendarConfig _config;
 
+  /// Create a new date converter
   const DateConverter(this._config);
 
   /// Get current calendar config.
@@ -69,8 +70,8 @@ class DateConverter {
     final gregorianStart = _config.gregorianStart.toDouble();
 
     final a = ((14 - month) / 12).floor();
-    var adjustedYear = year + 4800 - a;
-    var adjustedMonth = month + 12 * a - 3;
+    final adjustedYear = year + 4800 - a;
+    final adjustedMonth = month + 12 * a - 3;
 
     double jd =
         (day +
@@ -226,7 +227,7 @@ class DateConverter {
         m1 * (15 + m2 * (monthLength - 15)) +
         (1 - m1) * (fortnightDay + 15 * m2);
 
-    var adjustedMonth =
+    final adjustedMonth =
         normalizedMonth +
         4 -
         ((normalizedMonth + 15) / 16).floor() * 4 +
@@ -276,7 +277,7 @@ class DateConverter {
     final e = ((mmonth + 12) / 16).floor();
     final f = ((mmonth + 11) / 16).floor();
 
-    int monthDay =
+    final monthDay =
         dayCount - (29.544 * mmonth - 29.26).floor() - b * e + c * f * 30;
     mmonth += f * 3 - e * 4;
 
@@ -346,12 +347,12 @@ class DateConverter {
   /// Check watat (intercalary month) using the exact proven algorithm
   Map<String, double> _checkWatat(int myear) {
     // Find the appropriate era for this year
-    Map<String, double> era = MyanmarYearConstants.getMyConst(myear);
+    final Map<String, double> era = MyanmarYearConstants.getMyConst(myear);
 
     final double nm = era['NM']!;
     final double wo = era['WO']!;
 
-    double ta =
+    final ta =
         (CalendarConstants.solarYear / 12 - CalendarConstants.lunarMonth) *
         (12 - nm);
     double ed =
@@ -359,7 +360,7 @@ class DateConverter {
         CalendarConstants.lunarMonth;
     if (ed < ta) ed += CalendarConstants.lunarMonth;
 
-    double fm =
+    final fm =
         (CalendarConstants.solarYear * myear +
                 CalendarConstants.myanmarEpoch -
                 ed +

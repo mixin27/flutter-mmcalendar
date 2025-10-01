@@ -20,6 +20,7 @@ class MoonPhaseProgressWidget extends StatelessWidget {
   /// Foreground color for widget.
   final Color? foregroundColor;
 
+  /// Create a new moon phase progress widget
   const MoonPhaseProgressWidget({
     super.key,
     required this.date,
@@ -77,6 +78,7 @@ class MoonPhaseIndicator extends StatelessWidget {
   /// Foreground color for widget.
   final Color? foregroundColor;
 
+  /// Create a new moon phase indicator
   const MoonPhaseIndicator({
     super.key,
     required this.date,

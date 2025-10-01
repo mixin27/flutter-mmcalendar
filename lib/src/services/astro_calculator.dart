@@ -143,7 +143,7 @@ class AstroCalculator {
 
   // Individual astrological day calculations
   bool _calculateThamanyo(int month, int weekday) {
-    var mmt = (month / 13).floor();
+    final mmt = (month / 13).floor();
     month = month % 13 + mmt;
     if (month <= 0) month = 4;
 
@@ -199,7 +199,7 @@ class AstroCalculator {
   }
 
   bool _calculateYatyotema(int month, int day) {
-    var mmt = (month / 13).floor();
+    final mmt = (month / 13).floor();
     month = month % 13 + mmt;
     if (month <= 0) month = 4;
 
@@ -218,7 +218,7 @@ class AstroCalculator {
   }
 
   bool _calculateShanyat(int month, int day) {
-    var mmt = (month / 13).floor();
+    final mmt = (month / 13).floor();
     month = month % 13 + mmt;
     if (month <= 0) month = 4;
 

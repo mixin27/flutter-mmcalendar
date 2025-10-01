@@ -1,3 +1,4 @@
+import 'package:example/pages/chronicle_demo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
@@ -220,6 +221,12 @@ class _HomePageState extends State<HomePage> {
         onTap: () => _navigateToUtilsDemo(),
       ),
       FeatureItem(
+        title: 'Chronicle',
+        description: 'Chronicle of Myanmar',
+        icon: Icons.history,
+        onTap: () => _navigateToChronicleDemo(),
+      ),
+      FeatureItem(
         title: 'API Examples',
         description: 'Code examples and usage',
         icon: Icons.code,
@@ -393,6 +400,13 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => UtilitiesDemoPage()),
+    );
+  }
+
+  void _navigateToChronicleDemo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChronicleDemoPage()),
     );
   }
 

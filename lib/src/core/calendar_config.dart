@@ -30,6 +30,7 @@ class CalendarConfig {
   /// Default language for translations
   final String defaultLanguage;
 
+  /// Create config with default values
   const CalendarConfig({
     this.sasanaYearType = 0,
     this.calendarType = 0,
@@ -40,7 +41,7 @@ class CalendarConfig {
 
   /// Create config with Myanmar Time (UTC+6:30)
   factory CalendarConfig.myanmarTime() {
-    return const CalendarConfig(timezoneOffset: 6.5, defaultLanguage: 'my');
+    return const CalendarConfig(defaultLanguage: 'my');
   }
 
   /// Create config with Ancient Myanmar Time (UTC+6:24:47)
@@ -57,6 +58,7 @@ class CalendarConfig {
   /// Convert UTC Julian Day Number to local time
   double utcToLocal(double utcJdn) => utcJdn + timezoneOffsetInDays;
 
+  /// Copy with new values
   CalendarConfig copyWith({
     int? sasanaYearType,
     int? calendarType,

@@ -1,64 +1,140 @@
 import 'package:flutter/material.dart';
 
+/// Theme for the Myanmar calendar
 class MyanmarCalendarTheme {
-  // Background and borders
+  /// Background color
   final Color backgroundColor;
+
+  /// Border color
   final Color borderColor;
+
+  /// Border width
   final double borderWidth;
+
+  /// Border radius
   final double borderRadius;
+
+  /// Elevation
   final double elevation;
 
   // Header styling
+
+  /// Header background color
   final Color headerBackgroundColor;
+
+  /// Header text color
   final Color headerTextColor;
+
+  /// Header text style
   final TextStyle headerTextStyle;
+
+  /// Header subtitle style
   final TextStyle? headerSubtitleStyle;
+
+  /// Header padding
   final EdgeInsets headerPadding;
+
+  /// Header icon size
   final double headerIconSize;
 
   // Weekday header styling
+
+  /// Weekday header background color
   final Color weekdayHeaderBackgroundColor;
+
+  /// Weekday header text color
   final Color weekdayHeaderTextColor;
+
+  /// Weekday header text style
   final TextStyle weekdayHeaderTextStyle;
+
+  /// Weekday header padding
   final EdgeInsets weekdayHeaderPadding;
 
   // Calendar grid styling
+
+  /// Calendar padding
   final EdgeInsets calendarPadding;
+
+  /// Date cell margin
   final EdgeInsets dateCellMargin;
+
+  /// Date cell border radius
   final double dateCellBorderRadius;
 
   // Date cell styling
+
+  /// Date cell background color
   final Color dateCellBackgroundColor;
+
+  /// Date cell text color
   final Color dateCellTextColor;
+
+  /// Date cell text style
   final TextStyle dateCellTextStyle;
+
+  /// Date cell secondary text style
   final TextStyle? dateCellSecondaryTextStyle;
 
   // Today styling
+
+  /// Today background color
   final Color todayBackgroundColor;
+
+  /// Today text color
   final Color todayTextColor;
+
+  /// Today border color
   final Color? todayBorderColor;
 
   // Selected date styling
+
+  /// Selected date background color
   final Color selectedDateBackgroundColor;
+
+  /// Selected date text color
   final Color selectedDateTextColor;
+
+  /// Selected date border color
   final Color? selectedDateBorderColor;
 
   // Disabled date styling
+
+  /// Disabled date background color
   final Color disabledDateBackgroundColor;
+
+  /// Disabled date text color
   final Color disabledDateTextColor;
 
   // Special day styling
+
+  /// Sabbath background color
   final Color sabbathBackgroundColor;
+
+  /// Sabbath text color
   final Color sabbathTextColor;
+
+  /// Full moon background color
   final Color fullMoonBackgroundColor;
+
+  /// Full moon text color
   final Color fullMoonTextColor;
+
+  /// New moon background color
   final Color newMoonBackgroundColor;
+
+  /// New moon text color
   final Color newMoonTextColor;
 
   // Indicator colors
+
+  /// Holiday indicator color
   final Color holidayIndicatorColor;
+
+  /// Astro indicator color
   final Color astroIndicatorColor;
 
+  /// Create a new theme
   const MyanmarCalendarTheme({
     required this.backgroundColor,
     required this.borderColor,

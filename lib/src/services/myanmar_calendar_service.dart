@@ -200,7 +200,7 @@ class MyanmarCalendarService {
     // get first day of myanmar month
     final yearInfo = _dateConverter.getYearInfo(year);
     final yearType = yearInfo['yearType'];
-    var monthLength = _dateConverter.getMonthLength(month, yearType);
+    final monthLength = _dateConverter.getMonthLength(month, yearType);
 
     // We don't use Late Kason, Just Kason
     if (month == 14 && yearType == 0) {
@@ -213,8 +213,8 @@ class MyanmarCalendarService {
     }
 
     for (int day = 1; day <= monthLength; day++) {
-      var jdn = _dateConverter.myanmarToJulian(year, month, day, 12, 0, 0);
-      var convertedDate = _dateConverter.julianToMyanmar(jdn);
+      final jdn = _dateConverter.myanmarToJulian(year, month, day);
+      final convertedDate = _dateConverter.julianToMyanmar(jdn);
       if (convertedDate.year == year && convertedDate.month == month) {
         dates.add(convertedDate);
       }
@@ -233,18 +233,19 @@ class MyanmarCalendarService {
 
   /// Check if a Myanmar year is a watat year
   bool isWatatYear(int year) {
-    final firstDayOfYear = _dateConverter.myanmarToJulian(year, 1, 1, 12, 0, 0);
+    final firstDayOfYear = _dateConverter.myanmarToJulian(year, 1, 1);
     final myanmarDate = _dateConverter.julianToMyanmar(firstDayOfYear);
     return myanmarDate.yearType > 0;
   }
 
   /// Get year type for a Myanmar year
   int getYearType(int year) {
-    final firstDayOfYear = _dateConverter.myanmarToJulian(year, 1, 1, 12, 0, 0);
+    final firstDayOfYear = _dateConverter.myanmarToJulian(year, 1, 1);
     final myanmarDate = _dateConverter.julianToMyanmar(firstDayOfYear);
     return myanmarDate.yearType;
   }
 
+  /// Set language for the service
   void setLanguage(Language language) {
     TranslationService.setLanguage(language);
   }
@@ -278,7 +279,7 @@ class MyanmarCalendarService {
 
     try {
       // Try to create the date
-      final jdn = _dateConverter.myanmarToJulian(year, month, day, 12, 0, 0);
+      final jdn = _dateConverter.myanmarToJulian(year, month, day);
       final reconstructed = _dateConverter.julianToMyanmar(jdn);
 
       // Check if the reconstructed date matches input
