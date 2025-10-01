@@ -64,4 +64,46 @@ class ChronicleService {
     }
     return null;
   }
+
+  /// Get entries for a given dynasty ID (ordered by start date).
+  List<ChronicleEntryData> entriesForDynasty(String dynastyId) {
+    _ensureLoaded();
+    return List<ChronicleEntryData>.from(
+      _dynastyToEntries?[dynastyId] ?? const <ChronicleEntryData>[],
+    );
+  }
+
+  /// Get chronicle entries whose span intersects the JDN range [startJdn, endJdn].
+  List<ChronicleEntryData> betweenJdn(double startJdn, double endJdn) {
+    _ensureLoaded();
+    final double a = startJdn <= endJdn ? startJdn : endJdn;
+    final double b = startJdn <= endJdn ? endJdn : startJdn;
+    final result = <ChronicleEntryData>[];
+    for (final e in _entries!) {
+      final double ej0 = e.startJdn;
+      final double ej1 = e.endJdn ?? double.infinity;
+      if (ej0 <= b && ej1 >= a) {
+        result.add(e);
+      }
+    }
+    result.sort((x, y) => x.startJdn.compareTo(y.startJdn));
+    return result;
+  }
+
+  /// List all dynasties (ordered by start date).
+  List<DynastyData> allDynasties() {
+    _ensureLoaded();
+    final list = List<DynastyData>.from(_dynasties!);
+    list.sort((a, b) => a.startJdn.compareTo(b.startJdn));
+    return list;
+  }
+
+  /// Lookup a dynasty by ID.
+  DynastyData? dynastyById(String dynastyId) {
+    _ensureLoaded();
+    for (final d in _dynasties!) {
+      if (d.id == dynastyId) return d;
+    }
+    return null;
+  }
 }

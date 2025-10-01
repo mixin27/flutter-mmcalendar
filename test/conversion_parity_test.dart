@@ -22,8 +22,16 @@ void main() {
         final y = s[0], m = s[1], d = s[2];
         final jdn = converter.westernToJulian(y, m, d, 12, 0, 0);
         final back = converter.julianToWestern(jdn);
-        expect([back.year, back.month, back.day], [y, m, d], reason: 'Date mismatch for $y-$m-$d');
-        expect([back.hour, back.minute], [12, 0], reason: 'Noon-based time expected for $y-$m-$d');
+        expect(
+          [back.year, back.month, back.day],
+          [y, m, d],
+          reason: 'Date mismatch for $y-$m-$d',
+        );
+        expect(
+          [back.hour, back.minute],
+          [12, 0],
+          reason: 'Noon-based time expected for $y-$m-$d',
+        );
       }
     });
 
@@ -41,9 +49,20 @@ void main() {
         final jdn = converter.myanmarToJulian(my, mm, md, 12, 0, 0);
         final back = converter.julianToMyanmar(jdn);
         // Accept equivalent representations across year-boundary months (e.g., Late Tagu/Tagu)
-        final jdnBack = converter.myanmarToJulian(back.year, back.month, back.day, 12, 0, 0);
-        expect((jdnBack - jdn).abs() < 0.5, isTrue,
-            reason: 'JDN round-trip mismatch for $my/$mm/$md -> ${back.year}/${back.month}/${back.day}');
+        final jdnBack = converter.myanmarToJulian(
+          back.year,
+          back.month,
+          back.day,
+          12,
+          0,
+          0,
+        );
+        expect(
+          (jdnBack - jdn).abs() < 0.5,
+          isTrue,
+          reason:
+              'JDN round-trip mismatch for $my/$mm/$md -> ${back.year}/${back.month}/${back.day}',
+        );
       }
     });
 
@@ -52,15 +71,31 @@ void main() {
       final converter = DateConverter(cfg);
 
       final western = [2024, 3, 31]; // Easter 2024 Sunday
-      final jdnMorning = converter.westernToJulian(western[0], western[1], western[2], 0, 0, 0);
-      final jdnNight = converter.westernToJulian(western[0], western[1], western[2], 23, 59, 59);
+      final jdnMorning = converter.westernToJulian(
+        western[0],
+        western[1],
+        western[2],
+        0,
+        0,
+        0,
+      );
+      final jdnNight = converter.westernToJulian(
+        western[0],
+        western[1],
+        western[2],
+        23,
+        59,
+        59,
+      );
 
       final mmMorning = converter.julianToMyanmar(jdnMorning);
       final mmNight = converter.julianToMyanmar(jdnNight);
 
-      expect([mmMorning.year, mmMorning.month, mmMorning.day],
-          [mmNight.year, mmNight.month, mmNight.day],
-          reason: 'Myanmar date should remain the same within the same civil day');
+      expect(
+        [mmMorning.year, mmMorning.month, mmMorning.day],
+        [mmNight.year, mmNight.month, mmNight.day],
+        reason: 'Myanmar date should remain the same within the same civil day',
+      );
     });
   });
 
@@ -75,5 +110,3 @@ void main() {
     });
   });
 }
-
-

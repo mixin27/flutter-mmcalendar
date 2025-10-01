@@ -754,4 +754,57 @@ class MyanmarCalendar {
     final jdn = WesternDate.fromDateTime(dt).julianDayNumber;
     return _chronicleInstance().dynastyForJdn(jdn);
   }
+
+  /// Get chronicles for a Julian Day Number
+  static List<ChronicleEntryData> getChronicleForJdn(double jdn) {
+    return _chronicleInstance().byJdn(jdn);
+  }
+
+  /// Get dynasty for a Julian Day Number
+  static DynastyData? getDynastyForJdn(double jdn) {
+    return _chronicleInstance().dynastyForJdn(jdn);
+  }
+
+  /// Get chronicles for a MyanmarDate (uses its JDN)
+  static List<ChronicleEntryData> getChronicleForMyanmar(MyanmarDate date) {
+    return _chronicleInstance().byJdn(date.julianDayNumber);
+  }
+
+  /// Get dynasty for a MyanmarDate (uses its JDN)
+  static DynastyData? getDynastyForMyanmar(MyanmarDate date) {
+    return _chronicleInstance().dynastyForJdn(date.julianDayNumber);
+  }
+
+  /// Get entries for a given dynasty ID
+  static List<ChronicleEntryData> getEntriesForDynasty(String dynastyId) {
+    return _chronicleInstance().entriesForDynasty(dynastyId);
+  }
+
+  /// Get chronicle entries intersecting [start, end] (DateTime) range
+  static List<ChronicleEntryData> getChroniclesBetween(
+    DateTime start,
+    DateTime end,
+  ) {
+    final a = WesternDate.fromDateTime(start).julianDayNumber;
+    final b = WesternDate.fromDateTime(end).julianDayNumber;
+    return _chronicleInstance().betweenJdn(a, b);
+  }
+
+  /// Get chronicle entries intersecting [startJdn, endJdn]
+  static List<ChronicleEntryData> getChroniclesBetweenJdn(
+    double startJdn,
+    double endJdn,
+  ) {
+    return _chronicleInstance().betweenJdn(startJdn, endJdn);
+  }
+
+  /// List all dynasties
+  static List<DynastyData> listDynasties() {
+    return _chronicleInstance().allDynasties();
+  }
+
+  /// Lookup a dynasty by ID
+  static DynastyData? getDynastyById(String dynastyId) {
+    return _chronicleInstance().dynastyById(dynastyId);
+  }
 }
