@@ -64,11 +64,13 @@ import 'src/core/myanmar_date_time.dart';
 import 'src/localization/language.dart';
 import 'src/localization/translation_service.dart';
 import 'src/models/astro_info.dart';
+import 'src/models/chronicle_models.dart';
 import 'src/models/complete_date.dart';
 import 'src/models/holiday_info.dart';
 import 'src/models/myanmar_date.dart';
 import 'src/models/validation_result.dart';
 import 'src/models/western_date.dart';
+import 'src/services/chronicle_service.dart';
 import 'src/services/myanmar_calendar_service.dart';
 import 'src/utils/calendar_utils.dart';
 import 'src/utils/package_constants.dart';
@@ -86,6 +88,7 @@ export 'src/localization/language.dart';
 export 'src/localization/translation_service.dart';
 // Models
 export 'src/models/astro_info.dart';
+export 'src/models/chronicle_models.dart';
 export 'src/models/complete_date.dart';
 export 'src/models/holiday_info.dart';
 export 'src/models/myanmar_date.dart';
@@ -100,6 +103,9 @@ export 'src/services/myanmar_calendar_service.dart';
 export 'src/utils/calendar_constants.dart';
 // Utils
 export 'src/utils/calendar_utils.dart';
+export 'src/utils/chronicle_dynasties.dart';
+export 'src/utils/chronicle_dynasty_meta.dart';
+export 'src/utils/chronicle_entries.dart';
 export 'src/utils/date_extension.dart';
 export 'src/utils/package_constants.dart';
 export 'src/widgets/moon/moon_phase_painter.dart';
@@ -143,6 +149,12 @@ class MyanmarCalendar {
   // Private static instances
   static MyanmarCalendarService? _service;
   static CalendarConfig _config = const CalendarConfig();
+
+  static ChronicleService? _chronicles;
+  static ChronicleService _chronicleInstance() {
+    _chronicles ??= ChronicleService(config: config, language: currentLanguage);
+    return _chronicles!;
+  }
 
   // Private constructor to prevent instantiation
   MyanmarCalendar._();
@@ -729,5 +741,17 @@ class MyanmarCalendar {
     _config = const CalendarConfig();
     _service = null;
     TranslationService.setLanguage(Language.english);
+  }
+
+  /// Get chronicles for [DateTime]
+  static List<ChronicleEntryData> getChronicleFor(DateTime dt) {
+    final jdn = WesternDate.fromDateTime(dt).julianDayNumber;
+    return _chronicleInstance().byJdn(jdn);
+  }
+
+  /// Get dynasty data for [DateTime]
+  static DynastyData? getDynastyFor(DateTime dt) {
+    final jdn = WesternDate.fromDateTime(dt).julianDayNumber;
+    return _chronicleInstance().dynastyForJdn(jdn);
   }
 }
