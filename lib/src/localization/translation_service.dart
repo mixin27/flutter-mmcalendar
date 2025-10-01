@@ -1373,6 +1373,14 @@ class TranslationService {
       Language.shan: 'ၵူၼ်းမိူင်',
       Language.karen: 'အမျိုးသား',
     },
+    "National Day": {
+      Language.english: "National Day",
+      Language.myanmar: 'အမျိုးသားနေ့',
+      Language.zawgyi: 'အမ်ိဳးသားေန႔',
+      Language.mon: 'သၟာဗ္ၚ်ဂကူဗၟာ',
+      Language.shan: 'ဝၼ်းၵူၼ်းမိူင်',
+      Language.karen: 'အမျိုးသားနေ့',
+    },
     "G. Aung San BD": {
       Language.english: "G. Aung San BD",
       Language.myanmar: 'ဗိုလ်ချုပ်မွေးနေ့',
