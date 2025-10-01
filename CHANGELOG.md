@@ -1,5 +1,12 @@
 ## 3.0.0
 
+- Fixed myanmar `National Day` calculation.
+- Added `National Day` translation
+- Remove unrelated holidays like `UN Day`, `Valentines Day`, etc.
+- Added chronicles and dynasties data and can be used via public api
+
+## 3.0.0
+
 - Fixed `isToday` calculation in `CompleteDate`
 - Fixed weekday style with compact mode flag
 - Fixed myanmar month translation
