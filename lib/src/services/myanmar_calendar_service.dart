@@ -200,7 +200,6 @@ class MyanmarCalendarService {
     // get first day of myanmar month
     final yearInfo = _dateConverter.getYearInfo(year);
     final yearType = yearInfo['yearType'];
-    final monthLength = _dateConverter.getMonthLength(month, yearType);
 
     // We don't use Late Kason, Just Kason
     if (month == 14 && yearType == 0) {
@@ -212,12 +211,15 @@ class MyanmarCalendarService {
       return dates;
     }
 
-    for (int day = 1; day <= monthLength; day++) {
-      final jdn = _dateConverter.myanmarToJulian(year, month, day);
-      final convertedDate = _dateConverter.julianToMyanmar(jdn);
-      if (convertedDate.year == year && convertedDate.month == month) {
-        dates.add(convertedDate);
-      }
+    // Get first day of the month
+    var jdn = _dateConverter.myanmarToJulian(year, month, 1);
+    var currentDate = _dateConverter.julianToMyanmar(jdn);
+
+    // Add all days in the month
+    while (currentDate.year == year && currentDate.month == month) {
+      dates.add(currentDate);
+      jdn += 1;
+      currentDate = _dateConverter.julianToMyanmar(jdn);
     }
 
     return dates;

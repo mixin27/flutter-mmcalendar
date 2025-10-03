@@ -16,6 +16,8 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
   bool _showPublicHolidays = true;
   bool _showReligiousHolidays = true;
   bool _showCulturalHolidays = true;
+  bool _showOtherHolidays = true;
+  bool _showAnniversaryDays = true;
   String _searchText = '';
 
   @override
@@ -352,6 +354,33 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
               activeColor: Colors.blue,
               controlAffinity: ListTileControlAffinity.leading,
             ),
+
+            CheckboxListTile(
+              title: Text('Other Holidays'),
+              subtitle: Text('Diwali, Eid, etc.'),
+              value: _showOtherHolidays,
+              onChanged: (value) {
+                setState(() {
+                  _showOtherHolidays = value ?? true;
+                  _loadHolidaysForYear();
+                });
+              },
+              activeColor: Colors.teal,
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            CheckboxListTile(
+              title: Text('Anniversary Days'),
+              subtitle: Text('Valentines, April Fool\', etc.'),
+              value: _showAnniversaryDays,
+              onChanged: (value) {
+                setState(() {
+                  _showAnniversaryDays = value ?? true;
+                  _loadHolidaysForYear();
+                });
+              },
+              activeColor: Colors.deepPurple,
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
           ],
         ),
       ),
@@ -419,6 +448,10 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
     final holidayInfo = holiday.holidayInfo;
     final isToday = holiday.isSameDay(MyanmarCalendar.today());
     final isPast = holiday.isBefore(MyanmarCalendar.today());
+    final combinedHolidays = [
+      ...holidayInfo.allHolidays,
+      ...holidayInfo.allAnniversaryDays,
+    ];
 
     return ListTile(
       leading: SizedBox(
@@ -462,7 +495,7 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...holidayInfo.allHolidays.map(
+          ...combinedHolidays.map(
             (h) => Text(
               TranslationService.translate(h),
               style: TextStyle(
@@ -499,6 +532,11 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
               if (holidayInfo.culturalHolidays.isNotEmpty &&
                   _showCulturalHolidays)
                 _buildHolidayTypeChip('Cultural', Colors.blue),
+              if (holidayInfo.otherHolidays.isNotEmpty && _showOtherHolidays)
+                _buildHolidayTypeChip('Others', Colors.teal),
+              if (holidayInfo.allAnniversaryDays.isNotEmpty &&
+                  _showAnniversaryDays)
+                _buildHolidayTypeChip('Anniversary Days', Colors.deepPurple),
             ],
           ),
         ],
@@ -592,17 +630,23 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: holiday.holidayInfo.allHolidays
-                                  .map(
-                                    (h) => Text(
-                                      TranslationService.translate(h),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
+                              children:
+                                  [
+                                        ...holiday.holidayInfo.allHolidays,
+                                        ...holiday
+                                            .holidayInfo
+                                            .allAnniversaryDays,
+                                      ]
+                                      .map(
+                                        (h) => Text(
+                                          TranslationService.translate(h),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
                             ),
                           ),
                           Container(
@@ -654,7 +698,8 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
         );
         for (final date in monthDates) {
           final myanmarDateTime = MyanmarDateTime.fromMyanmarDate(date);
-          if (myanmarDateTime.hasHolidays) {
+          if (myanmarDateTime.hasHolidays ||
+              myanmarDateTime.hasAnniversaryDays) {
             _holidaysInYear.add(myanmarDateTime);
           }
         }
@@ -683,12 +728,22 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
       if (_showCulturalHolidays && holidayInfo.culturalHolidays.isNotEmpty) {
         matchesFilter = true;
       }
+      if (_showOtherHolidays && holidayInfo.otherHolidays.isNotEmpty) {
+        matchesFilter = true;
+      }
+      if (_showAnniversaryDays && holidayInfo.allAnniversaryDays.isNotEmpty) {
+        matchesFilter = true;
+      }
 
       if (!matchesFilter) return false;
 
       // Apply search filter
       if (_searchText.isNotEmpty) {
-        final allHolidayNames = holidayInfo.allHolidays.join(' ').toLowerCase();
+        final items = [
+          ...holidayInfo.allHolidays,
+          ...holidayInfo.allAnniversaryDays,
+        ];
+        final allHolidayNames = items.join(' ').toLowerCase();
         return allHolidayNames.contains(_searchText);
       }
 
@@ -713,7 +768,8 @@ class _HolidayDemoPageState extends State<HolidayDemoPage> {
           final monthDates = MyanmarCalendar.getMyanmarMonth(nextYear, month);
           for (final date in monthDates) {
             final myanmarDateTime = MyanmarDateTime.fromMyanmarDate(date);
-            if (myanmarDateTime.hasHolidays) {
+            if (myanmarDateTime.hasHolidays ||
+                myanmarDateTime.hasAnniversaryDays) {
               nextYearHolidays.add(myanmarDateTime);
             }
           }

@@ -396,6 +396,9 @@ class MyanmarDateTime {
   /// Check if this date has holidays
   bool get hasHolidays => holidayInfo.hasHolidays;
 
+  /// Check if this date has anniversary days
+  bool get hasAnniversaryDays => holidayInfo.hasAnniversaryDays;
+
   /// Check if this date has astrological significance
   bool get hasAstrologicalDays => astrologicalDays.isNotEmpty;
 
