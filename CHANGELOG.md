@@ -1,3 +1,8 @@
+## 3.1.1
+
+- Added `MoonPhaseIndicator` widget
+- Added chronicles and dynasties data
+
 ## 3.1.0
 
 - Fixed myanmar `National Day` calculation.
