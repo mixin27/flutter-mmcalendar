@@ -126,6 +126,9 @@ class CompleteDate {
   /// Checks if this date has any holidays
   bool get hasHolidays => holidays.hasHolidays;
 
+  /// Checks if this date has any anniversary days
+  bool get hasAnniversaryDays => holidays.hasAnniversaryDays;
+
   /// Checks if this date has astrological significance
   bool get hasAstrologicalDays => astro.astrologicalDays.isNotEmpty;
 
@@ -167,6 +170,9 @@ class CompleteDate {
 
   /// Gets all holidays as a combined list
   List<String> get allHolidays => holidays.allHolidays;
+
+  /// Gets all anniversary days as a combined list
+  List<String> get allAnniversaryDays => holidays.allAnniversaryDays;
 
   /// Gets public holidays only
   List<String> get publicHolidays => holidays.publicHolidays;
@@ -348,6 +354,9 @@ class CompleteDate {
         'publicHolidays': holidays.publicHolidays,
         'religiousHolidays': holidays.religiousHolidays,
         'culturalHolidays': holidays.culturalHolidays,
+        'otherHolidays': holidays.otherHolidays,
+        'myanmarAnniversaryDays': holidays.myanmarAnniversaryDays,
+        'otherAnniversaryDays': holidays.otherAnniversaryDays,
       },
     };
   }
@@ -408,6 +417,13 @@ class CompleteDate {
         ),
         culturalHolidays: List<String>.from(
           holidaysMap['culturalHolidays'] as List,
+        ),
+        otherHolidays: List<String>.from(holidaysMap['otherHolidays'] as List),
+        myanmarAnniversaryDays: List<String>.from(
+          holidaysMap['myanmarAnniversaryDays'] as List,
+        ),
+        otherAnniversaryDays: List<String>.from(
+          holidaysMap['otherAnniversaryDays'] as List,
         ),
       ),
     );

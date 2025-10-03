@@ -28,6 +28,9 @@ class HolidayCalculator {
     final publicHolidays = <String>[];
     final religiousHolidays = <String>[];
     final culturalHolidays = <String>[];
+    final otherHolidays = <String>[];
+    final myanmarAnniversaryDays = <String>[];
+    final otherAnniversaryDays = <String>[];
 
     // Convert to Western date for Gregorian-based holidays
     final westernJdn = date.julianDayNumber;
@@ -52,10 +55,22 @@ class HolidayCalculator {
     // Thingyan holidays (Myanmar New Year)
     _addThingyanHolidays(date, westernDate, publicHolidays, culturalHolidays);
 
+    // Other holidays
+    _addOtherHolidays(westernDate, otherHolidays);
+
+    // Myanmar anniversary days
+    _addMyanmarAnniversaryDays(date, myanmarAnniversaryDays);
+
+    // Other anniversary days
+    _addOtherAnniversaryDays(westernDate, otherAnniversaryDays);
+
     return HolidayInfo(
       publicHolidays: publicHolidays,
       religiousHolidays: religiousHolidays,
       culturalHolidays: culturalHolidays,
+      otherHolidays: otherHolidays,
+      myanmarAnniversaryDays: myanmarAnniversaryDays,
+      otherAnniversaryDays: otherAnniversaryDays,
     );
   }
 
@@ -89,13 +104,21 @@ class HolidayCalculator {
       publicHolidays.add(TranslationService.translate('Holiday'));
     }
 
+    if (date.year >= 1379 &&
+        date.month == CalendarConstants.monthThadingyut &&
+        (date.day == 14 || date.day == 16)) {
+      publicHolidays.add(TranslationService.translate('Holiday'));
+    }
+
     // Tazaungdaing Festival - Tazaungmon full moon
     if (date.month == CalendarConstants.monthTazaungmon &&
         date.moonPhase == CalendarConstants.moonPhaseFullMoon) {
       religiousHolidays.add(TranslationService.translate('Tazaungdaing'));
     }
 
-    if (date.year >= 1379 && date.month == 8 && date.day == 14) {
+    if (date.year >= 1379 &&
+        date.month == CalendarConstants.monthTazaungmon &&
+        date.day == 14) {
       culturalHolidays.add(TranslationService.translate('Holiday'));
     }
 
@@ -119,67 +142,131 @@ class HolidayCalculator {
       culturalHolidays.add(TranslationService.translate('Tabaung'));
       culturalHolidays.add(TranslationService.translate('Pwe'));
     }
+  }
 
+  /// Add Myanmar anniversary days
+  void _addMyanmarAnniversaryDays(MyanmarDate date, List<String> items) {
     // Mahathamaya Day - Nayon full moon
     if (date.month == CalendarConstants.monthNayon &&
         date.moonPhase == CalendarConstants.moonPhaseFullMoon) {
-      religiousHolidays.add(TranslationService.translate('Mahathamaya'));
+      items.add(TranslationService.translate('Mahathamaya'));
     }
 
     // Garudhamma Day - Tawthalin full moon
     if (date.month == CalendarConstants.monthTawthalin &&
         date.moonPhase == CalendarConstants.moonPhaseFullMoon) {
-      religiousHolidays.add(TranslationService.translate('Garudhamma'));
+      items.add(TranslationService.translate('Garudhamma'));
     }
 
     // Mothers' Day - Pyatho full moon (since 1998 CE / 1360 ME)
     if (date.year >= 1360 &&
         date.month == CalendarConstants.monthPyatho &&
         date.moonPhase == CalendarConstants.moonPhaseFullMoon) {
-      culturalHolidays.add(TranslationService.translate('Mothers'));
+      items.add(TranslationService.translate('Mothers'));
     }
 
     // Fathers' Day - Tabaung full moon (since 2008 CE / 1370 ME)
     if (date.year >= 1370 &&
         date.month == CalendarConstants.monthTabaung &&
         date.moonPhase == CalendarConstants.moonPhaseFullMoon) {
-      culturalHolidays.add(TranslationService.translate('Fathers'));
+      items.add(TranslationService.translate('Fathers'));
     }
 
     // Metta Day - Wagaung full moon
     if (date.month == CalendarConstants.monthWagaung &&
         date.moonPhase == CalendarConstants.moonPhaseFullMoon) {
-      religiousHolidays.add(TranslationService.translate('Metta'));
+      items.add(TranslationService.translate('Metta'));
     }
 
     // Taungpyone Pwe - Wagaung 10
     if (date.month == CalendarConstants.monthWagaung && date.day == 10) {
-      culturalHolidays.add(TranslationService.translate('Taungpyone'));
-      culturalHolidays.add(TranslationService.translate('Pwe'));
+      items.add(TranslationService.translate('Taungpyone'));
+      items.add(TranslationService.translate('Pwe'));
     }
 
     // Yadanagu Pwe - Wagaung 23
     if (date.month == CalendarConstants.monthWagaung && date.day == 23) {
-      culturalHolidays.add(TranslationService.translate('Yadanagu'));
-      culturalHolidays.add(TranslationService.translate('Pwe'));
+      items.add(TranslationService.translate('Yadanagu'));
+      items.add(TranslationService.translate('Pwe'));
     }
 
     // Mon National Day - Tabodwe 16 (since 1947 CE / 1309 ME)
     if (date.year >= 1309 &&
         date.month == CalendarConstants.monthTabodwe &&
         date.day == 16) {
-      culturalHolidays.add(TranslationService.translate('Mon'));
-      culturalHolidays.add(TranslationService.translate('National'));
+      items.add(TranslationService.translate('Mon'));
+      items.add(TranslationService.translate('National'));
     }
 
     // Shan New Year & Authors' Day - Nadaw 1
     if (date.month == CalendarConstants.monthNadaw && date.day == 1) {
-      culturalHolidays.add(TranslationService.translate('Shan'));
-      culturalHolidays.add(TranslationService.translate("New Year's"));
+      items.add(TranslationService.translate('Shan'));
+      items.add(TranslationService.translate("New Year's"));
 
       if (date.year >= 1306) {
-        culturalHolidays.add(TranslationService.translate('Authors'));
+        items.add(TranslationService.translate('Authors'));
       }
+    }
+  }
+
+  /// Add other anniversary days
+  void _addOtherAnniversaryDays(
+    Map<String, int> westernDate,
+    List<String> items,
+  ) {
+    final year = westernDate['year']!;
+    final month = westernDate['month']!;
+    final day = westernDate['day']!;
+
+    // General Aung San's Birthday (February 13, since 1915)
+    if (year >= 1915 && month == 2 && day == 13) {
+      items.add(TranslationService.translate('G. Aung San BD'));
+    }
+
+    // Valentines Day
+    if ((year >= 1969) && (month == 2 && day == 14)) {
+      items.add(TranslationService.translate('Valentines'));
+    }
+
+    // Earth Day
+    if ((year >= 1970) && (month == 4 && day == 22)) {
+      items.add(TranslationService.translate('Earth'));
+    }
+
+    // April Fools'
+    if ((year >= 1392) && (month == 4 && day == 1)) {
+      items.add(TranslationService.translate("April Fools'"));
+    }
+
+    // Red cross
+    if ((year >= 1948) && (month == 5 && day == 8)) {
+      items.add(TranslationService.translate('Red Cross'));
+    }
+
+    // World Teachers'
+    if ((year >= 1994) && (month == 10 && day == 5)) {
+      items.add(TranslationService.translate("World Teachers'"));
+    }
+
+    // UN Day
+    if ((year >= 1947) && (month == 10 && day == 24)) {
+      items.add(TranslationService.translate("United Nations"));
+    }
+
+    // Halloween
+    if ((year >= 1753) && (month == 10 && day == 31)) {
+      items.add(TranslationService.translate("Halloween"));
+    }
+
+    final jd = _westernToJdn(year, month, day);
+    final eid2Search = _bSearch1(jd, _getEid2Days());
+    if (eid2Search >= 0) {
+      items.add(TranslationService.translate("Eid"));
+    }
+
+    final cySearch = _bSearch1(jd, _getChineseNewYearDays());
+    if (cySearch >= 0) {
+      items.add(TranslationService.translate("Chinese New Year's"));
     }
   }
 
@@ -199,9 +286,9 @@ class HolidayCalculator {
       publicHolidays.add(TranslationService.translate("New Year's"));
     }
 
-    // General Aung San's Birthday (February 13, since 1915)
-    if (year >= 1915 && month == 2 && day == 13) {
-      culturalHolidays.add(TranslationService.translate('G. Aung San BD'));
+    // Pre New Year's
+    if (year >= 2018 && month == 12 && day == 31) {
+      publicHolidays.add(TranslationService.translate("Holiday"));
     }
 
     // Independence Day (January 4, since 1948)
@@ -322,6 +409,24 @@ class HolidayCalculator {
     }
   }
 
+  /// Add other holidays
+  void _addOtherHolidays(
+    Map<String, int> westernDate,
+    List<String> otherHolidays,
+  ) {
+    final year = westernDate['year']!;
+    final month = westernDate['month']!;
+    final day = westernDate['day']!;
+
+    final jd = _westernToJdn(year, month, day);
+    if (_bSearch1(jd, _getDiwaliDays()) >= 0) {
+      otherHolidays.add(TranslationService.translate('Diwali'));
+    }
+    if (_bSearch1(jd, _getEidDays()) >= 0) {
+      otherHolidays.add(TranslationService.translate('Eid'));
+    }
+  }
+
   /// Calculate Easter Sunday for a given year using Gregorian calendar
   int _calculateEaster(int year) {
     final a = year % 19;
@@ -402,5 +507,52 @@ class HolidayCalculator {
       return substituteHolidays.contains(julianDayNumber.round());
     }
     return false;
+  }
+
+  List<int> _getChineseNewYearDays() {
+    return [
+      2456689,
+      2456690,
+      2457073,
+      2457074,
+      2457427,
+      2457428,
+      2457782,
+      2457783,
+      2458166,
+      2458167,
+    ];
+  }
+
+  List<int> _getDiwaliDays() {
+    return [2456599, 2456953, 2457337, 2457691, 2458045, 2458429];
+  }
+
+  List<int> _getEidDays() {
+    return [2456513, 2456867, 2457221, 2457576, 2457930, 2458285];
+  }
+
+  List<int> _getEid2Days() {
+    return [2456936, 2457290, 2457644, 2457998, 2458353];
+  }
+
+  // Binary search for array with one element
+  static int _bSearch1(int key, List<int> arr) {
+    int low = 0;
+    int high = arr.length - 1;
+
+    while (low <= high) {
+      final int mid = ((low + high) / 2).floor();
+
+      if (arr[mid] > key) {
+        high = mid - 1;
+      } else if (arr[mid] < key) {
+        low = mid + 1;
+      } else {
+        return mid;
+      }
+    }
+
+    return -1;
   }
 }

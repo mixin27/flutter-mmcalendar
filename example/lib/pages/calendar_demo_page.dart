@@ -156,6 +156,21 @@ class _CalendarDemoPageState extends State<CalendarDemoPage> {
             ),
           ],
 
+          // Anniversary Days
+          if (date.hasAnniversaryDays) ...[
+            SizedBox(height: 8),
+            Text(
+              'Anniversary Days:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            ...date.allAnniversaryDays.map(
+              (holiday) => Padding(
+                padding: EdgeInsets.only(left: 8, top: 2),
+                child: Text('• $holiday', style: TextStyle(color: Colors.red)),
+              ),
+            ),
+          ],
+
           // Astrological information
           if (date.hasAstrologicalDays) ...[
             SizedBox(height: 8),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
@@ -12,17 +10,6 @@ void main() {
     timezoneOffset: 6.5, // Myanmar Standard Time
     sasanaYearType: 0,
   );
-
-  final service = MyanmarCalendarService(
-    config: CalendarConfig(defaultLanguage: Language.myanmar.name),
-  );
-  final dateTime = MyanmarCalendar.fromWestern(2026, 8, 13);
-  final result = service.formatMyanmarDate(
-    dateTime.myanmarDate,
-    pattern: '&y &M',
-    language: Language.myanmar,
-  );
-  log("Result -> $result");
 
   runApp(const MyApp());
 }

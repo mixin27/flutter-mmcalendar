@@ -1271,11 +1271,11 @@ class TranslationService {
     },
     "New Year's": {
       Language.english: "New Year's",
-      Language.myanmar: 'နှစ်ဆန်း',
-      Language.zawgyi: 'ႏွစ္ဆန္း',
-      Language.mon: 'လှာဲသၞာံ',
-      Language.shan: 'ပီမႂ်ႇ',
-      Language.karen: 'နှစ်ဆန်း',
+      Language.myanmar: 'နှစ်သစ်ကူး',
+      Language.zawgyi: 'ႏွစ္သစ္ကူး',
+      Language.mon: "New Year's",
+      Language.shan: "New Year's",
+      Language.karen: "New Year's",
     },
     'Independence': {
       Language.english: 'Independence',
@@ -1677,13 +1677,13 @@ class TranslationService {
       Language.shan: 'World Teachers Day',
       Language.karen: 'World Teachers Day',
     },
-    "Chinese New Year": {
-      Language.english: "Chinese New Year",
-      Language.myanmar: 'Chinese New Year',
-      Language.zawgyi: 'Chinese New Year',
-      Language.mon: 'Chinese New Year',
-      Language.shan: 'Chinese New Year',
-      Language.karen: 'Chinese New Year',
+    "Chinese New Year's": {
+      Language.english: "Chinese New Year's",
+      Language.myanmar: 'တရုတ်နှစ်သစ်ကူး',
+      Language.zawgyi: "Chinese New Year's",
+      Language.mon: "Chinese New Year's",
+      Language.shan: "Chinese New Year's",
+      Language.karen: "Chinese New Year's",
     },
     "Holiday": {
       Language.english: "Holiday",

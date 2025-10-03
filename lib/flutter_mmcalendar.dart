@@ -108,8 +108,7 @@ export 'src/utils/chronicle_dynasty_meta.dart';
 export 'src/utils/chronicle_entries.dart';
 export 'src/utils/date_extension.dart';
 export 'src/utils/package_constants.dart';
-export 'src/widgets/moon/moon_phase_painter.dart';
-export 'src/widgets/moon/moon_phase_widgets.dart';
+export 'src/widgets/moon/moon_phase_indicator.dart';
 // Widgets
 export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';

@@ -164,41 +164,4 @@ class CalendarConstants {
     'Krittika',
     'Mrigasiras',
   ];
-
-  /// Eid 2
-  static const List<int> ghEid2 = [2456936, 2457290, 2457644, 2457998, 2458353];
-
-  /// Chinese new year ref
-  static const List<int> ghCNY = [
-    2456689,
-    2456690,
-    2457073,
-    2457074,
-    2457427,
-    2457428,
-    2457782,
-    2457783,
-    2458166,
-    2458167,
-  ];
-
-  /// Diwali
-  static const List<int> ghDiwali = [
-    2456599,
-    2456953,
-    2457337,
-    2457691,
-    2458045,
-    2458429,
-  ];
-
-  /// Eid
-  static const List<int> ghEid = [
-    2456513,
-    2456867,
-    2457221,
-    2457576,
-    2457930,
-    2458285,
-  ];
 }
