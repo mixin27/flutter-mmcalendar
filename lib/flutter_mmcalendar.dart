@@ -59,6 +59,7 @@
 /// For detailed documentation and examples, visit: https://pub.dev/packages/flutter_mmcalendar
 library;
 
+import 'src/core/calendar_cache.dart';
 import 'src/core/calendar_config.dart';
 import 'src/core/myanmar_date_time.dart';
 import 'src/localization/language.dart';
@@ -80,9 +81,11 @@ import 'src/utils/package_constants.dart';
 // ============================================================================
 
 // Configuration
+export 'src/core/calendar_cache.dart';
 export 'src/core/calendar_config.dart';
 export 'src/core/myanmar_calendar_theme.dart';
 export 'src/core/myanmar_date_time.dart';
+
 // Localization
 export 'src/localization/language.dart';
 export 'src/localization/translation_service.dart';
@@ -155,6 +158,8 @@ class MyanmarCalendar {
     return _chronicles!;
   }
 
+  static CalendarCache? _cache;
+
   // Private constructor to prevent instantiation
   MyanmarCalendar._();
 
@@ -201,6 +206,41 @@ class MyanmarCalendar {
   static MyanmarCalendarService get _serviceInstance {
     _service ??= MyanmarCalendarService(config: _config);
     return _service!;
+  }
+
+  /// Configure cache
+  static void configureCache(CacheConfig cacheConfig) {
+    _cache = CalendarCache(config: cacheConfig);
+  }
+
+  /// Get cache instance
+  static CalendarCache get cache {
+    _cache ??= CalendarCache();
+    return _cache!;
+  }
+
+  /// Clear all caches
+  static void clearCache() {
+    cache.clearAll();
+  }
+
+  /// Get cache statistics
+  static Map<String, dynamic> getCacheStatistics() {
+    return cache.getStatistics();
+  }
+
+  /// Warm up cache with date range
+  static void warmUpCache({DateTime? startDate, DateTime? endDate}) {
+    cache.warmUp(
+      startDate: startDate,
+      endDate: endDate,
+      service: _serviceInstance,
+    );
+  }
+
+  /// Reset cache statistics
+  static void resetCacheStatistics() {
+    cache.resetStatistics();
   }
 
   // ============================================================================

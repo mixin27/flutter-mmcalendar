@@ -21,10 +21,35 @@ import 'package:flutter_mmcalendar/src/models/holiday_info.dart';
 import 'package:flutter_mmcalendar/src/models/myanmar_date.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_constants.dart';
 
+import '../core/calendar_cache.dart';
+
 /// Service for calculating holidays in the Myanmar calendar system
 class HolidayCalculator {
+  late final CalendarCache _cache;
+
+  /// Create a new [HolidayCalculator] instance
+  HolidayCalculator({CacheConfig? cacheConfig}) {
+    _cache = CalendarCache(config: cacheConfig ?? const CacheConfig());
+  }
+
   /// Get all holidays for a Myanmar date
   HolidayInfo getHolidays(MyanmarDate date) {
+    // Try to get from cache
+    final cached = _cache.getHolidayInfo(date);
+    if (cached != null) {
+      return cached;
+    }
+
+    // Calculate if not in cache
+    final holidayInfo = _calculateHolidays(date);
+
+    // Store in cache
+    _cache.putHolidayInfo(date, holidayInfo);
+
+    return holidayInfo;
+  }
+
+  HolidayInfo _calculateHolidays(MyanmarDate date) {
     final publicHolidays = <String>[];
     final religiousHolidays = <String>[];
     final culturalHolidays = <String>[];

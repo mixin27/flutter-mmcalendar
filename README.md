@@ -595,6 +595,10 @@ print('Supported Languages: ${diagnostics['supportedLanguages']}');
 MyanmarCalendar.reset();
 ```
 
+## Cache System
+
+See [Cache Docs](cache.md)
+
 ## Acknowledgements
 
 The calculation algorithms are based on the original work by

@@ -20,10 +20,35 @@ import 'package:flutter_mmcalendar/src/models/astro_info.dart';
 import 'package:flutter_mmcalendar/src/models/myanmar_date.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_constants.dart';
 
+import '../core/calendar_cache.dart';
+
 /// Calculator for astrological information in Myanmar calendar
 class AstroCalculator {
+  late final CalendarCache _cache;
+
+  /// Create a new [AstroCalculator] instance
+  AstroCalculator({CacheConfig? cacheConfig}) {
+    _cache = CalendarCache(config: cacheConfig ?? const CacheConfig());
+  }
+
   /// Calculate astrological information for a Myanmar date
-  AstroInfo calculate(MyanmarDate md) {
+  AstroInfo calculate(MyanmarDate date) {
+    // Try to get from cache
+    final cached = _cache.getAstroInfo(date);
+    if (cached != null) {
+      return cached;
+    }
+
+    // Calculate if not in cache
+    final astroInfo = _calculateAstroInfo(date);
+
+    // Store in cache
+    _cache.putAstroInfo(date, astroInfo);
+
+    return astroInfo;
+  }
+
+  AstroInfo _calculateAstroInfo(MyanmarDate md) {
     final sabbath = _calculateSabbath(md.day, md.month, md.yearType);
 
     return AstroInfo(

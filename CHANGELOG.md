@@ -1,3 +1,7 @@
+## 3.2.0
+
+- Added `Cache` system: See [Cache Docs](https://github.com/mixin27/flutter-mmcalendar/blob/main/cache.md) for usage.
+
 ## 3.1.1
 
 - Added `MoonPhaseIndicator` widget

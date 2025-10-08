@@ -11,6 +11,9 @@ void main() {
     sasanaYearType: 0,
   );
 
+  // Configure cache for optimal performance
+  MyanmarCalendar.configureCache(const CacheConfig.highPerformance());
+
   runApp(const MyApp());
 }
 
