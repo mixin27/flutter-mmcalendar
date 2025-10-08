@@ -4,6 +4,7 @@ import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 import 'api_demo_page.dart';
 import 'astrological_demo_page.dart';
+import 'cache_demo_page.dart';
 import 'calendar_demo_page.dart';
 import 'converter_demo_page.dart';
 import 'holiday_demo_page.dart';
@@ -227,6 +228,12 @@ class _HomePageState extends State<HomePage> {
         onTap: () => _navigateToChronicleDemo(),
       ),
       FeatureItem(
+        title: 'Cache',
+        description: 'Cache system',
+        icon: Icons.memory,
+        onTap: () => _navigateToCacheDemo(),
+      ),
+      FeatureItem(
         title: 'API Examples',
         description: 'Code examples and usage',
         icon: Icons.code,
@@ -407,6 +414,13 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ChronicleDemoPage()),
+    );
+  }
+
+  void _navigateToCacheDemo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CacheDemoPage()),
     );
   }
 

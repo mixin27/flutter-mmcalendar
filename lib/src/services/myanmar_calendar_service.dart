@@ -12,6 +12,8 @@ import 'package:flutter_mmcalendar/src/services/date_converter.dart';
 import 'package:flutter_mmcalendar/src/services/format_service.dart';
 import 'package:flutter_mmcalendar/src/services/holiday_calculator.dart';
 
+import '../core/calendar_cache.dart';
+
 /// Main service class for Myanmar Calendar operations
 ///
 /// This service provides:
@@ -22,18 +24,25 @@ import 'package:flutter_mmcalendar/src/services/holiday_calculator.dart';
 /// - Configuration management
 class MyanmarCalendarService {
   final CalendarConfig _config;
-  final DateConverter _dateConverter;
-  final AstroCalculator _astroCalculator;
-  final HolidayCalculator _holidayCalculator;
+  late final DateConverter _dateConverter;
+  late final AstroCalculator _astroCalculator;
+  late final HolidayCalculator _holidayCalculator;
   final FormatService _formatService;
+  late final CalendarCache _cache;
 
   /// Create a new Myanmar Calendar service with configuration
   MyanmarCalendarService({CalendarConfig? config, Language? defaultLanguage})
     : _config = config ?? const CalendarConfig(),
-      _dateConverter = DateConverter(config ?? const CalendarConfig()),
-      _astroCalculator = AstroCalculator(),
-      _holidayCalculator = HolidayCalculator(),
+
       _formatService = FormatService() {
+    // Initialize cache
+    _cache = CalendarCache(config: _config.cacheConfig ?? const CacheConfig());
+
+    // Initialize services with cache config
+    _dateConverter = DateConverter(_config);
+    _astroCalculator = AstroCalculator(cacheConfig: _config.cacheConfig);
+    _holidayCalculator = HolidayCalculator(cacheConfig: _config.cacheConfig);
+
     // Set default language
     if (defaultLanguage != null) {
       TranslationService.setLanguage(defaultLanguage);
@@ -178,6 +187,13 @@ class MyanmarCalendarService {
 
   /// Get complete information for a date (Myanmar + Western + Astro + Holidays)
   CompleteDate getCompleteDate(DateTime dateTime) {
+    // Try to get from cache
+    final cached = _cache.getCompleteDate(dateTime);
+    if (cached != null) {
+      return cached;
+    }
+
+    // Calculate if not in cache
     final westernDate = WesternDate.fromDateTime(dateTime);
     final myanmarDate = _dateConverter.julianToMyanmar(
       westernDate.julianDayNumber,
@@ -185,12 +201,17 @@ class MyanmarCalendarService {
     final astroInfo = _astroCalculator.calculate(myanmarDate);
     final holidayInfo = _holidayCalculator.getHolidays(myanmarDate);
 
-    return CompleteDate(
+    final completeDate = CompleteDate(
       western: westernDate,
       myanmar: myanmarDate,
       astro: astroInfo,
       holidays: holidayInfo,
     );
+
+    // Store in cache
+    _cache.putCompleteDate(dateTime, completeDate);
+
+    return completeDate;
   }
 
   /// Get Myanmar dates for a month
@@ -301,5 +322,15 @@ class MyanmarCalendarService {
         error: 'Invalid date: ${e.toString()}',
       );
     }
+  }
+
+  /// Get cache statistics
+  Map<String, dynamic> getCacheStatistics() {
+    return _cache.getStatistics();
+  }
+
+  /// Clear cache
+  void clearCache() {
+    _cache.clearAll();
   }
 }

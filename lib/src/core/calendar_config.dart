@@ -1,3 +1,5 @@
+import 'calendar_cache.dart';
+
 /// Configuration class for the Myanmar Calendar
 class CalendarConfig {
   /// Sasana year type
@@ -30,6 +32,9 @@ class CalendarConfig {
   /// Default language for translations
   final String defaultLanguage;
 
+  /// Cache configuration
+  final CacheConfig? cacheConfig;
+
   /// Create config with default values
   const CalendarConfig({
     this.sasanaYearType = 0,
@@ -37,6 +42,7 @@ class CalendarConfig {
     this.gregorianStart = 2361222,
     this.timezoneOffset = 6.5, // Myanmar Time UTC+6:30
     this.defaultLanguage = 'en',
+    this.cacheConfig,
   });
 
   /// Create config with Myanmar Time (UTC+6:30)
@@ -65,6 +71,7 @@ class CalendarConfig {
     int? gregorianStart,
     double? timezoneOffset,
     String? defaultLanguage,
+    CacheConfig? cacheConfig,
   }) {
     return CalendarConfig(
       sasanaYearType: sasanaYearType ?? this.sasanaYearType,
@@ -72,6 +79,7 @@ class CalendarConfig {
       gregorianStart: gregorianStart ?? this.gregorianStart,
       timezoneOffset: timezoneOffset ?? this.timezoneOffset,
       defaultLanguage: defaultLanguage ?? this.defaultLanguage,
+      cacheConfig: cacheConfig ?? this.cacheConfig,
     );
   }
 }

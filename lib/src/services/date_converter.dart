@@ -23,14 +23,18 @@ import 'package:flutter_mmcalendar/src/models/western_date.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_constants.dart';
 import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
 
+import '../core/calendar_cache.dart';
 import '../utils/myanmar_year_constants.dart';
 
 /// Date converter core
 class DateConverter {
   final CalendarConfig _config;
+  late final CalendarCache _cache;
 
   /// Create a new date converter
-  const DateConverter(this._config);
+  DateConverter(this._config) {
+    _cache = CalendarCache(config: _config.cacheConfig ?? const CacheConfig());
+  }
 
   /// Get current calendar config.
   CalendarConfig get config => _config;
@@ -113,6 +117,22 @@ class DateConverter {
 
   /// Convert Julian Day Number to Western date
   WesternDate julianToWestern(double julianDayNumber) {
+    // Try to get from cache
+    final cached = _cache.getWesternDate(julianDayNumber);
+    if (cached != null) {
+      return cached;
+    }
+
+    // Calculate if not in cache
+    final westernDate = _calculateJulianToWestern(julianDayNumber);
+
+    // Store in cache
+    _cache.putWesternDate(julianDayNumber, westernDate);
+
+    return westernDate;
+  }
+
+  WesternDate _calculateJulianToWestern(double julianDayNumber) {
     final localJdn = julianDayNumber;
     final calType = _config.calendarType;
     final gregorianStart = _config.gregorianStart.toDouble();
@@ -251,6 +271,22 @@ class DateConverter {
 
   /// Convert Julian Day Number to Myanmar date
   MyanmarDate julianToMyanmar(double julianDayNumber) {
+    // Try to get from cache
+    final cached = _cache.getMyanmarDate(julianDayNumber);
+    if (cached != null) {
+      return cached;
+    }
+
+    // Calculate if not in cache
+    final myanmarDate = _calculateJulianToMyanmar(julianDayNumber);
+
+    // Store in cache
+    _cache.putMyanmarDate(julianDayNumber, myanmarDate);
+
+    return myanmarDate;
+  }
+
+  MyanmarDate _calculateJulianToMyanmar(double julianDayNumber) {
     final jdn = julianDayNumber.round();
 
     // Calculate Myanmar year
