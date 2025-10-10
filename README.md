@@ -527,28 +527,12 @@ class CalendarController extends ChangeNotifier {
 
 ## Performance Tips
 
-1. **Caching**: The package automatically caches calculated dates and astrological information.
+1. **Caching**: The package automatically caches calculated dates and astrological information. See [Caching System Docs](cache.md).
 
 2. **Batch Operations**: Use batch methods for processing multiple dates:
 
    ```dart
-   // Efficient
    final dates = MyanmarCalendar.convertWesternDates(westernDates);
-
-   // Less efficient
-   final dates = westernDates.map((d) => MyanmarCalendar.fromDateTime(d)).toList();
-   ```
-
-3. **Configuration**: Set up configuration once at app startup:
-
-   ```dart
-   void main() {
-     MyanmarCalendar.configure(
-       language: Language.myanmar,
-       timezoneOffset: 6.5,
-     );
-     runApp(MyApp());
-   }
    ```
 
 ## Troubleshooting
@@ -594,10 +578,6 @@ print('Supported Languages: ${diagnostics['supportedLanguages']}');
 // Reset configuration if needed
 MyanmarCalendar.reset();
 ```
-
-## Cache System
-
-See [Cache Docs](cache.md)
 
 ## Acknowledgements
 

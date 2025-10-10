@@ -27,9 +27,7 @@ class AstroCalculator {
   late final CalendarCache _cache;
 
   /// Create a new [AstroCalculator] instance
-  AstroCalculator({CacheConfig? cacheConfig}) {
-    _cache = CalendarCache(config: cacheConfig ?? const CacheConfig());
-  }
+  AstroCalculator({required CalendarCache cache}) : _cache = cache;
 
   /// Calculate astrological information for a Myanmar date
   AstroInfo calculate(MyanmarDate date) {

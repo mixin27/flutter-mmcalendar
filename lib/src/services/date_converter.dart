@@ -16,7 +16,6 @@
 /// ------------------------------------------------------------
 library;
 
-import 'package:flutter/rendering.dart';
 import 'package:flutter_mmcalendar/src/core/calendar_config.dart';
 import 'package:flutter_mmcalendar/src/models/myanmar_date.dart';
 import 'package:flutter_mmcalendar/src/models/western_date.dart';
@@ -29,12 +28,10 @@ import '../utils/myanmar_year_constants.dart';
 /// Date converter core
 class DateConverter {
   final CalendarConfig _config;
-  late final CalendarCache _cache;
+  final CalendarCache _cache;
 
   /// Create a new date converter
-  DateConverter(this._config) {
-    _cache = CalendarCache(config: _config.cacheConfig ?? const CacheConfig());
-  }
+  DateConverter(this._config, {required CalendarCache cache}) : _cache = cache;
 
   /// Get current calendar config.
   CalendarConfig get config => _config;
@@ -70,6 +67,36 @@ class DateConverter {
   ]) {
     _validateWesternDate(year, month, day, hour, minute, second);
 
+    // Try to get from cache
+    // final cached = _cache.g(julianDayNumber);
+    // if (cached != null) {
+    //   return cached;
+    // }
+
+    // Calculate if not in cache
+    final jd = _calculateWesternToJulian(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+    );
+
+    // Store in cache
+    // _cache.putWesternDate(julianDayNumber, westernDate);
+
+    return jd;
+  }
+
+  double _calculateWesternToJulian(
+    int year,
+    int month,
+    int day, [
+    int hour = 12,
+    int minute = 0,
+    int second = 0,
+  ]) {
     final calType = _config.calendarType;
     final gregorianStart = _config.gregorianStart.toDouble();
 
@@ -569,97 +596,5 @@ class DateConverter {
       'firstDayJdn': yearInfo['tg1']!.toInt(),
       'fullMoonJdn': yearInfo['fm']!.toInt(),
     };
-  }
-
-  /// Test conversion accuracy
-  static void testAccuracy() {
-    final converter = DateConverter(const CalendarConfig());
-
-    debugPrint(
-      'Testing Myanmar Calendar Conversion (Based on Proven Implementation):',
-    );
-    debugPrint('=' * 70);
-
-    // Test today's date
-    final today = DateTime.now();
-    try {
-      final jdn = converter.westernToJulian(today.year, today.month, today.day);
-      final myanmarDate = converter.julianToMyanmar(jdn);
-
-      debugPrint('Today (${today.year}-${today.month}-${today.day}):');
-      debugPrint('JDN: ${jdn.toStringAsFixed(6)}');
-      debugPrint(
-        'Myanmar: ${myanmarDate.year}/${myanmarDate.month}/${myanmarDate.day}',
-      );
-      debugPrint(
-        'Year Type: ${myanmarDate.yearType} (${_getYearTypeName(myanmarDate.yearType)})',
-      );
-      debugPrint(
-        'Moon Phase: ${myanmarDate.moonPhase} (${_getMoonPhaseName(myanmarDate.moonPhase)})',
-      );
-      debugPrint(
-        'Weekday: ${myanmarDate.weekday} (${_getWeekdayName(myanmarDate.weekday)})',
-      );
-
-      // Test reverse conversion
-      final backToJdn = converter.myanmarToJulian(
-        myanmarDate.year,
-        myanmarDate.month,
-        myanmarDate.day,
-      );
-      debugPrint('Reverse JDN: ${backToJdn.toStringAsFixed(6)}');
-      debugPrint('JDN Match: ${(jdn - backToJdn).abs() < 0.0001 ? "✓" : "✗"}');
-    } catch (e) {
-      debugPrint('ERROR: $e');
-    }
-
-    debugPrint('\n${'=' * 70}');
-    debugPrint(
-      'Algorithm is based on proven flutter_mmcalendar implementation',
-    );
-    debugPrint(
-      'This should provide accurate conversions for Myanmar calendar dates',
-    );
-  }
-
-  static String _getYearTypeName(int yearType) {
-    switch (yearType) {
-      case 0:
-        return 'Common Year';
-      case 1:
-        return 'Little Watat';
-      case 2:
-        return 'Big Watat';
-      default:
-        return 'Unknown';
-    }
-  }
-
-  static String _getMoonPhaseName(int moonPhase) {
-    switch (moonPhase) {
-      case 0:
-        return 'Waxing';
-      case 1:
-        return 'Full Moon';
-      case 2:
-        return 'Waning';
-      case 3:
-        return 'New Moon';
-      default:
-        return 'Unknown';
-    }
-  }
-
-  static String _getWeekdayName(int weekday) {
-    const weekdays = [
-      'Saturday',
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-    ];
-    return weekdays[weekday % 7];
   }
 }

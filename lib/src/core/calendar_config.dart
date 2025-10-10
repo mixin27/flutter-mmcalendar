@@ -33,7 +33,7 @@ class CalendarConfig {
   final String defaultLanguage;
 
   /// Cache configuration
-  final CacheConfig? cacheConfig;
+  // final CacheConfig? cacheConfig;
 
   /// Create config with default values
   const CalendarConfig({
@@ -42,7 +42,7 @@ class CalendarConfig {
     this.gregorianStart = 2361222,
     this.timezoneOffset = 6.5, // Myanmar Time UTC+6:30
     this.defaultLanguage = 'en',
-    this.cacheConfig,
+    // this.cacheConfig,
   });
 
   /// Create config with Myanmar Time (UTC+6:30)
@@ -79,7 +79,7 @@ class CalendarConfig {
       gregorianStart: gregorianStart ?? this.gregorianStart,
       timezoneOffset: timezoneOffset ?? this.timezoneOffset,
       defaultLanguage: defaultLanguage ?? this.defaultLanguage,
-      cacheConfig: cacheConfig ?? this.cacheConfig,
+      // cacheConfig: cacheConfig ?? this.cacheConfig,
     );
   }
 }

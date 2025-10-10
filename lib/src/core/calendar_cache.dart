@@ -3,7 +3,6 @@ import '../models/complete_date.dart';
 import '../models/holiday_info.dart';
 import '../models/myanmar_date.dart';
 import '../models/western_date.dart';
-import '../services/myanmar_calendar_service.dart';
 
 /// Cache configuration options
 class CacheConfig {
@@ -68,6 +67,11 @@ class CacheConfig {
       maxHolidayInfoCacheSize = 500,
       enableCaching = true,
       cacheTTL = 0;
+
+  @override
+  String toString() {
+    return 'CacheConfig(maxCompleteDateCacheSize: $maxCompleteDateCacheSize, maxMyanmarDateCacheSize: $maxMyanmarDateCacheSize, maxWesternDateCacheSize: $maxWesternDateCacheSize, maxAstroInfoCacheSize: $maxAstroInfoCacheSize, maxHolidayInfoCacheSize: $maxHolidayInfoCacheSize, enableCaching: $enableCaching, cacheTTL: $cacheTTL)';
+  }
 }
 
 /// Cache entry with timestamp for TTL support
@@ -87,12 +91,16 @@ class _CacheEntry<T> {
 class _LRUCache<K, V> {
   final int maxSize;
   final int ttl;
+  final bool enabled;
   final Map<K, _CacheEntry<V>> _cache = {};
   final List<K> _accessOrder = [];
 
-  _LRUCache(this.maxSize, this.ttl);
+  _LRUCache(this.maxSize, this.ttl, this.enabled);
 
   V? get(K key) {
+    // If caching is disabled, always return null
+    if (!enabled || maxSize == 0) return null;
+
     final entry = _cache[key];
     if (entry == null) return null;
 
@@ -111,7 +119,8 @@ class _LRUCache<K, V> {
   }
 
   void put(K key, V value) {
-    if (maxSize == 0) return; // Caching disabled
+    // If caching is disabled, don't store anything
+    if (!enabled || maxSize == 0) return;
 
     // Remove if already exists
     if (_cache.containsKey(key)) {
@@ -152,13 +161,49 @@ class _LRUCache<K, V> {
           ? (_cache.length / maxSize * 100).toStringAsFixed(2)
           : '0',
       'ttl': ttl,
+      'enabled': enabled,
     };
   }
 }
 
 /// Centralized cache manager for Myanmar Calendar
+///
+/// This class manages caching for all calendar operations.
+/// It can work in two modes:
+/// 1. Global shared mode - All services share one cache instance
+/// 2. Independent mode - Each service has its own cache
 class CalendarCache {
-  static CalendarCache? _instance;
+  // ============================================================================
+  // GLOBAL SHARED CACHE
+  // ============================================================================
+
+  /// Global shared cache instance
+  static CalendarCache? _globalCache;
+
+  /// Get or create global shared cache
+  static CalendarCache global() {
+    _globalCache ??= CalendarCache._internal(const CacheConfig());
+    return _globalCache!;
+  }
+
+  /// Configure global cache with new settings
+  static void configureGlobal(CacheConfig config) {
+    _globalCache = CalendarCache._internal(config);
+  }
+
+  /// Check if global cache exists
+  static bool get hasGlobal => _globalCache != null;
+
+  /// Clear global cache instance (mainly for testing)
+  static void resetGlobal() {
+    _globalCache?.clearAll();
+    _globalCache = null;
+  }
+
+  // ============================================================================
+  // INSTANCE PROPERTIES
+  // ============================================================================
+
   late CacheConfig _config;
 
   // Individual caches
@@ -172,57 +217,62 @@ class CalendarCache {
   int _hits = 0;
   int _misses = 0;
 
+  // ============================================================================
+  // CONSTRUCTORS
+  // ============================================================================
+
+  /// Private constructor for creating cache instances
   CalendarCache._internal(CacheConfig config) {
     _config = config;
     _initializeCaches();
   }
 
-  /// Get singleton instance
-  factory CalendarCache({CacheConfig? config}) {
-    _instance ??= CalendarCache._internal(config ?? const CacheConfig());
-    return _instance!;
+  /// Create a new independent cache instance
+  /// Use this for testing or when you need isolated caching
+  factory CalendarCache.independent({CacheConfig? config}) {
+    return CalendarCache._internal(config ?? const CacheConfig());
   }
 
-  /// Initialize all caches
   void _initializeCaches() {
     _completeDateCache = _LRUCache(
       _config.maxCompleteDateCacheSize,
       _config.cacheTTL,
+      _config.enableCaching,
     );
     _myanmarDateCache = _LRUCache(
       _config.maxMyanmarDateCacheSize,
       _config.cacheTTL,
+      _config.enableCaching,
     );
     _westernDateCache = _LRUCache(
       _config.maxWesternDateCacheSize,
       _config.cacheTTL,
+      _config.enableCaching,
     );
     _astroInfoCache = _LRUCache(
       _config.maxAstroInfoCacheSize,
       _config.cacheTTL,
+      _config.enableCaching,
     );
     _holidayInfoCache = _LRUCache(
       _config.maxHolidayInfoCacheSize,
       _config.cacheTTL,
+      _config.enableCaching,
     );
   }
 
-  /// Reconfigure cache
-  void configure(CacheConfig config) {
-    _config = config;
-    clearAll(); // Clear old caches
-    _initializeCaches();
-  }
-
   // ============================================================================
-  // COMPLETE DATE CACHE
+  // CACHE OPERATIONS
   // ============================================================================
 
   /// Get cached CompleteDate
   CompleteDate? getCompleteDate(DateTime dateTime) {
-    if (!_config.enableCaching) return null;
+    if (!_config.enableCaching) {
+      _misses++;
+      return null;
+    }
 
-    final key = _generateDateKey(dateTime);
+    final key = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
     final cached = _completeDateCache.get(key);
 
     if (cached != null) {
@@ -237,20 +287,18 @@ class CalendarCache {
   /// Cache CompleteDate
   void putCompleteDate(DateTime dateTime, CompleteDate completeDate) {
     if (!_config.enableCaching) return;
-
-    final key = _generateDateKey(dateTime);
+    final key = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
     _completeDateCache.put(key, completeDate);
   }
 
-  // ============================================================================
-  // MYANMAR DATE CACHE
-  // ============================================================================
-
   /// Get cached MyanmarDate
   MyanmarDate? getMyanmarDate(double julianDayNumber) {
-    if (!_config.enableCaching) return null;
+    if (!_config.enableCaching) {
+      _misses++;
+      return null;
+    }
 
-    final key = _generateJDNKey(julianDayNumber);
+    final key = julianDayNumber.toStringAsFixed(6);
     final cached = _myanmarDateCache.get(key);
 
     if (cached != null) {
@@ -265,20 +313,18 @@ class CalendarCache {
   /// Cache MyanmarDate
   void putMyanmarDate(double julianDayNumber, MyanmarDate myanmarDate) {
     if (!_config.enableCaching) return;
-
-    final key = _generateJDNKey(julianDayNumber);
+    final key = julianDayNumber.toStringAsFixed(6);
     _myanmarDateCache.put(key, myanmarDate);
   }
 
-  // ============================================================================
-  // WESTERN DATE CACHE
-  // ============================================================================
-
   /// Get cached WesternDate
   WesternDate? getWesternDate(double julianDayNumber) {
-    if (!_config.enableCaching) return null;
+    if (!_config.enableCaching) {
+      _misses++;
+      return null;
+    }
 
-    final key = _generateJDNKey(julianDayNumber);
+    final key = julianDayNumber.toStringAsFixed(6);
     final cached = _westernDateCache.get(key);
 
     if (cached != null) {
@@ -293,18 +339,16 @@ class CalendarCache {
   /// Cache WesternDate
   void putWesternDate(double julianDayNumber, WesternDate westernDate) {
     if (!_config.enableCaching) return;
-
-    final key = _generateJDNKey(julianDayNumber);
+    final key = julianDayNumber.toStringAsFixed(6);
     _westernDateCache.put(key, westernDate);
   }
 
-  // ============================================================================
-  // ASTRO INFO CACHE
-  // ============================================================================
-
   /// Get cached AstroInfo
-  AstroInfo? getAstroInfo(MyanmarDate myanmarDate) {
-    if (!_config.enableCaching) return null;
+  AstroInfo? getAstroInfo(dynamic myanmarDate) {
+    if (!_config.enableCaching) {
+      _misses++;
+      return null;
+    }
 
     final key = _generateMyanmarDateKey(myanmarDate);
     final cached = _astroInfoCache.get(key);
@@ -319,20 +363,18 @@ class CalendarCache {
   }
 
   /// Cache AstroInfo
-  void putAstroInfo(MyanmarDate myanmarDate, AstroInfo astroInfo) {
+  void putAstroInfo(dynamic myanmarDate, AstroInfo astroInfo) {
     if (!_config.enableCaching) return;
-
     final key = _generateMyanmarDateKey(myanmarDate);
     _astroInfoCache.put(key, astroInfo);
   }
 
-  // ============================================================================
-  // HOLIDAY INFO CACHE
-  // ============================================================================
-
   /// Get cached HolidayInfo
-  HolidayInfo? getHolidayInfo(MyanmarDate myanmarDate) {
-    if (!_config.enableCaching) return null;
+  HolidayInfo? getHolidayInfo(dynamic myanmarDate) {
+    if (!_config.enableCaching) {
+      _misses++;
+      return null;
+    }
 
     final key = _generateMyanmarDateKey(myanmarDate);
     final cached = _holidayInfoCache.get(key);
@@ -347,26 +389,16 @@ class CalendarCache {
   }
 
   /// Cache HolidayInfo
-  void putHolidayInfo(MyanmarDate myanmarDate, HolidayInfo holidayInfo) {
+  void putHolidayInfo(dynamic myanmarDate, HolidayInfo holidayInfo) {
     if (!_config.enableCaching) return;
-
     final key = _generateMyanmarDateKey(myanmarDate);
     _holidayInfoCache.put(key, holidayInfo);
   }
 
-  // ============================================================================
-  // KEY GENERATION
-  // ============================================================================
-
-  String _generateDateKey(DateTime dateTime) {
-    return '${dateTime.year}-${dateTime.month}-${dateTime.day}';
-  }
-
-  String _generateJDNKey(double julianDayNumber) {
-    return julianDayNumber.toStringAsFixed(6);
-  }
-
-  String _generateMyanmarDateKey(MyanmarDate myanmarDate) {
+  String _generateMyanmarDateKey(dynamic myanmarDate) {
+    if (myanmarDate is Map) {
+      return '${myanmarDate['year']}-${myanmarDate['month']}-${myanmarDate['day']}';
+    }
     return '${myanmarDate.year}-${myanmarDate.month}-${myanmarDate.day}';
   }
 
@@ -386,35 +418,25 @@ class CalendarCache {
   }
 
   /// Clear CompleteDate cache only
-  void clearCompleteDateCache() {
-    _completeDateCache.clear();
-  }
+  void clearCompleteDateCache() => _completeDateCache.clear();
 
   /// Clear MyanmarDate cache only
-  void clearMyanmarDateCache() {
-    _myanmarDateCache.clear();
-  }
+  void clearMyanmarDateCache() => _myanmarDateCache.clear();
 
   /// Clear WesternDate cache only
-  void clearWesternDateCache() {
-    _westernDateCache.clear();
-  }
+  void clearWesternDateCache() => _westernDateCache.clear();
 
   /// Clear AstroInfo cache only
-  void clearAstroInfoCache() {
-    _astroInfoCache.clear();
-  }
+  void clearAstroInfoCache() => _astroInfoCache.clear();
 
   /// Clear HolidayInfo cache only
-  void clearHolidayInfoCache() {
-    _holidayInfoCache.clear();
-  }
+  void clearHolidayInfoCache() => _holidayInfoCache.clear();
 
   /// Warm up cache with common dates
   void warmUp({
     DateTime? startDate,
     DateTime? endDate,
-    required MyanmarCalendarService service,
+    required dynamic service,
   }) {
     if (!_config.enableCaching) return;
 
@@ -424,24 +446,23 @@ class CalendarCache {
 
     var currentDate = start;
     while (currentDate.isBefore(end) || currentDate.isAtSameMomentAs(end)) {
-      // This will populate the cache
       service.getCompleteDate(currentDate);
       currentDate = currentDate.add(const Duration(days: 1));
     }
   }
 
   // ============================================================================
-  // STATISTICS AND DIAGNOSTICS
+  // STATISTICS
   // ============================================================================
 
-  /// Get cache hit rate
+  /// Get hit rate.
   double get hitRate {
     final total = _hits + _misses;
     if (total == 0) return 0;
     return _hits / total;
   }
 
-  /// Get comprehensive cache statistics
+  /// Get statistics as map
   Map<String, dynamic> getStatistics() {
     final total = _hits + _misses;
     return {
@@ -449,7 +470,9 @@ class CalendarCache {
       'hits': _hits,
       'misses': _misses,
       'total_requests': total,
-      'hit_rate_percent': total > 0 ? (hitRate * 100).toStringAsFixed(2) : '0',
+      'hit_rate_percent': total > 0
+          ? (hitRate * 100).toStringAsFixed(2)
+          : '0.00',
       'caches': {
         'complete_date': _completeDateCache.getStats(),
         'myanmar_date': _myanmarDateCache.getStats(),
@@ -472,9 +495,9 @@ class CalendarCache {
     _misses = 0;
   }
 
-  /// Get current configuration
+  /// Get [CacheConfig] instance
   CacheConfig get config => _config;
 
-  /// Check if caching is enabled
+  /// Check whether cache is enabled or not.
   bool get isEnabled => _config.enableCaching;
 }
