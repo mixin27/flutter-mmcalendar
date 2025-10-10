@@ -12,6 +12,8 @@ import 'package:flutter_mmcalendar/src/services/holiday_calculator.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_constants.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_utils.dart';
 
+import 'calendar_cache.dart';
+
 /// Myanmar DateTime class that provides a convenient interface for Myanmar calendar operations
 ///
 /// This class acts as a wrapper around the DateConverter service, providing:
@@ -46,9 +48,12 @@ class MyanmarDateTime {
 
   /// Creates Myanmar DateTime from current date/time
   factory MyanmarDateTime.now({CalendarConfig? config}) {
-    final converter = DateConverter(config ?? const CalendarConfig());
-    final astroCalculator = AstroCalculator();
-    final holidayCalculator = HolidayCalculator();
+    final converter = DateConverter(
+      config ?? const CalendarConfig(),
+      cache: CalendarCache.global(),
+    );
+    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
+    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
 
     // Get current UTC time and convert to Julian Day Number
     final now = DateTime.now().toUtc();
@@ -74,9 +79,12 @@ class MyanmarDateTime {
     DateTime dateTime, {
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(config ?? const CalendarConfig());
-    final astroCalculator = AstroCalculator();
-    final holidayCalculator = HolidayCalculator();
+    final converter = DateConverter(
+      config ?? const CalendarConfig(),
+      cache: CalendarCache.global(),
+    );
+    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
+    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
 
     final jdn = converter.westernToJulian(
       dateTime.year,
@@ -105,9 +113,12 @@ class MyanmarDateTime {
     int second = 0,
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(config ?? const CalendarConfig());
-    final astroCalculator = AstroCalculator();
-    final holidayCalculator = HolidayCalculator();
+    final converter = DateConverter(
+      config ?? const CalendarConfig(),
+      cache: CalendarCache.global(),
+    );
+    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
+    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
 
     final jdn = converter.westernToJulian(
       year,
@@ -136,9 +147,12 @@ class MyanmarDateTime {
     int second = 0,
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(config ?? const CalendarConfig());
-    final astroCalculator = AstroCalculator();
-    final holidayCalculator = HolidayCalculator();
+    final converter = DateConverter(
+      config ?? const CalendarConfig(),
+      cache: CalendarCache.global(),
+    );
+    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
+    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
 
     final jdn = converter.myanmarToJulian(
       year,
@@ -162,9 +176,12 @@ class MyanmarDateTime {
     MyanmarDate myanmarDate, {
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(config ?? const CalendarConfig());
-    final astroCalculator = AstroCalculator();
-    final holidayCalculator = HolidayCalculator();
+    final converter = DateConverter(
+      config ?? const CalendarConfig(),
+      cache: CalendarCache.global(),
+    );
+    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
+    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
 
     return MyanmarDateTime._(
       converter,
@@ -179,9 +196,12 @@ class MyanmarDateTime {
     WesternDate westernDate, {
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(config ?? const CalendarConfig());
-    final astroCalculator = AstroCalculator();
-    final holidayCalculator = HolidayCalculator();
+    final converter = DateConverter(
+      config ?? const CalendarConfig(),
+      cache: CalendarCache.global(),
+    );
+    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
+    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
 
     return MyanmarDateTime._(
       converter,
@@ -196,9 +216,12 @@ class MyanmarDateTime {
     double julianDayNumber, {
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(config ?? const CalendarConfig());
-    final astroCalculator = AstroCalculator();
-    final holidayCalculator = HolidayCalculator();
+    final converter = DateConverter(
+      config ?? const CalendarConfig(),
+      cache: CalendarCache.global(),
+    );
+    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
+    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
 
     return MyanmarDateTime._(
       converter,

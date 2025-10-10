@@ -28,9 +28,7 @@ class HolidayCalculator {
   late final CalendarCache _cache;
 
   /// Create a new [HolidayCalculator] instance
-  HolidayCalculator({CacheConfig? cacheConfig}) {
-    _cache = CalendarCache(config: cacheConfig ?? const CacheConfig());
-  }
+  HolidayCalculator({required CalendarCache cache}) : _cache = cache;
 
   /// Get all holidays for a Myanmar date
   HolidayInfo getHolidays(MyanmarDate date) {

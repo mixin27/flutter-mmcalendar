@@ -158,8 +158,6 @@ class MyanmarCalendar {
     return _chronicles!;
   }
 
-  static CalendarCache? _cache;
-
   // Private constructor to prevent instantiation
   MyanmarCalendar._();
 
@@ -204,32 +202,31 @@ class MyanmarCalendar {
 
   /// Get the service instance (lazy initialization)
   static MyanmarCalendarService get _serviceInstance {
-    _service ??= MyanmarCalendarService(config: _config);
+    // Service uses global cache automatically
+    _service ??= MyanmarCalendarService.withGlobalCache(config: _config);
     return _service!;
   }
 
-  /// Configure cache
+  /// Configure global cache used by all MyanmarCalendar operations
   static void configureCache(CacheConfig cacheConfig) {
-    _cache = CalendarCache(config: cacheConfig);
+    CalendarCache.configureGlobal(cacheConfig);
+    _service = null; // Reset service to use new cache
   }
 
-  /// Get cache instance
-  static CalendarCache get cache {
-    _cache ??= CalendarCache();
-    return _cache!;
-  }
+  /// Get global cache instance
+  static CalendarCache get cache => CalendarCache.global();
 
   /// Clear all caches
   static void clearCache() {
     cache.clearAll();
   }
 
-  /// Get cache statistics
+  /// Get global cache statistics
   static Map<String, dynamic> getCacheStatistics() {
     return cache.getStatistics();
   }
 
-  /// Warm up cache with date range
+  /// Warm up global cache
   static void warmUpCache({DateTime? startDate, DateTime? endDate}) {
     cache.warmUp(
       startDate: startDate,
@@ -238,7 +235,7 @@ class MyanmarCalendar {
     );
   }
 
-  /// Reset cache statistics
+  /// Reset global cache statistics
   static void resetCacheStatistics() {
     cache.resetStatistics();
   }

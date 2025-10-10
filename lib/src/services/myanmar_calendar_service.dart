@@ -24,26 +24,57 @@ import '../core/calendar_cache.dart';
 /// - Configuration management
 class MyanmarCalendarService {
   final CalendarConfig _config;
+  final CalendarCache _cache;
   late final DateConverter _dateConverter;
   late final AstroCalculator _astroCalculator;
   late final HolidayCalculator _holidayCalculator;
   final FormatService _formatService;
-  late final CalendarCache _cache;
 
-  /// Create a new Myanmar Calendar service with configuration
-  MyanmarCalendarService({CalendarConfig? config, Language? defaultLanguage})
-    : _config = config ?? const CalendarConfig(),
+  /// Create service that uses the global shared cache
+  /// This is the default and recommended for most use cases
+  MyanmarCalendarService.withGlobalCache({
+    CalendarConfig? config,
+    Language? defaultLanguage,
+  }) : _config = config ?? const CalendarConfig(),
+       _cache = CalendarCache.global(), // Use global cache
+       _formatService = FormatService() {
+    _initializeServices();
+    _setLanguage(defaultLanguage);
+  }
 
-      _formatService = FormatService() {
-    // Initialize cache
-    _cache = CalendarCache(config: _config.cacheConfig ?? const CacheConfig());
+  /// Create service with independent cache
+  /// Use this for testing or when isolation is needed
+  MyanmarCalendarService.withIndependentCache({
+    CalendarConfig? config,
+    CacheConfig? cacheConfig,
+    Language? defaultLanguage,
+  }) : _config = config ?? const CalendarConfig(),
+       _cache = CalendarCache.independent(
+         config: cacheConfig ?? const CacheConfig(),
+       ),
+       _formatService = FormatService() {
+    _initializeServices();
+    _setLanguage(defaultLanguage);
+  }
 
-    // Initialize services with cache config
-    _dateConverter = DateConverter(_config);
-    _astroCalculator = AstroCalculator(cacheConfig: _config.cacheConfig);
-    _holidayCalculator = HolidayCalculator(cacheConfig: _config.cacheConfig);
+  /// Legacy constructor - uses global cache by default
+  factory MyanmarCalendarService({
+    CalendarConfig? config,
+    Language? defaultLanguage,
+  }) {
+    return MyanmarCalendarService.withGlobalCache(
+      config: config,
+      defaultLanguage: defaultLanguage,
+    );
+  }
 
-    // Set default language
+  void _initializeServices() {
+    _dateConverter = DateConverter(_config, cache: _cache);
+    _astroCalculator = AstroCalculator(cache: _cache);
+    _holidayCalculator = HolidayCalculator(cache: _cache);
+  }
+
+  void _setLanguage(Language? defaultLanguage) {
     if (defaultLanguage != null) {
       TranslationService.setLanguage(defaultLanguage);
     } else {
@@ -276,6 +307,12 @@ class MyanmarCalendarService {
   /// Get current language
   Language get currentLanguage => TranslationService.currentLanguage;
 
+  /// Get cache statistics
+  Map<String, dynamic> getCacheStatistics() => _cache.getStatistics();
+
+  /// Clear cache
+  void clearCache() => _cache.clearAll();
+
   /// Validate Myanmar date
   ValidationResult validateMyanmarDate(int year, int month, int day) {
     // Basic range checks
@@ -322,15 +359,5 @@ class MyanmarCalendarService {
         error: 'Invalid date: ${e.toString()}',
       );
     }
-  }
-
-  /// Get cache statistics
-  Map<String, dynamic> getCacheStatistics() {
-    return _cache.getStatistics();
-  }
-
-  /// Clear cache
-  void clearCache() {
-    _cache.clearAll();
   }
 }

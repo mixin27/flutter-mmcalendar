@@ -1,14 +1,15 @@
 // ignore_for_file: avoid_redundant_argument_values
 
-import 'package:flutter_mmcalendar/src/core/calendar_config.dart';
-import 'package:flutter_mmcalendar/src/core/myanmar_date_time.dart';
-import 'package:flutter_mmcalendar/src/services/date_converter.dart';
+import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Conversion parity and stability', () {
     test('Western <-> JDN round-trip at noon (date-only)', () {
-      final converter = DateConverter(const CalendarConfig());
+      final converter = DateConverter(
+        const CalendarConfig(),
+        cache: CalendarCache.independent(),
+      );
 
       final samples = <List<int>>[
         [1752, 9, 14], // Gregorian start (British)
@@ -36,7 +37,10 @@ void main() {
     });
 
     test('Myanmar <-> JDN round-trip at noon (JDN parity)', () {
-      final converter = DateConverter(const CalendarConfig());
+      final converter = DateConverter(
+        const CalendarConfig(),
+        cache: CalendarCache.independent(),
+      );
 
       final samples = <List<int>>[
         [1386, 8, 25], // National Day example (Tazaungmon 25 -> waning 10)
@@ -68,7 +72,7 @@ void main() {
 
     test('Myanmar date stability across intraday times', () {
       final cfg = CalendarConfig();
-      final converter = DateConverter(cfg);
+      final converter = DateConverter(cfg, cache: CalendarCache.independent());
 
       final western = [2024, 3, 31]; // Easter 2024 Sunday
       final jdnMorning = converter.westernToJulian(

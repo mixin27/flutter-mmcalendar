@@ -1,5 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+
+class CacheDemoApp extends StatelessWidget {
+  const CacheDemoApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Myanmar Calendar Cache Demo',
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      home: const CacheDemoPage(),
+    );
+  }
+}
 
 class CacheDemoPage extends StatefulWidget {
   const CacheDemoPage({super.key});
@@ -10,7 +25,7 @@ class CacheDemoPage extends StatefulWidget {
 
 class _CacheDemoPageState extends State<CacheDemoPage> {
   Map<String, dynamic>? _cacheStats;
-  String _selectedProfile = 'High Performance';
+  String _selectedProfile = 'Default';
   bool _isLoading = false;
   final List<String> _logs = [];
 
@@ -27,6 +42,7 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
   }
 
   void _log(String message) {
+    log(message);
     setState(() {
       _logs.insert(
         0,
@@ -76,16 +92,19 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
 
     final stopwatch = Stopwatch()..start();
 
-    MyanmarCalendar.warmUpCache(
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(days: 90)),
-    );
+    try {
+      MyanmarCalendar.warmUpCache(
+        startDate: DateTime.now(),
+        endDate: DateTime.now().add(const Duration(days: 90)),
+      );
+      stopwatch.stop();
+      _log('Cache warmed up in ${stopwatch.elapsedMilliseconds}ms');
+    } catch (e) {
+      stopwatch.stop();
+      _log('Error warming up cache: $e');
+    }
 
-    stopwatch.stop();
-
-    _log('Cache warmed up in ${stopwatch.elapsedMilliseconds}ms');
     _updateStats();
-
     setState(() => _isLoading = false);
   }
 
@@ -94,18 +113,28 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
 
     _log('Testing performance with 1000 date conversions...');
 
+    // Reset stats to measure accurately
+    MyanmarCalendar.resetCacheStatistics();
+
     final stopwatch = Stopwatch()..start();
 
-    // Convert 1000 dates (with repetition for cache hits)
-    for (var i = 0; i < 1000; i++) {
-      MyanmarCalendar.fromWestern(2024, 1, (i % 30) + 1);
+    try {
+      // Convert 1000 dates (with repetition for cache hits)
+      for (var i = 0; i < 1000; i++) {
+        MyanmarCalendar.fromWestern(2024, 1, (i % 28) + 1);
+      }
+      stopwatch.stop();
+      _log('Completed in ${stopwatch.elapsedMilliseconds}ms');
+
+      final stats = MyanmarCalendar.getCacheStatistics();
+      final hitRate = stats['hit_rate_percent'] as String;
+      _log('Cache hit rate: $hitRate%');
+    } catch (e) {
+      stopwatch.stop();
+      _log('Error: $e');
     }
 
-    stopwatch.stop();
-
-    _log('Completed in ${stopwatch.elapsedMilliseconds}ms');
     _updateStats();
-
     setState(() => _isLoading = false);
   }
 
@@ -143,18 +172,54 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildInfoCard(),
+                  const SizedBox(height: 16),
                   _buildProfileSelector(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   _buildActionButtons(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   _buildStatisticsCard(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   _buildCacheDetailsCard(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   _buildLogsCard(),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildInfoCard() {
+    return Card(
+      color: Colors.blue.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.info_outline, color: Colors.blue.shade700),
+                const SizedBox(width: 8),
+                Text(
+                  'Cache System Demo',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'This demo shows the Myanmar Calendar caching system in action. '
+              'Try different profiles and observe the performance improvements!',
+              style: TextStyle(fontSize: 13),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -188,14 +253,41 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
                       selectedColor: Colors.blue,
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.white : Colors.black87,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                     );
                   }).toList(),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _getProfileDescription(_selectedProfile),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade600,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  String _getProfileDescription(String profile) {
+    switch (profile) {
+      case 'High Performance':
+        return 'Large cache sizes (500-1000 entries) for maximum speed';
+      case 'Default':
+        return 'Balanced cache sizes (100-200 entries) for typical use';
+      case 'Memory Efficient':
+        return 'Small cache sizes (30-50 entries) with 1-hour TTL';
+      case 'Disabled':
+        return 'No caching - all calculations are fresh';
+      default:
+        return '';
+    }
   }
 
   Widget _buildActionButtons() {
@@ -218,11 +310,19 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
                   onPressed: _warmUpCache,
                   icon: const Icon(Icons.wb_sunny),
                   label: const Text('Warm Up Cache'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                    foregroundColor: Colors.black87,
+                  ),
                 ),
                 ElevatedButton.icon(
                   onPressed: _testPerformance,
                   icon: const Icon(Icons.speed),
                   label: const Text('Test Performance'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
                 ),
                 ElevatedButton.icon(
                   onPressed: _clearCache,
@@ -382,9 +482,7 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
   String _formatCacheName(String name) {
     return name
         .split('_')
-        .map((word) {
-          return word[0].toUpperCase() + word.substring(1);
-        })
+        .map((word) => word[0].toUpperCase() + word.substring(1))
         .join(' ');
   }
 
@@ -394,7 +492,8 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
     int maxSize,
     String utilization,
   ) {
-    final percentage = double.parse(utilization);
+    final percentage = double.tryParse(utilization) ?? 0.0;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -415,7 +514,7 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
           ),
           const SizedBox(height: 4),
           LinearProgressIndicator(
-            value: percentage / 100,
+            value: maxSize > 0 ? (percentage / 100) : 0,
             backgroundColor: Colors.grey[300],
             valueColor: AlwaysStoppedAnimation<Color>(
               percentage > 80 ? Colors.red : Colors.blue,
@@ -445,7 +544,7 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
             const SizedBox(height: 12),
             if (_logs.isEmpty)
               const Text(
-                'No activity yet',
+                'No activity yet. Try performing some actions above!',
                 style: TextStyle(
                   color: Colors.grey,
                   fontStyle: FontStyle.italic,
@@ -455,12 +554,25 @@ class _CacheDemoPageState extends State<CacheDemoPage> {
               ..._logs.map(
                 (log) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    log,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'monospace',
-                    ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.fiber_manual_record,
+                        size: 8,
+                        color: Colors.blue,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          log,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
