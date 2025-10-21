@@ -1,3 +1,10 @@
+## 3.2.1
+
+- Fixed: Diwali, Eid, Chinese new year holidays - Instead of hard-coded arrays, calculate these dates dynamically. Can be extend more in the future.
+- Fixed: `MyanmarDateTime` cached with better approach
+- Added anniversary days and other holidays getter to `MyanmarDateTime`
+- Publically export `translateNumbers()` in `FormatService`
+
 ## 3.2.0
 
 - Added `Cache` system: See [Cache Docs](https://github.com/mixin27/flutter-mmcalendar/blob/main/cache.md) for usage.

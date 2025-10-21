@@ -93,7 +93,7 @@ class FormatService {
       // Year name (12-year cycle)
       result = result.replaceAll('&N', _getYearName(date.year));
 
-      return _translateNumbers(result);
+      return translateNumbers(result);
     } finally {
       if (currentLang != oldLang) {
         TranslationService.setLanguage(oldLang);
@@ -231,7 +231,7 @@ class FormatService {
       // Weekday number
       result = result.replaceAll('%w', date.weekday.toString());
 
-      return _translateNumbers(result);
+      return translateNumbers(result);
     } finally {
       if (currentLang != oldLang) {
         TranslationService.setLanguage(oldLang);
@@ -354,8 +354,8 @@ class FormatService {
   }
 
   /// Translate numbers to the current language
-  String _translateNumbers(String text) {
-    final currentLang = TranslationService.currentLanguage;
+  String translateNumbers(String text, {Language? language}) {
+    final currentLang = language ?? TranslationService.currentLanguage;
 
     // Only translate numbers for Myanmar languages
     if (currentLang == Language.myanmar || currentLang == Language.zawgyi) {
