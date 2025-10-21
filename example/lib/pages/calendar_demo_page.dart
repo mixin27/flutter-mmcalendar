@@ -121,6 +121,7 @@ class _CalendarDemoPageState extends State<CalendarDemoPage> {
           Divider(),
 
           // Basic date info
+          _buildInfoRow('Sasana Year', date.formatMyanmar(pattern: '&Sy')),
           _buildInfoRow('Myanmar Date', date.formatMyanmar()),
           _buildInfoRow('Western Date', date.formatWestern()),
           _buildInfoRow('Julian Day', '${date.julianDayNumber}'),

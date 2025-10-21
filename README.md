@@ -314,6 +314,7 @@ final date = MyanmarCalendar.today();
 '&ff'    // Fortnight day (e.g., ၁၀ ရက်)
 '&d'     // Day number
 '&w'     // Weekday name
+'&Sy'     // Sasana Year (e.g., ၂၅၆၉)
 
 // Example usage
 final formatted = date.formatMyanmar('&y ခုနှစ် &M &P &ff');
