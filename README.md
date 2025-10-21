@@ -311,14 +311,14 @@ final date = MyanmarCalendar.today();
 '&y'     // Myanmar year (e.g., ၁၃၈၅)
 '&M'     // Myanmar month name (e.g., တပေါင်း)
 '&P'     // Moon phase (e.g., လဆုတ်)
-'&ff'    // Fortnight day (e.g., ၁၀ ရက်)
+'&ff'    // Fortnight day (e.g., ၁၀)
 '&d'     // Day number
 '&w'     // Weekday name
 '&Sy'     // Sasana Year (e.g., ၂၅၆၉)
 
 // Example usage
 final formatted = date.formatMyanmar('&y ခုနှစ် &M &P &ff');
-// Output: ၁၃၈၅ ခုနှစ် တပေါင်း လဆုတ် ၁၀ ရက်
+// Output: ၁၃၈၅ ခုနှစ် တပေါင်း လဆုတ် ၁၀
 ```
 
 ### Western Date Patterns

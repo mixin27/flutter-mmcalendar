@@ -76,14 +76,11 @@ class FormatService {
       // Fortnight day with zero padding
       result = result.replaceAll(
         '&ff',
-        '${date.fortnightDay.toString().padLeft(2, '0')} ${TranslationService.translate('Yat')}',
+        date.fortnightDay.toString().padLeft(2, '0'),
       );
 
       // Fortnight day
-      result = result.replaceAll(
-        '&f',
-        '${date.fortnightDay.toString()} ${TranslationService.translate('Yat')}',
-      );
+      result = result.replaceAll('&f', date.fortnightDay.toString());
 
       // Weekday name
       result = result.replaceAll('&W', _getWeekdayName(date.weekday));
