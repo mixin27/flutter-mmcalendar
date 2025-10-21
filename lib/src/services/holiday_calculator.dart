@@ -677,6 +677,11 @@ class HolidayCalculator {
       2028: {'month': 1, 'day': 26},
       2029: {'month': 2, 'day': 13},
       2030: {'month': 2, 'day': 3},
+      2031: {'month': 1, 'day': 23},
+      2032: {'month': 2, 'day': 11},
+      2033: {'month': 1, 'day': 31},
+      2034: {'month': 2, 'day': 19},
+      2035: {'month': 2, 'day': 8},
     };
 
     if (chineseNewYear.containsKey(year)) {
