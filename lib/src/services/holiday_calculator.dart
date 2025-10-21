@@ -474,6 +474,19 @@ class HolidayCalculator {
       2028: {'month': 10, 'day': 17},
       2029: {'month': 11, 'day': 5},
       2030: {'month': 10, 'day': 26},
+      2031: {'month': 11, 'day': 14},
+      2032: {'month': 11, 'day': 2},
+      2033: {'month': 10, 'day': 22},
+      2034: {'month': 11, 'day': 10},
+      2035: {'month': 10, 'day': 30},
+      2036: {'month': 10, 'day': 19},
+      2037: {'month': 11, 'day': 7},
+      2038: {'month': 10, 'day': 27},
+      2039: {'month': 10, 'day': 17},
+      2040: {'month': 11, 'day': 4},
+      2041: {'month': 10, 'day': 25},
+      2042: {'month': 11, 'day': 12},
+      2043: {'month': 11, 'day': 1},
     };
 
     if (diwaliDates.containsKey(year)) {
