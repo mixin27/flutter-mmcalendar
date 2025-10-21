@@ -281,14 +281,18 @@ class HolidayCalculator {
       items.add(TranslationService.translate("Halloween"));
     }
 
-    final jd = _westernToJdn(year, month, day);
-    final eid2Search = _bSearch1(jd, _getEid2Days());
-    if (eid2Search >= 0) {
-      items.add(TranslationService.translate("Eid"));
+    // Eid al-Fitr (approximate calculation)
+    if (_isEidAlFitr(year, month, day)) {
+      items.add(TranslationService.translate("Eid al-Fitr"));
     }
 
-    final cySearch = _bSearch1(jd, _getChineseNewYearDays());
-    if (cySearch >= 0) {
+    // Eid al-Adha (approximate calculation)
+    if (_isEidAlAdha(year, month, day)) {
+      items.add(TranslationService.translate("Eid al-Adha"));
+    }
+
+    // Chinese New Year
+    if (_isChineseNewYear(year, month, day)) {
       items.add(TranslationService.translate("Chinese New Year's"));
     }
   }
@@ -441,13 +445,264 @@ class HolidayCalculator {
     final month = westernDate['month']!;
     final day = westernDate['day']!;
 
-    final jd = _westernToJdn(year, month, day);
-    if (_bSearch1(jd, _getDiwaliDays()) >= 0) {
+    // Diwali (approximate calculation)
+    if (_isDiwali(year, month, day)) {
       otherHolidays.add(TranslationService.translate('Diwali'));
     }
-    if (_bSearch1(jd, _getEidDays()) >= 0) {
-      otherHolidays.add(TranslationService.translate('Eid'));
+  }
+
+  /// Check if date is Diwali
+  /// Diwali occurs in October or November (15th day of Kartik - Hindu calendar)
+  /// This is an approximate calculation
+  bool _isDiwali(int year, int month, int day) {
+    // Diwali lookup table for known years (you can expand this)
+    final diwaliDates = <int, Map<String, int>>{
+      2014: {'month': 10, 'day': 23},
+      2015: {'month': 11, 'day': 11},
+      2016: {'month': 10, 'day': 30},
+      2017: {'month': 10, 'day': 19},
+      2018: {'month': 11, 'day': 7},
+      2019: {'month': 10, 'day': 27},
+      2020: {'month': 11, 'day': 14},
+      2021: {'month': 11, 'day': 4},
+      2022: {'month': 10, 'day': 24},
+      2023: {'month': 11, 'day': 12},
+      2024: {'month': 11, 'day': 1},
+      2025: {'month': 10, 'day': 20},
+      2026: {'month': 11, 'day': 8},
+      2027: {'month': 10, 'day': 29},
+      2028: {'month': 10, 'day': 17},
+      2029: {'month': 11, 'day': 5},
+      2030: {'month': 10, 'day': 26},
+      2031: {'month': 11, 'day': 14},
+      2032: {'month': 11, 'day': 2},
+      2033: {'month': 10, 'day': 22},
+      2034: {'month': 11, 'day': 10},
+      2035: {'month': 10, 'day': 30},
+      2036: {'month': 10, 'day': 19},
+      2037: {'month': 11, 'day': 7},
+      2038: {'month': 10, 'day': 27},
+      2039: {'month': 10, 'day': 17},
+      2040: {'month': 11, 'day': 4},
+      2041: {'month': 10, 'day': 25},
+      2042: {'month': 11, 'day': 12},
+      2043: {'month': 11, 'day': 1},
+    };
+
+    if (diwaliDates.containsKey(year)) {
+      final diwali = diwaliDates[year]!;
+      return month == diwali['month'] && day == diwali['day'];
     }
+
+    return false;
+  }
+
+  /// Check if date is Eid al-Fitr
+  /// Eid al-Fitr is at the end of Ramadan (Islamic calendar)
+  bool _isEidAlFitr(int year, int month, int day) {
+    // Eid al-Fitr lookup table (you can expand this)
+    final eidDates = <int, List<Map<String, int>>>{
+      2014: [
+        {'month': 7, 'day': 28},
+        {'month': 7, 'day': 29},
+      ],
+      2015: [
+        {'month': 7, 'day': 17},
+        {'month': 7, 'day': 18},
+      ],
+      2016: [
+        {'month': 7, 'day': 6},
+        {'month': 7, 'day': 7},
+      ],
+      2017: [
+        {'month': 6, 'day': 25},
+        {'month': 6, 'day': 26},
+      ],
+      2018: [
+        {'month': 6, 'day': 15},
+        {'month': 6, 'day': 16},
+      ],
+      2019: [
+        {'month': 6, 'day': 4},
+        {'month': 6, 'day': 5},
+      ],
+      2020: [
+        {'month': 5, 'day': 24},
+        {'month': 5, 'day': 25},
+      ],
+      2021: [
+        {'month': 5, 'day': 13},
+        {'month': 5, 'day': 14},
+      ],
+      2022: [
+        {'month': 5, 'day': 2},
+        {'month': 5, 'day': 3},
+      ],
+      2023: [
+        {'month': 4, 'day': 21},
+        {'month': 4, 'day': 22},
+      ],
+      2024: [
+        {'month': 4, 'day': 10},
+        {'month': 4, 'day': 11},
+      ],
+      2025: [
+        {'month': 3, 'day': 30},
+        {'month': 3, 'day': 31},
+      ],
+      2026: [
+        {'month': 3, 'day': 20},
+        {'month': 3, 'day': 21},
+      ],
+      2027: [
+        {'month': 3, 'day': 9},
+        {'month': 3, 'day': 10},
+      ],
+      2028: [
+        {'month': 2, 'day': 26},
+        {'month': 2, 'day': 27},
+      ],
+      2029: [
+        {'month': 2, 'day': 14},
+        {'month': 2, 'day': 15},
+      ],
+      2030: [
+        {'month': 2, 'day': 4},
+        {'month': 2, 'day': 5},
+      ],
+    };
+
+    if (eidDates.containsKey(year)) {
+      for (final eid in eidDates[year]!) {
+        if (month == eid['month'] && day == eid['day']) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /// Check if date is Eid al-Adha
+  /// Eid al-Adha is approximately 70 days after Eid al-Fitr
+  bool _isEidAlAdha(int year, int month, int day) {
+    // Eid al-Adha lookup table (you can expand this)
+    final eidAdha = <int, List<Map<String, int>>>{
+      2014: [
+        {'month': 10, 'day': 4},
+        {'month': 10, 'day': 5},
+      ],
+      2015: [
+        {'month': 9, 'day': 23},
+        {'month': 9, 'day': 24},
+      ],
+      2016: [
+        {'month': 9, 'day': 12},
+        {'month': 9, 'day': 13},
+      ],
+      2017: [
+        {'month': 9, 'day': 1},
+        {'month': 9, 'day': 2},
+      ],
+      2018: [
+        {'month': 8, 'day': 21},
+        {'month': 8, 'day': 22},
+      ],
+      2019: [
+        {'month': 8, 'day': 11},
+        {'month': 8, 'day': 12},
+      ],
+      2020: [
+        {'month': 7, 'day': 31},
+        {'month': 8, 'day': 1},
+      ],
+      2021: [
+        {'month': 7, 'day': 20},
+        {'month': 7, 'day': 21},
+      ],
+      2022: [
+        {'month': 7, 'day': 9},
+        {'month': 7, 'day': 10},
+      ],
+      2023: [
+        {'month': 6, 'day': 28},
+        {'month': 6, 'day': 29},
+      ],
+      2024: [
+        {'month': 6, 'day': 16},
+        {'month': 6, 'day': 17},
+      ],
+      2025: [
+        {'month': 6, 'day': 6},
+        {'month': 6, 'day': 7},
+      ],
+      2026: [
+        {'month': 5, 'day': 27},
+        {'month': 5, 'day': 28},
+      ],
+      2027: [
+        {'month': 5, 'day': 16},
+        {'month': 5, 'day': 17},
+      ],
+      2028: [
+        {'month': 5, 'day': 5},
+        {'month': 5, 'day': 6},
+      ],
+      2029: [
+        {'month': 4, 'day': 24},
+        {'month': 4, 'day': 25},
+      ],
+      2030: [
+        {'month': 4, 'day': 13},
+        {'month': 4, 'day': 14},
+      ],
+    };
+
+    if (eidAdha.containsKey(year)) {
+      for (final eid in eidAdha[year]!) {
+        if (month == eid['month'] && day == eid['day']) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /// Check if date is Chinese New Year
+  bool _isChineseNewYear(int year, int month, int day) {
+    // Chinese New Year lookup table (you can expand this)
+    final chineseNewYear = <int, Map<String, int>>{
+      2014: {'month': 1, 'day': 31},
+      2015: {'month': 2, 'day': 19},
+      2016: {'month': 2, 'day': 8},
+      2017: {'month': 1, 'day': 28},
+      2018: {'month': 2, 'day': 16},
+      2019: {'month': 2, 'day': 5},
+      2020: {'month': 1, 'day': 25},
+      2021: {'month': 2, 'day': 12},
+      2022: {'month': 2, 'day': 1},
+      2023: {'month': 1, 'day': 22},
+      2024: {'month': 2, 'day': 10},
+      2025: {'month': 1, 'day': 29},
+      2026: {'month': 2, 'day': 17},
+      2027: {'month': 2, 'day': 6},
+      2028: {'month': 1, 'day': 26},
+      2029: {'month': 2, 'day': 13},
+      2030: {'month': 2, 'day': 3},
+      2031: {'month': 1, 'day': 23},
+      2032: {'month': 2, 'day': 11},
+      2033: {'month': 1, 'day': 31},
+      2034: {'month': 2, 'day': 19},
+      2035: {'month': 2, 'day': 8},
+    };
+
+    if (chineseNewYear.containsKey(year)) {
+      final cny = chineseNewYear[year]!;
+      return month == cny['month'] && day == cny['day'];
+    }
+
+    return false;
   }
 
   /// Calculate Easter Sunday for a given year using Gregorian calendar
@@ -509,6 +764,15 @@ class HolidayCalculator {
     return {'year': finalYear, 'month': month, 'day': day};
   }
 
+  /// Check if a date is a substitute holiday
+  bool isSubstituteHoliday(double julianDayNumber, int year) {
+    if (year >= 2019 && year <= 2021) {
+      final substituteHolidays = _getSubstituteHolidays();
+      return substituteHolidays.contains(julianDayNumber.round());
+    }
+    return false;
+  }
+
   /// Get substitute holidays for specific years (2019-2021)
   List<int> _getSubstituteHolidays() {
     return [
@@ -521,61 +785,5 @@ class HolidayCalculator {
       2459300, 2459303, 2459323, 2459324,
       2459335, 2459548, 2459573,
     ];
-  }
-
-  /// Check if a date is a substitute holiday
-  bool isSubstituteHoliday(double julianDayNumber, int year) {
-    if (year >= 2019 && year <= 2021) {
-      final substituteHolidays = _getSubstituteHolidays();
-      return substituteHolidays.contains(julianDayNumber.round());
-    }
-    return false;
-  }
-
-  List<int> _getChineseNewYearDays() {
-    return [
-      2456689,
-      2456690,
-      2457073,
-      2457074,
-      2457427,
-      2457428,
-      2457782,
-      2457783,
-      2458166,
-      2458167,
-    ];
-  }
-
-  List<int> _getDiwaliDays() {
-    return [2456599, 2456953, 2457337, 2457691, 2458045, 2458429];
-  }
-
-  List<int> _getEidDays() {
-    return [2456513, 2456867, 2457221, 2457576, 2457930, 2458285];
-  }
-
-  List<int> _getEid2Days() {
-    return [2456936, 2457290, 2457644, 2457998, 2458353];
-  }
-
-  // Binary search for array with one element
-  static int _bSearch1(int key, List<int> arr) {
-    int low = 0;
-    int high = arr.length - 1;
-
-    while (low <= high) {
-      final int mid = ((low + high) / 2).floor();
-
-      if (arr[mid] > key) {
-        high = mid - 1;
-      } else if (arr[mid] < key) {
-        low = mid + 1;
-      } else {
-        return mid;
-      }
-    }
-
-    return -1;
   }
 }

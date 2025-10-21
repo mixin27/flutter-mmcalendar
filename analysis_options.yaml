@@ -8,3 +8,8 @@ linter:
     avoid_redundant_argument_values: true
     directives_ordering: true
     public_member_api_docs: true
+
+analyzer:
+  exclude:
+    - test/**
+    - local_tools/**

@@ -34,6 +34,23 @@ class MyanmarDateTime {
   AstroInfo? _astroInfo;
   HolidayInfo? _holidayInfo;
 
+  static final Map<String, DateConverter> _converters = {};
+  static final AstroCalculator _sharedAstroCalculator = AstroCalculator(
+    cache: CalendarCache.global(),
+  );
+  static final HolidayCalculator _sharedHolidayCalculator = HolidayCalculator(
+    cache: CalendarCache.global(),
+  );
+
+  /// Get or create a shared converter for the given config
+  static DateConverter _getConverter(CalendarConfig config) {
+    final key = config.hashCode.toString();
+    return _converters.putIfAbsent(
+      key,
+      () => DateConverter(config, cache: CalendarCache.global()),
+    );
+  }
+
   /// Private constructor
   MyanmarDateTime._(
     this._converter,
@@ -48,12 +65,8 @@ class MyanmarDateTime {
 
   /// Creates Myanmar DateTime from current date/time
   factory MyanmarDateTime.now({CalendarConfig? config}) {
-    final converter = DateConverter(
-      config ?? const CalendarConfig(),
-      cache: CalendarCache.global(),
-    );
-    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
-    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
+    final cfg = config ?? const CalendarConfig();
+    final converter = _getConverter(cfg);
 
     // Get current UTC time and convert to Julian Day Number
     final now = DateTime.now().toUtc();
@@ -68,8 +81,8 @@ class MyanmarDateTime {
 
     return MyanmarDateTime._(
       converter,
-      astroCalculator,
-      holidayCalculator,
+      _sharedAstroCalculator,
+      _sharedHolidayCalculator,
       jdn,
     );
   }
@@ -79,12 +92,8 @@ class MyanmarDateTime {
     DateTime dateTime, {
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(
-      config ?? const CalendarConfig(),
-      cache: CalendarCache.global(),
-    );
-    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
-    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
+    final cfg = config ?? const CalendarConfig();
+    final converter = _getConverter(cfg);
 
     final jdn = converter.westernToJulian(
       dateTime.year,
@@ -97,8 +106,8 @@ class MyanmarDateTime {
 
     return MyanmarDateTime._(
       converter,
-      astroCalculator,
-      holidayCalculator,
+      _sharedAstroCalculator,
+      _sharedHolidayCalculator,
       jdn,
     );
   }
@@ -113,12 +122,8 @@ class MyanmarDateTime {
     int second = 0,
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(
-      config ?? const CalendarConfig(),
-      cache: CalendarCache.global(),
-    );
-    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
-    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
+    final cfg = config ?? const CalendarConfig();
+    final converter = _getConverter(cfg);
 
     final jdn = converter.westernToJulian(
       year,
@@ -131,8 +136,8 @@ class MyanmarDateTime {
 
     return MyanmarDateTime._(
       converter,
-      astroCalculator,
-      holidayCalculator,
+      _sharedAstroCalculator,
+      _sharedHolidayCalculator,
       jdn,
     );
   }
@@ -147,12 +152,8 @@ class MyanmarDateTime {
     int second = 0,
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(
-      config ?? const CalendarConfig(),
-      cache: CalendarCache.global(),
-    );
-    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
-    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
+    final cfg = config ?? const CalendarConfig();
+    final converter = _getConverter(cfg);
 
     final jdn = converter.myanmarToJulian(
       year,
@@ -165,8 +166,8 @@ class MyanmarDateTime {
 
     return MyanmarDateTime._(
       converter,
-      astroCalculator,
-      holidayCalculator,
+      _sharedAstroCalculator,
+      _sharedHolidayCalculator,
       jdn,
     );
   }
@@ -176,17 +177,13 @@ class MyanmarDateTime {
     MyanmarDate myanmarDate, {
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(
-      config ?? const CalendarConfig(),
-      cache: CalendarCache.global(),
-    );
-    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
-    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
+    final cfg = config ?? const CalendarConfig();
+    final converter = _getConverter(cfg);
 
     return MyanmarDateTime._(
       converter,
-      astroCalculator,
-      holidayCalculator,
+      _sharedAstroCalculator,
+      _sharedHolidayCalculator,
       myanmarDate.julianDayNumber,
     );
   }
@@ -196,17 +193,13 @@ class MyanmarDateTime {
     WesternDate westernDate, {
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(
-      config ?? const CalendarConfig(),
-      cache: CalendarCache.global(),
-    );
-    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
-    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
+    final cfg = config ?? const CalendarConfig();
+    final converter = _getConverter(cfg);
 
     return MyanmarDateTime._(
       converter,
-      astroCalculator,
-      holidayCalculator,
+      _sharedAstroCalculator,
+      _sharedHolidayCalculator,
       westernDate.julianDayNumber,
     );
   }
@@ -216,17 +209,13 @@ class MyanmarDateTime {
     double julianDayNumber, {
     CalendarConfig? config,
   }) {
-    final converter = DateConverter(
-      config ?? const CalendarConfig(),
-      cache: CalendarCache.global(),
-    );
-    final astroCalculator = AstroCalculator(cache: CalendarCache.global());
-    final holidayCalculator = HolidayCalculator(cache: CalendarCache.global());
+    final cfg = config ?? const CalendarConfig();
+    final converter = _getConverter(cfg);
 
     return MyanmarDateTime._(
       converter,
-      astroCalculator,
-      holidayCalculator,
+      _sharedAstroCalculator,
+      _sharedHolidayCalculator,
       julianDayNumber,
     );
   }
@@ -387,6 +376,18 @@ class MyanmarDateTime {
 
   /// Cultural holidays
   List<String> get culturalHolidays => holidayInfo.culturalHolidays;
+
+  /// All anniversary days
+  List<String> get allAnniversaryDays => holidayInfo.allAnniversaryDays;
+
+  /// All myanmar anniversary days
+  List<String> get myanmarAnniversaryDays => holidayInfo.myanmarAnniversaryDays;
+
+  /// All other anniversary days
+  List<String> get otherAnniversaryDays => holidayInfo.otherAnniversaryDays;
+
+  /// All other holidays
+  List<String> get otherHolidays => holidayInfo.otherHolidays;
 
   // ============================================================================
   // GETTERS - BOOLEAN PROPERTIES

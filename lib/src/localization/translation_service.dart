@@ -879,6 +879,14 @@ class TranslationService {
       Language.shan: 'ဝၢႆးဝၼ်း',
       Language.karen: 'မွန်းလွဲ',
     },
+    'Afternoon Pyathada': {
+      Language.english: 'Afternoon Pyathada',
+      Language.myanmar: 'မွန်းလွဲ ပြဿဒါး',
+      Language.zawgyi: 'မြန္းလြဲ ျပႆဒါး',
+      Language.mon: 'မွန်းလွဲ တ္ၚဲပြာဗ္ဗဒါ',
+      Language.shan: 'ဝၢႆးဝၼ်း ဝၼ်းပျၢတ်ႈ',
+      Language.karen: 'မွန်းလွဲ ပြဿဒါး',
+    },
     'Amyeittasote': {
       Language.english: 'Amyeittasote',
       Language.myanmar: 'အမြိတ္တစုတ်',

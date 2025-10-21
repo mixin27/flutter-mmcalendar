@@ -26,6 +26,7 @@ class FormatService {
   /// - `&w` : weekday number [0-6]
   /// - `&YT` : year type [e.g. Common Year, Little Watat]
   /// - `&N` : year name [e.g. Hpusha, Magha]
+  /// - `&Sy` : year name [e.g. Sasana Year]
   String formatMyanmarDate(
     MyanmarDate date, {
     String? pattern,
@@ -75,11 +76,14 @@ class FormatService {
       // Fortnight day with zero padding
       result = result.replaceAll(
         '&ff',
-        date.fortnightDay.toString().padLeft(2, '0'),
+        '${date.fortnightDay.toString().padLeft(2, '0')} ${TranslationService.translate('Yat')}',
       );
 
       // Fortnight day
-      result = result.replaceAll('&f', date.fortnightDay.toString());
+      result = result.replaceAll(
+        '&f',
+        '${date.fortnightDay.toString()} ${TranslationService.translate('Yat')}',
+      );
 
       // Weekday name
       result = result.replaceAll('&W', _getWeekdayName(date.weekday));
@@ -93,7 +97,10 @@ class FormatService {
       // Year name (12-year cycle)
       result = result.replaceAll('&N', _getYearName(date.year));
 
-      return _translateNumbers(result);
+      // Sasana Year
+      result = result.replaceAll('&Sy', date.sasanaYear.toString());
+
+      return translateNumbers(result);
     } finally {
       if (currentLang != oldLang) {
         TranslationService.setLanguage(oldLang);
@@ -231,7 +238,7 @@ class FormatService {
       // Weekday number
       result = result.replaceAll('%w', date.weekday.toString());
 
-      return _translateNumbers(result);
+      return translateNumbers(result);
     } finally {
       if (currentLang != oldLang) {
         TranslationService.setLanguage(oldLang);
@@ -354,8 +361,8 @@ class FormatService {
   }
 
   /// Translate numbers to the current language
-  String _translateNumbers(String text) {
-    final currentLang = TranslationService.currentLanguage;
+  String translateNumbers(String text, {Language? language}) {
+    final currentLang = language ?? TranslationService.currentLanguage;
 
     // Only translate numbers for Myanmar languages
     if (currentLang == Language.myanmar || currentLang == Language.zawgyi) {
