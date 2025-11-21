@@ -1847,5 +1847,31 @@ class TranslationService {
       Language.karen: 'လါၣ်နံၤ',
       Language.english: 'Next Month',
     },
+
+    // Shan Calendar specific translations
+    'Shan Era': {
+      Language.english: 'Shan Era',
+      Language.myanmar: 'ရှမ်းသက္ကရာဇ်',
+      Language.zawgyi: 'ရွမ္းသကၠရာဇ္',
+      Language.mon: 'Shan Era',
+      Language.shan: 'သႅင်ၸဝ်ႈတႆး',
+      Language.karen: 'Shan Era',
+    },
+    'Shan Calendar Year': {
+      Language.english: 'Shan Calendar Year',
+      Language.myanmar: 'ရှမ်းပြက္ခဒိန်နှစ်',
+      Language.zawgyi: 'ရွမ္းျပကၡဒိန္ႏွစ္',
+      Language.mon: 'Shan Calendar Year',
+      Language.shan: 'ပီလိၵ်ႈတိၼ်တႆး',
+      Language.karen: 'Shan Calendar Year',
+    },
+    'Shan New Year': {
+      Language.english: 'Shan New Year',
+      Language.myanmar: 'ရှမ်းနှစ်သစ်ကူး',
+      Language.zawgyi: 'ရွမ္းႏွစ္သစ္ကူး',
+      Language.mon: 'Shan New Year',
+      Language.shan: 'ပွႆးပီမႂ်ႇတႆး',
+      Language.karen: 'Shan New Year',
+    },
   };
 }

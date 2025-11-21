@@ -1,3 +1,8 @@
+## 3.2.2
+
+- Redo `&f` and `&ff` format by removing Yat in `FormatService`
+- Shan calendar year calculation support.
+
 ## 3.2.1
 
 - Fixed: Diwali, Eid, Chinese new year holidays - Instead of hard-coded arrays, calculate these dates dynamically. Can be extend more in the future.

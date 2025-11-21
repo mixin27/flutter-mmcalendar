@@ -155,15 +155,17 @@ class HolidayCalculator {
 
     // Karen New Year - Pyatho 1
     if (date.month == CalendarConstants.monthPyatho && date.day == 1) {
-      culturalHolidays.add(TranslationService.translate('Karen'));
-      culturalHolidays.add(TranslationService.translate("New Year's"));
+      culturalHolidays.add(
+        '${TranslationService.translate('Karen')} ${TranslationService.translate("New Year's")}',
+      );
     }
 
     // Tabaung Pwe - Tabaung full moon
     if (date.month == CalendarConstants.monthTabaung &&
         date.moonPhase == CalendarConstants.moonPhaseFullMoon) {
-      culturalHolidays.add(TranslationService.translate('Tabaung'));
-      culturalHolidays.add(TranslationService.translate('Pwe'));
+      culturalHolidays.add(
+        '${TranslationService.translate('Tabaung')} ${TranslationService.translate('Pwe')}',
+      );
     }
   }
 
@@ -203,28 +205,32 @@ class HolidayCalculator {
 
     // Taungpyone Pwe - Wagaung 10
     if (date.month == CalendarConstants.monthWagaung && date.day == 10) {
-      items.add(TranslationService.translate('Taungpyone'));
-      items.add(TranslationService.translate('Pwe'));
+      items.add(
+        '${TranslationService.translate('Taungpyone')} ${TranslationService.translate('Pwe')}',
+      );
     }
 
     // Yadanagu Pwe - Wagaung 23
     if (date.month == CalendarConstants.monthWagaung && date.day == 23) {
-      items.add(TranslationService.translate('Yadanagu'));
-      items.add(TranslationService.translate('Pwe'));
+      items.add(
+        '${TranslationService.translate('Yadanagu')} ${TranslationService.translate('Pwe')}',
+      );
     }
 
     // Mon National Day - Tabodwe 16 (since 1947 CE / 1309 ME)
     if (date.year >= 1309 &&
         date.month == CalendarConstants.monthTabodwe &&
         date.day == 16) {
-      items.add(TranslationService.translate('Mon'));
-      items.add(TranslationService.translate('National'));
+      items.add(
+        '${TranslationService.translate('Mon')} ${TranslationService.translate('National')}',
+      );
     }
 
     // Shan New Year & Authors' Day - Nadaw 1
     if (date.month == CalendarConstants.monthNadaw && date.day == 1) {
-      items.add(TranslationService.translate('Shan'));
-      items.add(TranslationService.translate("New Year's"));
+      final shan = TranslationService.translate('Shan');
+      final newYear = TranslationService.translate("New Year's");
+      items.add('$shan $newYear');
 
       if (date.year >= 1306) {
         items.add(TranslationService.translate('Authors'));
@@ -390,6 +396,8 @@ class HolidayCalculator {
       final newYearJdn = atatJdn + 1;
       final currentJdn = date.julianDayNumber.round();
 
+      final thinGyan = TranslationService.translate('Thingyan');
+
       // Myanmar New Year's Day
       if (currentJdn == newYearJdn) {
         publicHolidays.add(
@@ -398,23 +406,27 @@ class HolidayCalculator {
       }
       // Thingyan Atat
       else if (currentJdn == atatJdn) {
-        culturalHolidays.add(TranslationService.translate('Thingyan'));
-        culturalHolidays.add(TranslationService.translate('Atat'));
+        culturalHolidays.add(
+          '$thinGyan ${TranslationService.translate('Atat')}',
+        );
       }
       // Thingyan Akyat (water throwing days)
       else if (currentJdn > akyaJdn && currentJdn < atatJdn) {
-        culturalHolidays.add(TranslationService.translate('Thingyan'));
-        culturalHolidays.add(TranslationService.translate('Akyat'));
+        culturalHolidays.add(
+          '$thinGyan ${TranslationService.translate('Akyat')}',
+        );
       }
       // Thingyan Akya
       else if (currentJdn == akyaJdn) {
-        culturalHolidays.add(TranslationService.translate('Thingyan'));
-        culturalHolidays.add(TranslationService.translate('Akya'));
+        culturalHolidays.add(
+          '$thinGyan ${TranslationService.translate('Akya')}',
+        );
       }
       // Thingyan Akyo
       else if (currentJdn == akyoJdn) {
-        culturalHolidays.add(TranslationService.translate('Thingyan'));
-        culturalHolidays.add(TranslationService.translate('Akyo'));
+        culturalHolidays.add(
+          '$thinGyan ${TranslationService.translate('Akyo')}',
+        );
       }
 
       // Additional holiday periods for specific years

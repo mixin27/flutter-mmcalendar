@@ -8,6 +8,8 @@ import 'package:flutter_mmcalendar/src/services/myanmar_calendar_service.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_utils.dart';
 import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
 
+import '../models/shan_date.dart';
+
 /// A comprehensive Myanmar Calendar widget for Flutter applications
 ///
 /// This widget displays a full calendar view with Myanmar dates, Western dates,
@@ -454,6 +456,7 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
   /// Build month/year title
   Widget _buildMonthYearTitle() {
     final myanmarDate = _service.westernToMyanmar(_currentMonth);
+    final shanDate = ShanDate.fromMyanmarDate(myanmarDate);
 
     return InkWell(
       onTap: () => _showMonthYearPicker(),
@@ -462,35 +465,54 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (widget.showMyanmarDates) ...[
+            if (widget.language == Language.shan) ...[
               Text(
-                _service.formatMyanmarDate(
-                  myanmarDate,
-                  pattern: '&y &M',
-                  language: widget.language,
-                ),
+                'ပီ ${shanDate.year} ${shanDate.monthName}',
                 style: _theme.headerTextStyle.copyWith(
                   color: _theme.headerTextColor,
                 ),
                 textAlign: TextAlign.center,
               ),
-            ],
-            if (widget.showWesternDates) ...[
-              Text(
-                _service.formatWesternDate(
-                  _service.myanmarToWesternDate(
-                    myanmarDate.year,
-                    myanmarDate.month,
-                    myanmarDate.day,
+              if (widget.showWesternDates)
+                Text(
+                  '(${_service.formatWesternDate(_service.myanmarToWesternDate(myanmarDate.year, myanmarDate.month, myanmarDate.day), pattern: '%M %yyyy', language: widget.language)})',
+                  style: _theme.headerSubtitleStyle?.copyWith(
+                    color: _theme.headerTextColor.withValues(alpha: 0.7),
                   ),
-                  pattern: '%M %yyyy',
-                  language: widget.language,
+                  textAlign: TextAlign.center,
                 ),
-                style: _theme.headerSubtitleStyle?.copyWith(
-                  color: _theme.headerTextColor.withValues(alpha: 0.8),
+            ] else if (widget.showMyanmarDates) ...[
+              // Regular Myanmar Date Display
+              if (widget.showMyanmarDates) ...[
+                Text(
+                  _service.formatMyanmarDate(
+                    myanmarDate,
+                    pattern: '&y &M',
+                    language: widget.language,
+                  ),
+                  style: _theme.headerTextStyle.copyWith(
+                    color: _theme.headerTextColor,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
+              ],
+              if (widget.showWesternDates) ...[
+                Text(
+                  _service.formatWesternDate(
+                    _service.myanmarToWesternDate(
+                      myanmarDate.year,
+                      myanmarDate.month,
+                      myanmarDate.day,
+                    ),
+                    pattern: '%M %yyyy',
+                    language: widget.language,
+                  ),
+                  style: _theme.headerSubtitleStyle?.copyWith(
+                    color: _theme.headerTextColor.withValues(alpha: 0.8),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ],
           ],
         ),

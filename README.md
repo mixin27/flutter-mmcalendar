@@ -104,6 +104,48 @@ Future<void> showDatePicker(BuildContext context) async {
 }
 ```
 
+## Shan Calendar Support
+
+The package now supports the Shan calendar, which follows the Myanmar calendar structure but uses a different year calculation:
+
+> **NOTE:** We use the traditional `Tai Long / Shan` State era calculation.
+
+**Formula:** Shan Year = Myanmar Year + 733
+
+### Example Usage
+```dart
+// Get today's Shan year
+final date = MyanmarCalendar.today();
+print('Shan Year: ${date.shanYear}'); // e.g., 2120
+
+// Format as Shan date
+print(date.formatShan()); // ပီ 2120 လိူၼ်ပူၼ် ဝၼ်း 15
+
+// Complete date with Shan calendar
+final complete = date.formatCompleteWithShan(
+  language: Language.shan,
+);
+print(complete);
+// Output: "ပီ 2120 လိူၼ်ပူၼ် ဝၼ်း 15 | ၁၃၈၇ ပြာသို လဆန်း ၁၅ ရက် | 2025-01-15"
+
+// Convert between Shan and Myanmar years
+final shanYear = MyanmarCalendar.getShanYear(1387); // 2120
+final myanmarYear = MyanmarCalendar.getMyanmarYearFromShan(2120); // 1387
+```
+
+### Shan Calendar Widget
+
+When using Shan language, the calendar widget automatically displays Shan years:
+```dart
+MyanmarCalendarWidget(
+  language: Language.shan,
+  showHolidays: true,
+  onDateSelected: (date) {
+    print('Selected Shan Year: ${date.shanYear}');
+  },
+)
+```
+
 ## Core Classes
 
 ### MyanmarCalendar
@@ -311,14 +353,14 @@ final date = MyanmarCalendar.today();
 '&y'     // Myanmar year (e.g., ၁၃၈၅)
 '&M'     // Myanmar month name (e.g., တပေါင်း)
 '&P'     // Moon phase (e.g., လဆုတ်)
-'&ff'    // Fortnight day (e.g., ၁၀ ရက်)
+'&ff'    // Fortnight day (e.g., ၁၀)
 '&d'     // Day number
 '&w'     // Weekday name
 '&Sy'     // Sasana Year (e.g., ၂၅၆၉)
 
 // Example usage
 final formatted = date.formatMyanmar('&y ခုနှစ် &M &P &ff');
-// Output: ၁၃၈၅ ခုနှစ် တပေါင်း လဆုတ် ၁၀ ရက်
+// Output: ၁၃၈၅ ခုနှစ် တပေါင်း လဆုတ် ၁၀
 ```
 
 ### Western Date Patterns
