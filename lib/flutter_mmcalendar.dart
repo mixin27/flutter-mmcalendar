@@ -69,12 +69,14 @@ import 'src/models/chronicle_models.dart';
 import 'src/models/complete_date.dart';
 import 'src/models/holiday_info.dart';
 import 'src/models/myanmar_date.dart';
+import 'src/models/shan_date.dart';
 import 'src/models/validation_result.dart';
 import 'src/models/western_date.dart';
 import 'src/services/chronicle_service.dart';
 import 'src/services/myanmar_calendar_service.dart';
 import 'src/utils/calendar_utils.dart';
 import 'src/utils/package_constants.dart';
+import 'src/utils/shan_calendar_constants.dart';
 
 // ============================================================================
 // CORE EXPORTS
@@ -842,5 +844,61 @@ class MyanmarCalendar {
   /// Lookup a dynasty by ID
   static DynastyData? getDynastyById(String dynastyId) {
     return _chronicleInstance().dynastyById(dynastyId);
+  }
+
+  // ============================================================================
+  // SHAN CALENDAR SUPPORT
+  // ============================================================================
+
+  /// Get Shan calendar year from Myanmar year
+  ///
+  /// Formula: Shan Year = Myanmar Year + 733
+  ///
+  /// Example:
+  /// ```dart
+  /// final shanYear = MyanmarCalendar.getShanYear(1387); // Returns 2120
+  /// ```
+  static int getShanYear(int myanmarYear) {
+    return ShanCalendarConstants.getShanYear(myanmarYear);
+  }
+
+  /// Get Myanmar year from Shan year
+  ///
+  /// Example:
+  /// ```dart
+  /// final myanmarYear = MyanmarCalendar.getMyanmarYearFromShan(2120); // Returns 1387
+  /// ```
+  static int getMyanmarYearFromShan(int shanYear) {
+    return ShanCalendarConstants.getMyanmarYearFromShan(shanYear);
+  }
+
+  /// Get today's date in Shan calendar
+  ///
+  /// Example:
+  /// ```dart
+  /// final shanToday = MyanmarCalendar.todayInShan();
+  /// print('Today is Shan year ${shanToday.year}'); // e.g., 2120
+  /// ```
+  static ShanDate todayInShan() {
+    return today().shanDate;
+  }
+
+  /// Verify Shan year calculation
+  ///
+  /// Useful for debugging and validation
+  static bool verifyShanYear(int myanmarYear, int expectedShanYear) {
+    return ShanCalendarConstants.verifyShanYear(myanmarYear, expectedShanYear);
+  }
+
+  /// Format a Shan date
+  ///
+  /// Example:
+  /// ```dart
+  /// final shanDate = MyanmarCalendar.todayInShan();
+  /// final formatted = MyanmarCalendar.formatShanDate(shanDate);
+  /// print(formatted); // "ပီ 2120 လိူၼ်ပူၼ် ဝၼ်း 15"
+  /// ```
+  static String formatShanDate(ShanDate date, {String? pattern}) {
+    return date.format(pattern: pattern ?? 'ပီ &sy &sm ဝၼ်း &d');
   }
 }

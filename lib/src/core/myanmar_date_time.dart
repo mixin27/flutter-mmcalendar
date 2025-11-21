@@ -12,6 +12,7 @@ import 'package:flutter_mmcalendar/src/services/holiday_calculator.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_constants.dart';
 import 'package:flutter_mmcalendar/src/utils/calendar_utils.dart';
 
+import '../models/shan_date.dart';
 import 'calendar_cache.dart';
 
 /// Myanmar DateTime class that provides a convenient interface for Myanmar calendar operations
@@ -33,6 +34,9 @@ class MyanmarDateTime {
   WesternDate? _westernDate;
   AstroInfo? _astroInfo;
   HolidayInfo? _holidayInfo;
+
+  // Cache for Shan date
+  ShanDate? _shanDate;
 
   static final Map<String, DateConverter> _converters = {};
   static final AstroCalculator _sharedAstroCalculator = AstroCalculator(
@@ -819,5 +823,82 @@ class MyanmarDateTime {
       completeDate.julianDayNumber,
       config: config,
     );
+  }
+
+  // ==== Shan Calendar =======
+
+  /// Shan date object (cached)
+  ///
+  /// Converts Myanmar date to Shan calendar using the formula:
+  /// Shan Year = Myanmar Year + 733
+  ///
+  /// Example:
+  /// ```dart
+  /// final date = MyanmarCalendar.today();
+  /// print('Shan Year: ${date.shanYear}'); // e.g., 2120
+  /// print('Shan Date: ${date.shanDate.format()}');
+  /// ```
+  ShanDate get shanDate {
+    _shanDate ??= ShanDate.fromMyanmarDate(myanmarDate);
+    return _shanDate!;
+  }
+
+  /// Shan calendar year
+  ///
+  /// Example: For Myanmar year 1387, returns 2120
+  int get shanYear => shanDate.year;
+
+  /// Shan month name in Shan language
+  String get shanMonthName => shanDate.monthName;
+
+  /// Format as Shan date with custom pattern
+  ///
+  /// Example:
+  /// ```dart
+  /// final date = MyanmarCalendar.today();
+  /// print(date.formatShan()); // "ပီ 2120 လိူၼ်ပူၼ် ဝၼ်း 15"
+  /// print(date.formatShan('&sy-&sm-&d')); // "2120-လိူၼ်ပူၼ်-15"
+  /// ```
+  String formatShan([String? pattern]) {
+    return shanDate.format(pattern: pattern ?? 'ပီ &sy &sm ဝၼ်း &d');
+  }
+
+  /// Format complete date with Shan calendar included
+  ///
+  /// Example:
+  /// ```dart
+  /// final complete = date.formatCompleteWithShan(
+  ///   language: Language.shan,
+  ///   includeShan: true,
+  /// );
+  /// // Output: "ပီ 2120 လိူၼ်ပူၼ် ဝၼ်း 15 | ၁၃၈၇ ပြာသို လဆန်း ၁၅ ရက် | 2025-01-15"
+  /// ```
+  String formatCompleteWithShan({
+    String? shanPattern,
+    String? myanmarPattern,
+    String? westernPattern,
+    Language? language,
+    bool includeShan = true,
+    bool includeMyanmarDate = true,
+    bool includeWesternDate = true,
+  }) {
+    final parts = <String>[];
+
+    // Shan date (show when Shan language or explicitly requested)
+    if (includeShan && (language == Language.shan || shanPattern != null)) {
+      parts.add(formatShan(shanPattern));
+    }
+
+    // Myanmar date
+    if (includeMyanmarDate) {
+      parts.add(formatMyanmar(myanmarPattern, language));
+    }
+
+    // Western date
+    if (includeWesternDate) {
+      parts.add(formatWestern(westernPattern, language));
+    }
+
+    return parts.join(' | ');
   }
 }
