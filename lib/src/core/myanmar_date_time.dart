@@ -688,6 +688,7 @@ class MyanmarDateTime {
     return CompleteDate(
       western: westernDate,
       myanmar: myanmarDate,
+      shan: shanDate,
       astro: astroInfo,
       holidays: holidayInfo,
     );
