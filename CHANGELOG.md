@@ -1,3 +1,5 @@
+## 3.2.3
+
 ## 3.2.2
 
 - Redo `&f` and `&ff` format by removing Yat in `FormatService`

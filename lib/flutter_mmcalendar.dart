@@ -87,7 +87,8 @@ export 'src/core/calendar_cache.dart';
 export 'src/core/calendar_config.dart';
 export 'src/core/myanmar_calendar_theme.dart';
 export 'src/core/myanmar_date_time.dart';
-
+// Exceptions
+export 'src/exceptions/calendar_exceptions.dart';
 // Localization
 export 'src/localization/language.dart';
 export 'src/localization/translation_service.dart';
@@ -105,6 +106,7 @@ export 'src/services/date_converter.dart';
 export 'src/services/format_service.dart';
 export 'src/services/holiday_calculator.dart';
 export 'src/services/myanmar_calendar_service.dart';
+export 'src/utils/accessibility_utils.dart';
 export 'src/utils/calendar_constants.dart';
 // Utils
 export 'src/utils/calendar_utils.dart';
@@ -113,10 +115,13 @@ export 'src/utils/chronicle_dynasty_meta.dart';
 export 'src/utils/chronicle_entries.dart';
 export 'src/utils/date_extension.dart';
 export 'src/utils/package_constants.dart';
+// Performance and Accessibility
+export 'src/utils/performance_utils.dart';
 export 'src/widgets/moon/moon_phase_indicator.dart';
 // Widgets
 export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';
+export 'src/widgets/optimized_calendar_cell.dart';
 
 // ============================================================================
 // MAIN MYANMAR CALENDAR CLASS

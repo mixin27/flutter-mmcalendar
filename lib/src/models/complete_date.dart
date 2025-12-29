@@ -121,6 +121,9 @@ class CompleteDate {
   /// Gets the day from the Western calendar (1-31)
   int get westernDay => western.day;
 
+  /// Gets the weekday name from the Western calendar
+  String get westernWeekdayName => _getWeekdayName(western.weekday);
+
   /// Gets the Sasana year
   int get sasanaYear => myanmar.sasanaYear;
 

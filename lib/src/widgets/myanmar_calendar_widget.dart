@@ -5,8 +5,8 @@ import 'package:flutter_mmcalendar/src/localization/language.dart';
 import 'package:flutter_mmcalendar/src/localization/translation_service.dart';
 import 'package:flutter_mmcalendar/src/models/complete_date.dart';
 import 'package:flutter_mmcalendar/src/services/myanmar_calendar_service.dart';
-import 'package:flutter_mmcalendar/src/utils/calendar_utils.dart';
 import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
+import 'package:flutter_mmcalendar/src/widgets/optimized_calendar_cell.dart';
 
 import '../models/shan_date.dart';
 
@@ -346,15 +346,6 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     return date.year == _currentMonth.year && date.month == _currentMonth.month;
   }
 
-  /// Check if date is weekend
-  bool _isWeekend(DateTime date) {
-    // DateTime uses 1=Monday, 7=Sunday
-    // But we need to check against Myanmar calendar system: 0=Saturday, 1=Sunday, ..., 6=Friday
-    final myanmarWeekday =
-        (date.weekday + 1) % 7; // Convert DateTime weekday to Myanmar weekday
-    return myanmarWeekday == 0 || myanmarWeekday == 1; // Saturday or Sunday
-  }
-
   /// Navigate to previous month
   void _goToPreviousMonth() {
     setState(() {
@@ -617,171 +608,21 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     final isToday = _isToday(date);
     final isSelected = _isSelected(date);
     final isInCurrentMonth = _isInCurrentMonth(date);
-    // ignore: unused_local_variable
-    final isWeekend = _isWeekend(date);
     final isSelectable = _isDateSelectable(date);
-    final isFullMoon = completeDate.isFullMoon;
-    final isNewMoon = completeDate.isNewMoon;
 
-    // Determine colors and styles
-    Color backgroundColor = _theme.dateCellBackgroundColor;
-    Color textColor = _theme.dateCellTextColor;
-    Color? borderColor;
-
-    if (!isSelectable) {
-      backgroundColor = _theme.disabledDateBackgroundColor;
-      textColor = _theme.disabledDateTextColor;
-    }
-    // else if (isWeekend) {
-    //   backgroundColor = _theme.holidayIndicatorColor.withValues(alpha: 0.3);
-    //   textColor = _theme.holidayIndicatorColor;
-    // }
-    else if (isSelected) {
-      backgroundColor = _theme.selectedDateBackgroundColor;
-      textColor = _theme.selectedDateTextColor;
-      borderColor = _theme.selectedDateBorderColor;
-    } else if (isToday && widget.highlightToday) {
-      backgroundColor = _theme.todayBackgroundColor;
-      textColor = _theme.todayTextColor;
-      borderColor = _theme.todayBorderColor;
-    }
-    // else if (completeDate.isSabbath) {
-    //   backgroundColor = _theme.sabbathBackgroundColor;
-    //   textColor = _theme.sabbathTextColor;
-    // }
-
-    if (isFullMoon) {
-      backgroundColor = _theme.fullMoonBackgroundColor;
-      textColor = _theme.fullMoonTextColor;
-    }
-    if (isNewMoon) {
-      backgroundColor = _theme.newMoonBackgroundColor;
-      textColor = _theme.newMoonTextColor;
-    }
-
-    if (!isInCurrentMonth) {
-      backgroundColor = _theme.disabledDateBackgroundColor;
-      textColor = _theme.dateCellTextColor.withValues(alpha: 0.4);
-    }
-
-    return GestureDetector(
-      onTap: isSelectable ? () => _onDateTap(date) : null,
-      child: Container(
-        margin: _theme.dateCellMargin,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(_theme.dateCellBorderRadius),
-          border: borderColor != null
-              ? Border.all(color: borderColor, width: 2.0)
-              : null,
-        ),
-        child: Stack(
-          children: [
-            // Main date content
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Western date
-                  if (widget.showWesternDates)
-                    Text(
-                      date.day.toString(),
-
-                      style: _theme.dateCellTextStyle.copyWith(
-                        color: textColor,
-                        fontWeight: isToday ? FontWeight.bold : null,
-                      ),
-                    ),
-
-                  // Myanmar date
-                  if (widget.showMyanmarDates)
-                    Row(
-                      spacing: 2,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // if (isInCurrentMonth)
-                        //   Text(
-                        //     _formatMoonPhase(completeDate.moonPhase),
-                        //     style:
-                        //         (_theme.dateCellSecondaryTextStyle ??
-                        //                 _theme.dateCellTextStyle)
-                        //             .copyWith(
-                        //               color: textColor.withValues(alpha: 0.6),
-                        //             ),
-                        //   ),
-                        if (!(isFullMoon || isNewMoon))
-                          Text(
-                            CalendarUtils.convertNumberToLanguage(
-                              completeDate.fortnightDay.toDouble(),
-                            ),
-                            style:
-                                (_theme.dateCellSecondaryTextStyle ??
-                                        _theme.dateCellTextStyle)
-                                    .copyWith(
-                                      color: textColor.withValues(alpha: 0.6),
-                                    ),
-                          ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-
-            // Holiday indicator
-            if (widget.showHolidays && completeDate.hasHolidays)
-              Positioned(
-                top: 2,
-                right: 2,
-                // child: Icon(
-                //   Icons.weekend,
-                //   size: 8,
-                //   color: _theme.holidayIndicatorColor.withValues(alpha: 0.7),
-                // ),
-                child: Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: _theme.holidayIndicatorColor,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-
-            // Astrological indicator
-            if (widget.showAstrology && completeDate.hasAstrologicalDays)
-              Positioned(
-                top: 2,
-                left: 2,
-                // child: Icon(
-                //   Icons.star,
-                //   size: 8,
-                //   color: _theme.astroIndicatorColor.withValues(alpha: 0.7),
-                // ),
-                child: Container(
-                  width: 4,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: _theme.astroIndicatorColor,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-
-            // Moon phase indicator
-            if (isFullMoon || isNewMoon)
-              Positioned(
-                bottom: 2,
-                right: 2,
-                child: Icon(
-                  Icons.brightness_1,
-                  size: 8,
-                  color: isFullMoon
-                      ? _theme.fullMoonTextColor
-                      : _theme.newMoonTextColor,
-                ),
-              ),
-          ],
-        ),
+    // Use OptimizedCalendarCell for better performance and accessibility
+    return RepaintBoundary(
+      child: OptimizedCalendarCell(
+        date: completeDate,
+        isSelected: isSelected,
+        isToday: isToday,
+        isDisabled: !isSelectable,
+        isInCurrentMonth: isInCurrentMonth,
+        onTap: isSelectable ? () => _onDateTap(date) : null,
+        language: widget.language,
+        showHolidays: widget.showHolidays,
+        showAstrology: widget.showAstrology,
+        theme: _theme, // Pass the Myanmar calendar theme
       ),
     );
   }
