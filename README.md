@@ -18,6 +18,9 @@ A comprehensive Flutter package for Myanmar calendar system with full support fo
 - 📱 **Responsive Design**: Works perfectly on mobile, tablet, and desktop
 - 🔄 **Date Arithmetic**: Easy date calculations and manipulations
 - 🛡️ **Type Safe**: Full null safety support with comprehensive error handling
+- ♿ **Accessibility**: Screen reader support, keyboard navigation, and high contrast themes
+- ⚡ **Performance Optimized**: Built-in caching, batch processing, and performance monitoring
+- 🎭 **Custom Exceptions**: Detailed error messages with recovery suggestions
 
 ## Installation
 
@@ -567,6 +570,210 @@ class CalendarController extends ChangeNotifier {
   }
 }
 ```
+
+## Error Handling
+
+The package includes comprehensive custom exception classes with detailed error messages and recovery suggestions.
+
+### Exception Types
+
+```dart
+try {
+  final date = MyanmarCalendar.fromMyanmar(1385, 15, 1);  // Invalid month
+} on InvalidMyanmarDateException catch (e) {
+  print('Error: ${e.message}');
+  print('Suggestion: ${e.details!['suggestion']}');
+  // Output: Myanmar month must be between 1 and 13...
+} on DateConversionException catch (e) {
+  print('Conversion failed: ${e.message}');
+} catch (e) {
+  print('Unexpected error: $e');
+}
+```
+
+### Available Exceptions
+
+- `InvalidMyanmarDateException` - Invalid Myanmar date components
+- `InvalidWesternDateException` - Invalid Western date components
+- `DateConversionException` - Date conversion failures
+- `DateParseException` - Date string parsing failures
+- `InvalidConfigurationException` - Invalid configuration parameters
+- `DateOutOfRangeException` - Dates outside supported ranges
+- `CacheException` - Caching system issues
+- `AstrologicalCalculationException` - Astrological calculation failures
+- `HolidayCalculationException` - Holiday calculation failures
+
+For detailed error handling guide, see [error_handling.md](error_handling.md).
+
+## Performance Utilities
+
+### LRU Cache
+
+General-purpose cache with automatic eviction (Note: Use built-in `CalendarCache` for calendar dates).
+
+```dart
+final cache = LRUCache<String, dynamic>(maxSize: 100);
+
+// Store with optional TTL
+cache.put('key', value, ttl: Duration(minutes: 30));
+
+// Retrieve
+final value = cache.get('key');
+
+// Statistics
+final stats = cache.getStatistics();
+print('Hit rate: ${stats['hitRate']}%');
+```
+
+### Performance Monitoring
+
+Track operation performance to identify bottlenecks.
+
+```dart
+// Measure synchronous operations
+final result = PerformanceMonitor.measure('date_conversion', () {
+  return MyanmarCalendar.fromWestern(2024, 1, 1);
+});
+
+// Measure async operations
+final asyncResult = await PerformanceMonitor.measureAsync(
+  'fetch_data',
+  () async => await fetchData(),
+);
+
+// Get statistics
+final stats = PerformanceMonitor.getOperationStats('date_conversion');
+print('Average: ${stats!['avgMs']}ms');
+
+// Print report
+PerformanceMonitor.printReport();
+```
+
+### Batch Processing
+
+Process large datasets without blocking the UI.
+
+```dart
+final dates = List.generate(1000, (i) => DateTime(2024, 1, i + 1));
+
+final myanmarDates = await BatchOptimizer.processBatch(
+  dates,
+  (date) => MyanmarCalendar.fromDateTime(date),
+  batchSize: 50,
+  delayBetweenBatches: Duration(milliseconds: 10),
+);
+```
+
+### Debouncer & Throttler
+
+Control operation frequency for better performance.
+
+```dart
+// Debouncer - delay until calls stop
+final debouncer = Debouncer(delay: Duration(milliseconds: 300));
+TextField(
+  onChanged: (query) => debouncer.run(() => search(query)),
+)
+
+// Throttler - limit frequency
+final throttler = Throttler(duration: Duration(milliseconds: 100));
+NotificationListener<ScrollNotification>(
+  onNotification: (notification) {
+    throttler.run(() => updateVisibleDates());
+    return false;
+  },
+)
+```
+
+For complete performance guide, see [performance.md](performance.md).
+
+## Accessibility
+
+The package includes comprehensive accessibility features for users with disabilities.
+
+### Automatic Accessibility
+
+The `OptimizedCalendarCell` and calendar widgets include accessibility by default:
+
+- ✅ Screen reader support with semantic labels
+- ✅ Keyboard navigation ready
+- ✅ High contrast mode support
+- ✅ Text scaling support
+
+### Keyboard Navigation
+
+```dart
+Focus(
+  onKeyEvent: (node, event) {
+    return CalendarKeyboardHandler.handleKeyEvent(
+      node,
+      event,
+      onArrowUp: () => moveSelection(-7),      // Previous week
+      onArrowDown: () => moveSelection(7),     // Next week
+      onArrowLeft: () => moveSelection(-1),    // Previous day
+      onArrowRight: () => moveSelection(1),    // Next day
+      onEnter: () => selectDate(),
+      onSpace: () => selectDate(),
+      onHome: () => goToToday(),
+      onEnd: () => goToMonthEnd(),
+      onEscape: () => Navigator.pop(context),
+    );
+  },
+  child: MyanmarCalendarWidget(...),
+)
+```
+
+### Screen Reader Announcements
+
+```dart
+// Announce to screen reader
+CalendarAccessibility.announce(
+  context,
+  'Selected January 15, 2025',
+);
+
+// Announce date selection
+CalendarAccessibility.announceDateSelection(
+  context,
+  completeDate,
+  language: Language.myanmar,
+);
+```
+
+### High Contrast Support
+
+```dart
+// Check high contrast mode
+final isHighContrast = HighContrastHelper.isHighContrastEnabled(context);
+
+// Get high contrast color
+final color = HighContrastHelper.getHighContrastColor(
+  context,
+  normalColor: Colors.blue,
+  highContrastColor: Colors.black,
+);
+```
+
+### Text Scaling
+
+```dart
+// Get scaled font size
+final fontSize = TextScalingHelper.getScaledFontSize(
+  context,
+  14.0,
+  maxScale: 2.0,
+);
+
+// Get accessible text style
+final textStyle = TextScalingHelper.getAccessibleTextStyle(
+  context,
+  TextStyle(fontSize: 14),
+  minFontSize: 12,
+  maxFontSize: 24,
+);
+```
+
+For complete accessibility guide, see [accessibility.md](accessibility.md).
 
 ## Performance Tips
 

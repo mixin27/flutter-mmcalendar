@@ -1,5 +1,100 @@
 ## 3.2.3
 
+### 🎉 New Features
+
+#### Exception Handling
+- **Added custom exception classes** for better error handling throughout the package
+  - `InvalidMyanmarDateException` - For invalid Myanmar date components with helpful suggestions
+  - `InvalidWesternDateException` - For invalid Western date components
+  - `DateConversionException` - For date conversion failures with factory methods
+  - `DateParseException` - For date string parsing failures
+  - `InvalidConfigurationException` - For invalid configuration parameters
+  - `DateOutOfRangeException` - For dates outside supported ranges
+  - `CacheException` - For caching system issues
+  - `AstrologicalCalculationException` - For astrological calculation failures
+  - `HolidayCalculationException` - For holiday calculation failures
+- All exceptions include detailed error messages and recovery suggestions
+
+#### Performance Utilities
+- **Added `LRUCache<K, V>`** - Generic Least Recently Used cache with TTL support
+  - Automatic eviction of least recently used items
+  - Optional Time-To-Live for cache entries
+  - Statistics tracking (hits, misses, hit rate)
+  - Useful for general-purpose caching needs (Note: Use built-in `CalendarCache` for calendar dates)
+- **Added `PerformanceMonitor`** - Track and measure operation performance
+  - Measure synchronous and async operations
+  - Track min/max/average execution times
+  - Generate performance reports
+- **Added `BatchOptimizer`** - Process large datasets without blocking UI
+  - Configurable batch sizes and delays
+  - Support for both sync and async processing
+- **Added `Debouncer` and `Throttler`** - Control operation frequency
+  - Prevent excessive function calls
+  - Useful for search inputs and scroll handlers
+
+#### Accessibility Features
+- **Added `CalendarAccessibility`** - Comprehensive screen reader support
+  - Generate semantic labels for dates (Myanmar + Western)
+  - Include holiday and astrological information in labels
+  - Screen reader announcements for date selection
+  - Month navigation hints
+- **Added `CalendarKeyboardHandler`** - Full keyboard navigation support
+  - Arrow keys for date navigation
+  - Enter/Space for selection
+  - Home/End for quick navigation
+  - Escape for dismissal
+- **Added `HighContrastHelper`** - High contrast theme support
+  - Detect high contrast mode
+  - Apply appropriate colors and borders
+- **Added `TextScalingHelper`** - Text scaling support
+  - Respect system text scaling settings
+  - Clamp font sizes within acceptable ranges
+  - Support for large text mode
+
+#### Optimized Widgets
+- **Added `OptimizedCalendarCell`** - Best-practice calendar cell widget
+  - Wrapped in `RepaintBoundary` for better performance
+  - Full semantic labels for accessibility
+  - High contrast theme support
+  - Custom `MyanmarCalendarTheme` support
+  - Automatic text scaling
+  - Holiday and astrological indicators
+
+### 🔧 Improvements
+- **Refactored `MyanmarCalendarWidget`** to use `OptimizedCalendarCell`
+  - Reduced code by ~155 lines
+  - Better performance with `RepaintBoundary`
+  - Automatic accessibility support
+  - Consistent theming
+- **Added `westernWeekdayName` getter** to `CompleteDate` model
+- **Updated to modern Flutter APIs**
+  - `MediaQuery.textScalerOf()` instead of deprecated `textScaleFactor`
+  - `MediaQuery.highContrastOf()` instead of deprecated `highContrast`
+  - `Color.withValues(alpha:)` instead of deprecated `withOpacity()`
+  - `SemanticsService.sendAnnouncement()` with View
+
+### 📚 Documentation
+- Added comprehensive implementation guide
+- Added detailed API documentation for all new utilities
+- Added usage examples for exceptions, performance, and accessibility features
+
+### 🧪 Testing
+- Added comprehensive tests for exception classes (258 lines)
+- Added tests for performance utilities (200+ lines)
+- Total test coverage: 450+ lines of new tests
+
+### 📦 Exports
+All new features are properly exported from the main library:
+- `src/exceptions/calendar_exceptions.dart`
+- `src/utils/performance_utils.dart`
+- `src/utils/accessibility_utils.dart`
+- `src/widgets/optimized_calendar_cell.dart`
+
+### ⚠️ Notes
+- The new `LRUCache` is a general-purpose utility. For caching calendar dates, continue using the built-in `CalendarCache` which is optimized for calendar operations.
+- All accessibility features are optional and work seamlessly with existing code.
+- Performance utilities are available for monitoring and optimization but don't affect existing functionality.
+
 ## 3.2.2
 
 - Redo `&f` and `&ff` format by removing Yat in `FormatService`

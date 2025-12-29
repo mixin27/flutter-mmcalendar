@@ -8,7 +8,7 @@ funding:
   - https://www.buymeacoffee.com/kyawzayartun98
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.10.4
   flutter: ">=1.17.0"
 
 dependencies:
