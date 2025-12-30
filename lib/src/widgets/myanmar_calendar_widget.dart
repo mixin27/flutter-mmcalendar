@@ -5,10 +5,11 @@ import 'package:flutter_mmcalendar/src/localization/language.dart';
 import 'package:flutter_mmcalendar/src/localization/translation_service.dart';
 import 'package:flutter_mmcalendar/src/models/complete_date.dart';
 import 'package:flutter_mmcalendar/src/services/myanmar_calendar_service.dart';
-import 'package:flutter_mmcalendar/src/utils/calendar_utils.dart';
 import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
+import 'package:flutter_mmcalendar/src/widgets/optimized_calendar_cell.dart';
 
 import '../models/shan_date.dart';
+import 'calendar_selection_mode.dart';
 
 /// A comprehensive Myanmar Calendar widget for Flutter applications
 ///
@@ -129,6 +130,24 @@ class MyanmarCalendarWidget extends StatefulWidget {
   /// Whether to show animations
   final bool enableAnimations;
 
+  /// Selection mode
+  final CalendarSelectionMode selectionMode;
+
+  /// Callback when a range is selected
+  final void Function(DateTime? start, DateTime? end)? onRangeSelected;
+
+  /// Callback when multiple dates are selected
+  final void Function(List<DateTime> selectedDates)? onMultiSelected;
+
+  /// Initial selected range start
+  final DateTime? initialSelectedRangeStart;
+
+  /// Initial selected range end
+  final DateTime? initialSelectedRangeEnd;
+
+  /// Initial multi-selected dates
+  final List<DateTime>? initialMultiSelectedDates;
+
   /// Create a new Myanmar calendar widget
   const MyanmarCalendarWidget({
     super.key,
@@ -161,6 +180,12 @@ class MyanmarCalendarWidget extends StatefulWidget {
     this.highlightWeekends = true,
     this.animationDuration = const Duration(milliseconds: 300),
     this.enableAnimations = true,
+    this.selectionMode = CalendarSelectionMode.single,
+    this.onRangeSelected,
+    this.onMultiSelected,
+    this.initialSelectedRangeStart,
+    this.initialSelectedRangeEnd,
+    this.initialMultiSelectedDates,
   });
 
   @override
@@ -173,6 +198,9 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
   late MyanmarCalendarTheme _theme;
   late DateTime _currentMonth;
   DateTime? _selectedDate;
+  DateTime? _selectedRangeStart;
+  DateTime? _selectedRangeEnd;
+  final Set<DateTime> _multiSelectedDates = {};
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late PageController _pageController;
@@ -207,6 +235,17 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
 
     // Initialize selected date
     _selectedDate = widget.selectedDate ?? widget.initialDate;
+
+    // Initialize selection states
+    _selectedRangeStart = widget.initialSelectedRangeStart;
+    _selectedRangeEnd = widget.initialSelectedRangeEnd;
+    if (widget.initialMultiSelectedDates != null) {
+      _multiSelectedDates.addAll(
+        widget.initialMultiSelectedDates!.map(
+          (d) => DateTime(d.year, d.month, d.day),
+        ),
+      );
+    }
 
     // Initialize animations
     _animationController = AnimationController(
@@ -335,24 +374,48 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
 
   /// Check if date is selected
   bool _isSelected(DateTime date) {
-    if (_selectedDate == null) return false;
-    return date.year == _selectedDate!.year &&
-        date.month == _selectedDate!.month &&
-        date.day == _selectedDate!.day;
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    switch (widget.selectionMode) {
+      case CalendarSelectionMode.single:
+        if (_selectedDate == null) return false;
+        return date.year == _selectedDate!.year &&
+            date.month == _selectedDate!.month &&
+            date.day == _selectedDate!.day;
+      case CalendarSelectionMode.range:
+        return false; // Range selection uses start/end/middle
+      case CalendarSelectionMode.multi:
+        return _multiSelectedDates.contains(dateOnly);
+    }
+  }
+
+  /// Check if date is start of range
+  bool _isRangeStart(DateTime date) {
+    if (widget.selectionMode != CalendarSelectionMode.range) return false;
+    if (_selectedRangeStart == null) return false;
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    return dateOnly.isAtSameMomentAs(_selectedRangeStart!);
+  }
+
+  /// Check if date is end of range
+  bool _isRangeEnd(DateTime date) {
+    if (widget.selectionMode != CalendarSelectionMode.range) return false;
+    if (_selectedRangeEnd == null) return false;
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    return dateOnly.isAtSameMomentAs(_selectedRangeEnd!);
+  }
+
+  /// Check if date is within range
+  bool _isInRange(DateTime date) {
+    if (widget.selectionMode != CalendarSelectionMode.range) return false;
+    if (_selectedRangeStart == null || _selectedRangeEnd == null) return false;
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    return dateOnly.isAfter(_selectedRangeStart!) &&
+        dateOnly.isBefore(_selectedRangeEnd!);
   }
 
   /// Check if date is in current month
   bool _isInCurrentMonth(DateTime date) {
     return date.year == _currentMonth.year && date.month == _currentMonth.month;
-  }
-
-  /// Check if date is weekend
-  bool _isWeekend(DateTime date) {
-    // DateTime uses 1=Monday, 7=Sunday
-    // But we need to check against Myanmar calendar system: 0=Saturday, 1=Sunday, ..., 6=Friday
-    final myanmarWeekday =
-        (date.weekday + 1) % 7; // Convert DateTime weekday to Myanmar weekday
-    return myanmarWeekday == 0 || myanmarWeekday == 1; // Saturday or Sunday
   }
 
   /// Navigate to previous month
@@ -383,14 +446,43 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
 
   /// Handle date selection
   void _onDateTap(DateTime date) {
-    if (!_isDateSelectable(date)) return;
+    if (!widget.enableSelection || !_isDateSelectable(date)) return;
+
+    final dateOnly = DateTime(date.year, date.month, date.day);
 
     setState(() {
-      _selectedDate = date;
-    });
+      switch (widget.selectionMode) {
+        case CalendarSelectionMode.single:
+          _selectedDate = dateOnly;
+          widget.onDateSelected?.call(_getCompleteDate(dateOnly));
+          break;
 
-    final completeDate = _getCompleteDate(date);
-    widget.onDateSelected?.call(completeDate);
+        case CalendarSelectionMode.range:
+          if (_selectedRangeStart == null ||
+              (_selectedRangeStart != null && _selectedRangeEnd != null)) {
+            _selectedRangeStart = dateOnly;
+            _selectedRangeEnd = null;
+          } else {
+            if (dateOnly.isBefore(_selectedRangeStart!)) {
+              _selectedRangeEnd = _selectedRangeStart;
+              _selectedRangeStart = dateOnly;
+            } else {
+              _selectedRangeEnd = dateOnly;
+            }
+          }
+          widget.onRangeSelected?.call(_selectedRangeStart, _selectedRangeEnd);
+          break;
+
+        case CalendarSelectionMode.multi:
+          if (_multiSelectedDates.contains(dateOnly)) {
+            _multiSelectedDates.remove(dateOnly);
+          } else {
+            _multiSelectedDates.add(dateOnly);
+          }
+          widget.onMultiSelected?.call(_multiSelectedDates.toList()..sort());
+          break;
+      }
+    });
   }
 
   // ============================================================================
@@ -421,10 +513,11 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
             : null,
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (widget.showHeader) _buildHeader(),
           if (widget.showWeekdayHeaders) _buildWeekdayHeaders(),
-          Expanded(child: _buildCalendarGrid()),
+          _buildCalendarGrid(),
         ],
       ),
     );
@@ -617,172 +710,26 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     final isToday = _isToday(date);
     final isSelected = _isSelected(date);
     final isInCurrentMonth = _isInCurrentMonth(date);
-    // ignore: unused_local_variable
-    final isWeekend = _isWeekend(date);
     final isSelectable = _isDateSelectable(date);
-    final isFullMoon = completeDate.isFullMoon;
-    final isNewMoon = completeDate.isNewMoon;
 
-    // Determine colors and styles
-    Color backgroundColor = _theme.dateCellBackgroundColor;
-    Color textColor = _theme.dateCellTextColor;
-    Color? borderColor;
-
-    if (!isSelectable) {
-      backgroundColor = _theme.disabledDateBackgroundColor;
-      textColor = _theme.disabledDateTextColor;
-    }
-    // else if (isWeekend) {
-    //   backgroundColor = _theme.holidayIndicatorColor.withValues(alpha: 0.3);
-    //   textColor = _theme.holidayIndicatorColor;
-    // }
-    else if (isSelected) {
-      backgroundColor = _theme.selectedDateBackgroundColor;
-      textColor = _theme.selectedDateTextColor;
-      borderColor = _theme.selectedDateBorderColor;
-    } else if (isToday && widget.highlightToday) {
-      backgroundColor = _theme.todayBackgroundColor;
-      textColor = _theme.todayTextColor;
-      borderColor = _theme.todayBorderColor;
-    }
-    // else if (completeDate.isSabbath) {
-    //   backgroundColor = _theme.sabbathBackgroundColor;
-    //   textColor = _theme.sabbathTextColor;
-    // }
-
-    if (isFullMoon) {
-      backgroundColor = _theme.fullMoonBackgroundColor;
-      textColor = _theme.fullMoonTextColor;
-    }
-    if (isNewMoon) {
-      backgroundColor = _theme.newMoonBackgroundColor;
-      textColor = _theme.newMoonTextColor;
-    }
-
-    if (!isInCurrentMonth) {
-      backgroundColor = _theme.disabledDateBackgroundColor;
-      textColor = _theme.dateCellTextColor.withValues(alpha: 0.4);
-    }
-
-    return GestureDetector(
+    // Use OptimizedCalendarCell for better performance and accessibility
+    return OptimizedCalendarCell(
+      date: completeDate,
+      isSelected: isSelected,
+      isRangeStart: _isRangeStart(date),
+      isRangeEnd: _isRangeEnd(date),
+      isInRange: _isInRange(date),
+      isMultiSelected:
+          widget.selectionMode == CalendarSelectionMode.multi &&
+          _isSelected(date),
+      isToday: isToday,
+      isDisabled: !isSelectable,
+      isInCurrentMonth: isInCurrentMonth,
       onTap: isSelectable ? () => _onDateTap(date) : null,
-      child: Container(
-        margin: _theme.dateCellMargin,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(_theme.dateCellBorderRadius),
-          border: borderColor != null
-              ? Border.all(color: borderColor, width: 2.0)
-              : null,
-        ),
-        child: Stack(
-          children: [
-            // Main date content
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Western date
-                  if (widget.showWesternDates)
-                    Text(
-                      date.day.toString(),
-
-                      style: _theme.dateCellTextStyle.copyWith(
-                        color: textColor,
-                        fontWeight: isToday ? FontWeight.bold : null,
-                      ),
-                    ),
-
-                  // Myanmar date
-                  if (widget.showMyanmarDates)
-                    Row(
-                      spacing: 2,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // if (isInCurrentMonth)
-                        //   Text(
-                        //     _formatMoonPhase(completeDate.moonPhase),
-                        //     style:
-                        //         (_theme.dateCellSecondaryTextStyle ??
-                        //                 _theme.dateCellTextStyle)
-                        //             .copyWith(
-                        //               color: textColor.withValues(alpha: 0.6),
-                        //             ),
-                        //   ),
-                        if (!(isFullMoon || isNewMoon))
-                          Text(
-                            CalendarUtils.convertNumberToLanguage(
-                              completeDate.fortnightDay.toDouble(),
-                            ),
-                            style:
-                                (_theme.dateCellSecondaryTextStyle ??
-                                        _theme.dateCellTextStyle)
-                                    .copyWith(
-                                      color: textColor.withValues(alpha: 0.6),
-                                    ),
-                          ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-
-            // Holiday indicator
-            if (widget.showHolidays && completeDate.hasHolidays)
-              Positioned(
-                top: 2,
-                right: 2,
-                // child: Icon(
-                //   Icons.weekend,
-                //   size: 8,
-                //   color: _theme.holidayIndicatorColor.withValues(alpha: 0.7),
-                // ),
-                child: Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: _theme.holidayIndicatorColor,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-
-            // Astrological indicator
-            if (widget.showAstrology && completeDate.hasAstrologicalDays)
-              Positioned(
-                top: 2,
-                left: 2,
-                // child: Icon(
-                //   Icons.star,
-                //   size: 8,
-                //   color: _theme.astroIndicatorColor.withValues(alpha: 0.7),
-                // ),
-                child: Container(
-                  width: 4,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: _theme.astroIndicatorColor,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-
-            // Moon phase indicator
-            if (isFullMoon || isNewMoon)
-              Positioned(
-                bottom: 2,
-                right: 2,
-                child: Icon(
-                  Icons.brightness_1,
-                  size: 8,
-                  color: isFullMoon
-                      ? _theme.fullMoonTextColor
-                      : _theme.newMoonTextColor,
-                ),
-              ),
-          ],
-        ),
-      ),
+      language: widget.language,
+      showHolidays: widget.showHolidays,
+      showAstrology: widget.showAstrology,
+      theme: _theme, // Pass the Myanmar calendar theme
     );
   }
 

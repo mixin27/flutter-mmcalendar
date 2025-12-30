@@ -10,6 +10,8 @@ import 'converter_demo_page.dart';
 import 'holiday_demo_page.dart';
 import 'theme_demo_page.dart';
 import 'utilities_demo_page.dart';
+import 'selection_demo_page.dart';
+import 'horoscope_demo_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -239,6 +241,18 @@ class _HomePageState extends State<HomePage> {
         icon: Icons.code,
         onTap: () => _navigateToAPIDemo(),
       ),
+      FeatureItem(
+        title: 'Selection & Astro',
+        description: 'Range selection and astrology',
+        icon: Icons.auto_awesome,
+        onTap: () => _navigateToSelectionDemo(),
+      ),
+      FeatureItem(
+        title: 'Horoscope & AI',
+        description: 'Traditional horoscope and AI prompts',
+        icon: Icons.auto_awesome,
+        onTap: () => _navigateToHoroscopeDemo(),
+      ),
     ];
 
     return GridView.builder(
@@ -428,6 +442,20 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => APIDemoPage()),
+    );
+  }
+
+  void _navigateToSelectionDemo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SelectionDemoPage()),
+    );
+  }
+
+  void _navigateToHoroscopeDemo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HoroscopeDemoPage()),
     );
   }
 

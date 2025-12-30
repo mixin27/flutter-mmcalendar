@@ -2,6 +2,7 @@ import '../models/astro_info.dart';
 import '../models/complete_date.dart';
 import '../models/holiday_info.dart';
 import '../models/myanmar_date.dart';
+import '../models/shan_date.dart';
 import '../models/western_date.dart';
 
 /// Cache configuration options
@@ -11,6 +12,9 @@ class CacheConfig {
 
   /// Maximum number of MyanmarDate objects to cache
   final int maxMyanmarDateCacheSize;
+
+  /// Maximum number of ShanDate objects to cache
+  final int maxShanDateCacheSize;
 
   /// Maximum number of WesternDate objects to cache
   final int maxWesternDateCacheSize;
@@ -31,6 +35,7 @@ class CacheConfig {
   const CacheConfig({
     this.maxCompleteDateCacheSize = 100,
     this.maxMyanmarDateCacheSize = 200,
+    this.maxShanDateCacheSize = 200,
     this.maxWesternDateCacheSize = 200,
     this.maxAstroInfoCacheSize = 150,
     this.maxHolidayInfoCacheSize = 150,
@@ -42,6 +47,7 @@ class CacheConfig {
   const CacheConfig.disabled()
     : maxCompleteDateCacheSize = 0,
       maxMyanmarDateCacheSize = 0,
+      maxShanDateCacheSize = 0,
       maxWesternDateCacheSize = 0,
       maxAstroInfoCacheSize = 0,
       maxHolidayInfoCacheSize = 0,
@@ -52,6 +58,7 @@ class CacheConfig {
   const CacheConfig.memoryEfficient()
     : maxCompleteDateCacheSize = 30,
       maxMyanmarDateCacheSize = 50,
+      maxShanDateCacheSize = 50,
       maxWesternDateCacheSize = 50,
       maxAstroInfoCacheSize = 40,
       maxHolidayInfoCacheSize = 40,
@@ -62,6 +69,7 @@ class CacheConfig {
   const CacheConfig.highPerformance()
     : maxCompleteDateCacheSize = 500,
       maxMyanmarDateCacheSize = 1000,
+      maxShanDateCacheSize = 1000,
       maxWesternDateCacheSize = 1000,
       maxAstroInfoCacheSize = 500,
       maxHolidayInfoCacheSize = 500,
@@ -70,7 +78,7 @@ class CacheConfig {
 
   @override
   String toString() {
-    return 'CacheConfig(maxCompleteDateCacheSize: $maxCompleteDateCacheSize, maxMyanmarDateCacheSize: $maxMyanmarDateCacheSize, maxWesternDateCacheSize: $maxWesternDateCacheSize, maxAstroInfoCacheSize: $maxAstroInfoCacheSize, maxHolidayInfoCacheSize: $maxHolidayInfoCacheSize, enableCaching: $enableCaching, cacheTTL: $cacheTTL)';
+    return 'CacheConfig(maxCompleteDateCacheSize: $maxCompleteDateCacheSize, maxMyanmarDateCacheSize: $maxMyanmarDateCacheSize, maxShanDateCacheSize: $maxShanDateCacheSize, maxWesternDateCacheSize: $maxWesternDateCacheSize, maxAstroInfoCacheSize: $maxAstroInfoCacheSize, maxHolidayInfoCacheSize: $maxHolidayInfoCacheSize, enableCaching: $enableCaching, cacheTTL: $cacheTTL)';
   }
 }
 
@@ -209,6 +217,7 @@ class CalendarCache {
   // Individual caches
   late _LRUCache<String, CompleteDate> _completeDateCache;
   late _LRUCache<String, MyanmarDate> _myanmarDateCache;
+  late _LRUCache<String, ShanDate> _shanDateCache;
   late _LRUCache<String, WesternDate> _westernDateCache;
   late _LRUCache<String, AstroInfo> _astroInfoCache;
   late _LRUCache<String, HolidayInfo> _holidayInfoCache;
@@ -241,6 +250,11 @@ class CalendarCache {
     );
     _myanmarDateCache = _LRUCache(
       _config.maxMyanmarDateCacheSize,
+      _config.cacheTTL,
+      _config.enableCaching,
+    );
+    _shanDateCache = _LRUCache(
+      _config.maxShanDateCacheSize,
       _config.cacheTTL,
       _config.enableCaching,
     );
@@ -341,6 +355,32 @@ class CalendarCache {
     if (!_config.enableCaching) return;
     final key = julianDayNumber.toStringAsFixed(6);
     _westernDateCache.put(key, westernDate);
+  }
+
+  /// Get cached ShanDate
+  ShanDate? getShanDate(double julianDayNumber) {
+    if (!_config.enableCaching) {
+      _misses++;
+      return null;
+    }
+
+    final key = julianDayNumber.toStringAsFixed(6);
+    final cached = _shanDateCache.get(key);
+
+    if (cached != null) {
+      _hits++;
+      return cached;
+    }
+
+    _misses++;
+    return null;
+  }
+
+  /// Cache ShanDate
+  void putShanDate(double julianDayNumber, ShanDate shanDate) {
+    if (!_config.enableCaching) return;
+    final key = julianDayNumber.toStringAsFixed(6);
+    _shanDateCache.put(key, shanDate);
   }
 
   /// Get cached AstroInfo

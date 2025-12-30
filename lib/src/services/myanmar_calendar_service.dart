@@ -5,6 +5,7 @@ import 'package:flutter_mmcalendar/src/models/astro_info.dart';
 import 'package:flutter_mmcalendar/src/models/complete_date.dart';
 import 'package:flutter_mmcalendar/src/models/holiday_info.dart';
 import 'package:flutter_mmcalendar/src/models/myanmar_date.dart';
+import 'package:flutter_mmcalendar/src/models/shan_date.dart';
 import 'package:flutter_mmcalendar/src/models/validation_result.dart';
 import 'package:flutter_mmcalendar/src/models/western_date.dart';
 import 'package:flutter_mmcalendar/src/services/astro_calculator.dart';
@@ -229,12 +230,14 @@ class MyanmarCalendarService {
     final myanmarDate = _dateConverter.julianToMyanmar(
       westernDate.julianDayNumber,
     );
+    final shanDate = ShanDate.fromMyanmarDate(myanmarDate);
     final astroInfo = _astroCalculator.calculate(myanmarDate);
     final holidayInfo = _holidayCalculator.getHolidays(myanmarDate);
 
     final completeDate = CompleteDate(
       western: westernDate,
       myanmar: myanmarDate,
+      shan: shanDate,
       astro: astroInfo,
       holidays: holidayInfo,
     );
@@ -243,6 +246,17 @@ class MyanmarCalendarService {
     _cache.putCompleteDate(dateTime, completeDate);
 
     return completeDate;
+  }
+
+  /// Find auspicious days for a given Myanmar month and year
+  List<CompleteDate> findAuspiciousDays(int year, int month) {
+    final myanmarMonth = getMyanmarMonth(year, month);
+    return myanmarMonth
+        .map(
+          (md) => getCompleteDate(myanmarToWestern(md.year, md.month, md.day)),
+        )
+        .where((cd) => cd.astro.isAuspicious)
+        .toList();
   }
 
   /// Get Myanmar dates for a month

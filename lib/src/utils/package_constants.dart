@@ -17,7 +17,7 @@ class PackageConstants {
   static const String packageName = 'flutter_mmcalendar';
 
   /// Package version
-  static const String version = '3.0.0';
+  static const String version = '3.2.3';
 
   /// Package description
   static const String description =

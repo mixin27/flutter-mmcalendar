@@ -1,6 +1,7 @@
 import 'astro_info.dart';
 import 'holiday_info.dart';
 import 'myanmar_date.dart';
+import 'shan_date.dart';
 import 'western_date.dart';
 
 /// Complete date information combining all calendars and calculations
@@ -33,6 +34,9 @@ class CompleteDate {
   /// Myanmar calendar date information
   final MyanmarDate myanmar;
 
+  /// Shan calendar date information
+  final ShanDate shan;
+
   /// Astrological and astronomical information
   final AstroInfo astro;
 
@@ -46,6 +50,7 @@ class CompleteDate {
   const CompleteDate({
     required this.western,
     required this.myanmar,
+    required this.shan,
     required this.astro,
     required this.holidays,
   });
@@ -65,12 +70,14 @@ class CompleteDate {
   CompleteDate copyWith({
     WesternDate? western,
     MyanmarDate? myanmar,
+    ShanDate? shan,
     AstroInfo? astro,
     HolidayInfo? holidays,
   }) {
     return CompleteDate(
       western: western ?? this.western,
       myanmar: myanmar ?? this.myanmar,
+      shan: shan ?? this.shan,
       astro: astro ?? this.astro,
       holidays: holidays ?? this.holidays,
     );
@@ -96,6 +103,15 @@ class CompleteDate {
   /// Gets the day from the Myanmar calendar (1-30)
   int get myanmarDay => myanmar.day;
 
+  /// Gets the year from the Shan calendar
+  int get shanYear => shan.year;
+
+  /// Gets the month from the Shan calendar (1-12)
+  int get shanMonth => shan.month;
+
+  /// Gets the day from the Shan calendar (1-31)
+  int get shanDay => shan.day;
+
   /// Gets the year from the Western calendar
   int get westernYear => western.year;
 
@@ -104,6 +120,9 @@ class CompleteDate {
 
   /// Gets the day from the Western calendar (1-31)
   int get westernDay => western.day;
+
+  /// Gets the weekday name from the Western calendar
+  String get westernWeekdayName => _getWeekdayName(western.weekday);
 
   /// Gets the Sasana year
   int get sasanaYear => myanmar.sasanaYear;
@@ -233,6 +252,7 @@ class CompleteDate {
     return 'CompleteDate('
         'western: ${western.year}-${western.month.toString().padLeft(2, '0')}-${western.day.toString().padLeft(2, '0')}, '
         'myanmar: ${myanmar.year}/${myanmar.month}/${myanmar.day}, '
+        'shan: ${shan.year}/${shan.month}/${shan.day}, '
         'weekday: $weekday, '
         'moonPhase: $moonPhase, '
         'yearType: $yearType, '
@@ -254,6 +274,9 @@ class CompleteDate {
     );
     buffer.writeln(
       'Myanmar: ${myanmar.year}/${myanmar.month}/${myanmar.day} (${_getMoonPhaseName(moonPhase)} ${myanmar.fortnightDay})',
+    );
+    buffer.writeln(
+      'Shan: ${shan.year}/${shan.month}/${shan.day} (${_getMoonPhaseName(moonPhase)} ${shan.fortnightDay})',
     );
     buffer.writeln('Sasana Year: ${myanmar.sasanaYear}');
     buffer.writeln('Year Type: ${_getYearTypeName(myanmar.yearType)}');
@@ -340,6 +363,16 @@ class CompleteDate {
         'sasanaYear': myanmar.sasanaYear,
         'monthLength': myanmar.monthLength,
       },
+      'shan': {
+        'year': shan.year,
+        'month': shan.month,
+        'day': shan.day,
+        'myanmarYear': shan.myanmarYear,
+        'moonPhase': shan.moonPhase,
+        'fortnightDay': shan.fortnightDay,
+        'weekday': shan.weekday,
+        'monthType': shan.monthType,
+      },
       'astro': {
         'astrologicalDays': astro.astrologicalDays,
         'sabbath': astro.sabbath,
@@ -368,6 +401,7 @@ class CompleteDate {
   factory CompleteDate.fromMap(Map<String, dynamic> map) {
     final westernMap = map['western'] as Map<String, dynamic>;
     final myanmarMap = map['myanmar'] as Map<String, dynamic>;
+    final shanMap = map['shan'] as Map<String, dynamic>;
     final astroMap = map['astro'] as Map<String, dynamic>;
     final holidaysMap = map['holidays'] as Map<String, dynamic>;
 
@@ -395,6 +429,16 @@ class CompleteDate {
         sasanaYear: myanmarMap['sasanaYear'] as int,
         monthLength: myanmarMap['monthLength'] as int,
         monthType: myanmarMap['monthType'] as int,
+      ),
+      shan: ShanDate(
+        year: shanMap['year'] as int,
+        month: shanMap['month'] as int,
+        day: shanMap['day'] as int,
+        myanmarYear: shanMap['myanmarYear'] as int,
+        moonPhase: shanMap['moonPhase'] as int,
+        fortnightDay: shanMap['fortnightDay'] as int,
+        weekday: shanMap['weekday'] as int,
+        monthType: shanMap['monthType'] as int,
       ),
       astro: AstroInfo(
         astrologicalDays: List<String>.from(
