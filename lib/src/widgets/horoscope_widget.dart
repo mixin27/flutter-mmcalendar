@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mmcalendar/src/localization/language.dart';
-import 'package:flutter_mmcalendar/src/localization/translation_service.dart';
-import 'package:flutter_mmcalendar/src/models/complete_date.dart';
-import 'package:flutter_mmcalendar/src/utils/astro_details.dart';
-import 'package:flutter_mmcalendar/src/utils/date_extension.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 /// A widget that displays detailed astrological and horoscope information
 class HoroscopeWidget extends StatelessWidget {
@@ -128,9 +125,94 @@ class HoroscopeWidget extends StatelessWidget {
                 TranslationService.translateTo(date.astro.sabbath, _language),
               ),
             ),
+          const SizedBox(height: 24),
+          _buildAIPromptButton(context, effectivePrimaryColor),
         ],
       ),
     );
+  }
+
+  Widget _buildAIPromptButton(BuildContext context, Color primaryColor) {
+    return Center(
+      child: PopupMenuButton<AIPromptType>(
+        onSelected: (type) => _copyAIPrompt(context, type),
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: AIPromptType.horoscope,
+            child: Row(
+              children: [
+                const Icon(Icons.auto_awesome, size: 20),
+                const SizedBox(width: 12),
+                Text(TranslationService.translateTo('Horoscope', _language)),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: AIPromptType.fortuneTelling,
+            child: Row(
+              children: [
+                const Icon(Icons.monetization_on, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  TranslationService.translateTo('Fortune Telling', _language),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: AIPromptType.divination,
+            child: Row(
+              children: [
+                const Icon(Icons.self_improvement, size: 20),
+                const SizedBox(width: 12),
+                Text(TranslationService.translateTo('Divination', _language)),
+              ],
+            ),
+          ),
+        ],
+        child: ElevatedButton.icon(
+          onPressed: null, // PopupMenuButton handles tap
+          icon: const Icon(Icons.auto_awesome),
+          label: Text(
+            TranslationService.translateTo('Generate AI Prompt', _language),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: primaryColor,
+            disabledBackgroundColor: primaryColor,
+            foregroundColor: Colors.white,
+            disabledForegroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _copyAIPrompt(BuildContext context, AIPromptType type) {
+    final prompt = MyanmarCalendar.generateAIPrompt(
+      date,
+      language: _language,
+      type: type,
+    );
+    Clipboard.setData(ClipboardData(text: prompt)).then((_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              TranslationService.translateTo('Prompt Copied', _language),
+            ),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    });
   }
 
   Widget _buildHeader(Color primaryColor) {

@@ -294,6 +294,23 @@ MyanmarDatePickerWidget(
 )
 ```
 
+### HoroscopeWidget
+
+A specialized widget for displaying detailed traditional Burmese astrological information.
+
+```dart
+HoroscopeWidget(
+  date: MyanmarCalendar.getCompleteDate(DateTime.now()),
+  language: Language.english,
+)
+```
+
+This widget includes:
+- **Nakhat & Year Details**: Detailed descriptions of the Nakhat type.
+- **Mahabote & Characteristics**: Localized personality and destiny insights.
+- **Astrological Days**: Comprehensive list of auspicious and inauspicious indicators.
+- **AI Prompt Integration**: Built-in specialized prompt generation for AI analysis.
+
 ## Languages
 
 The package supports multiple languages:
@@ -423,6 +440,29 @@ print('Cultural Holidays: ${date.culturalHolidays}');
 // Get holiday info directly
 final holidayInfo = MyanmarCalendar.getHolidayInfo(date.myanmarDate);
 ```
+
+## AI Prompt Generation
+
+The package provides a specialized service to generate structured prompts for AI platforms (Gemini, ChatGPT, Claude) based on traditional Burmese astrological knowledge.
+
+### Generating Prompts
+
+```dart
+// Generate a horoscope prompt
+final prompt = MyanmarCalendar.generateAIPrompt(
+  completeDate,
+  language: Language.english,
+  type: AIPromptType.horoscope,
+);
+
+// Copy to clipboard or send to AI
+print(prompt);
+```
+
+### Prompt Types
+- `AIPromptType.horoscope`: General reading and character analysis.
+- `AIPromptType.fortuneTelling`: Focus on future trends, wealth, and success.
+- `AIPromptType.divination`: Spiritual guidance, inner growth, and overcoming obstacles.
 
 ## Date Arithmetic and Utilities
 

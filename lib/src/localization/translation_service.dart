@@ -1489,6 +1489,26 @@ class TranslationService {
       Language.mon: 'နက္ခတ် ကေုာံ ယၟုသၞာံ',
       Language.shan: 'ၼၵ်ႈၶတ်ႈ လႄႈ ၸိုဝ်ႈပီႊ',
     },
+    'Western Date': {
+      Language.english: 'Western Date',
+      Language.myanmar: 'အင်္ဂလိပ်ရက်စွဲ',
+      Language.zawgyi: 'အင်္ဂလိပ္ရက္စြဲ',
+    },
+    'Myanmar Date': {
+      Language.english: 'Myanmar Date',
+      Language.myanmar: 'မြန်မာရက်စွဲ',
+      Language.zawgyi: 'ျမန္မာရက္စြဲ',
+    },
+    'Description': {
+      Language.english: 'Description',
+      Language.myanmar: 'အသေးစိတ် ဖော်ပြချက်',
+      Language.zawgyi: 'အေသးစိတ္ ေဖာ္ျပခ်က္',
+    },
+    'Characteristics': {
+      Language.english: 'Characteristics',
+      Language.myanmar: 'ပင်ကိုယ်စရိုက် လက္ခဏာများ',
+      Language.zawgyi: 'ပင္ကိုယ္စရိုက္ လကၡဏာမ်ား',
+    },
     'Mahabote & Characteristics': {
       Language.english: 'Mahabote & Characteristics',
       Language.myanmar: 'မဟာဘုတ်နှင့် ပင်ကိုယ်စရိုက်',
@@ -1648,6 +1668,7 @@ class TranslationService {
       Language.shan: 'အကြို',
       Language.karen: 'ႁပ်ႉ',
     },
+
     'Akya': {
       Language.english: 'Akya',
       Language.myanmar: 'အကျ',
@@ -2276,6 +2297,83 @@ class TranslationService {
       Language.mon: 'Shan New Year',
       Language.shan: 'ပွႆးပီမႂ်ႇတႆး',
       Language.karen: 'Shan New Year',
+    },
+
+    // AI Prompt Generation
+    'Generate AI Prompt': {
+      Language.english: 'Generate AI Prompt',
+      Language.myanmar: 'AI ဟောစာတမ်း တောင်းဆိုချက် ထုတ်ယူရန်',
+      Language.zawgyi: 'AI ေဟာစာတမ္း ေတာင္းဆိုခ်က္ ထုတ္ယူရန္',
+      Language.mon: 'ပ္တိတ် ပရောမ် AI',
+      Language.shan: 'ထုတ်ယူ ပုၼ်ႈ AI',
+      Language.karen: 'ထုတ်ယူ AI',
+    },
+    'Fortune Telling': {
+      Language.english: 'Fortune Telling',
+      Language.myanmar: 'ဗေဒင်ဟောစာတမ်း',
+      Language.zawgyi: 'ေဗဒင္ေဟာစာတမ္း',
+    },
+    'Divination': {
+      Language.english: 'Divination',
+      Language.myanmar: 'နိမိတ်ဖတ်စာ',
+      Language.zawgyi: 'နိမိတ္ဖတ္စာ',
+    },
+    'Horoscope': {
+      Language.english: 'Horoscope',
+      Language.myanmar: 'ဟောစာတမ်း',
+      Language.zawgyi: 'ေဟာစာတမ္း',
+    },
+    'Copy Prompt': {
+      Language.english: 'Copy Prompt',
+      Language.myanmar: 'တောင်းဆိုချက်ကို ကူးယူပါ',
+      Language.zawgyi: 'ေတာင္းဆိုခ်က္ကို ကူးယူပါ',
+      Language.mon: 'ကူးယူ ပရောမ်',
+      Language.shan: 'ၵူတ်ႇဢဝ်',
+      Language.karen: 'ကူးယူ',
+    },
+    'Prompt Copied': {
+      Language.english: 'Prompt Copied to Clipboard',
+      Language.myanmar: 'တောင်းဆိုချက်ကို Clipboard ထဲသို့ ကူးယူပြီးပါပြီ',
+      Language.zawgyi: 'ေတာင္းဆိုခ်က္ကို Clipboard ထဲသို့ ကူးယူၿပီးပါၿပီ',
+      Language.mon: 'ကူးယူတုဲယျ',
+      Language.shan: 'ၵူတ်ႇဢဝ်ယဝ်ႉယဝ်ႉ',
+      Language.karen: 'ကူးယူပြီးပြီ',
+    },
+    'prompt_intro': {
+      Language.english:
+          'Please provide a detailed horoscope reading based on the following Myanmar astrological details:',
+      Language.myanmar:
+          'အောက်ပါ မြန်မာ့နက္ခတ်ဗေဒ အချက်အလက်များအပေါ် အခြေခံ၍ အသေးစိတ် ဟောစာတမ်း ထုတ်ပေးပါရန် -',
+    },
+    'prompt_analysis_req': {
+      Language.english:
+          'Please analyze these details based on traditional Myanmar astrology and provide insights into personality, career, and health for the near future.',
+      Language.myanmar:
+          'ဤအချက်အလက်များကို ရိုးရာမြန်မာ့နက္ခတ်ဗေဒအတိုင်း ခွဲခြမ်းစိတ်ဖြာပြီး ပင်ကိုယ်စရိုက်၊ အသက်မွေးဝမ်းကျောင်းနှင့် မကြာမီကာလအတွင်း ကျန်းမာရေးဆိုင်ရာများကို အသေးစိတ် ဟောကြားပေးပါ။',
+    },
+    'prompt_fortune_telling_intro': {
+      Language.english:
+          'Please provide a professional fortune-telling reading based on these Burmese astrological details:',
+      Language.myanmar:
+          'အောက်ပါ မြန်မာ့နက္ခတ်ဗေဒ အချက်အလက်များအပေါ် အခြေခံ၍ ကျွမ်းကျင်သော ဗေဒင်ဟောစာတမ်း တစ်စောင် ထုတ်ပေးပါရန် -',
+    },
+    'prompt_fortune_telling_req': {
+      Language.english:
+          'Focus on predicting future trends in wealth, relationships, and success. Provide specific guidance and remedies if applicable according to Burmese tradition.',
+      Language.myanmar:
+          'စည်းစိမ်ဥစ္စာ၊ အိမ်ထောင်ရေးနှင့် အောင်မြင်မှုဆိုင်ရာ အနာဂတ်အလားအလာများကို အလေးပေး ဟောကြားပေးပါ။ မြန်မာ့ရိုးရာဗေဒင်ပညာအရ လိုအပ်ပါက ယတြာနှင့် အကြံပြုချက်များကိုပါ ထည့်သွင်းပေးပါ။',
+    },
+    'prompt_divination_intro': {
+      Language.english:
+          'Use these astrological indicators for a divination session to provide spiritual guidance:',
+      Language.myanmar:
+          'ဤနက္ခတ်ဗေဒ အညွှန်းကိန်းများကို အသုံးပြု၍ ဘာသာရေးနှင့် စိတ်ပိုင်းဆိုင်ရာ လမ်းညွှန်မှုပေးနိုင်သော နိမိတ်ဖတ်စာ ထုတ်ပေးပါရန် -',
+    },
+    'prompt_divination_req': {
+      Language.english:
+          'Provide a deep, intuitive reading focused on the spiritual path, inner growth, and overcoming obstacles.',
+      Language.myanmar:
+          'စိတ်ပိုင်းဆိုင်ရာ ရင့်ကျက်မှု၊ ဝိညာဉ်ရေးရာ ဖွံ့ဖြိုးမှုနှင့် အခက်အခဲများကို ကျော်လွှားနိုင်မည့် နက်နဲသော နိမိတ်ဖတ်ကြားချက်များကို ဖော်ပြပေးပါ။',
     },
   };
 }

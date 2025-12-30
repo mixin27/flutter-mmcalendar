@@ -72,6 +72,7 @@ import 'src/models/myanmar_date.dart';
 import 'src/models/shan_date.dart';
 import 'src/models/validation_result.dart';
 import 'src/models/western_date.dart';
+import 'src/services/ai_prompt_service.dart';
 import 'src/services/chronicle_service.dart';
 import 'src/services/myanmar_calendar_service.dart';
 import 'src/utils/astro_details.dart';
@@ -102,6 +103,7 @@ export 'src/models/myanmar_date.dart';
 export 'src/models/validation_result.dart';
 export 'src/models/western_date.dart';
 // Services
+export 'src/services/ai_prompt_service.dart';
 export 'src/services/astro_calculator.dart';
 export 'src/services/date_converter.dart';
 export 'src/services/format_service.dart';
@@ -428,6 +430,28 @@ class MyanmarCalendar {
   /// ```
   static CompleteDate getCompleteDate(DateTime dateTime) {
     return _serviceInstance.getCompleteDate(dateTime);
+  }
+
+  /// Generate a structured AI prompt for a date
+  ///
+  /// Returns a prompt string that can be used with AI platforms to get
+  /// astrological readings, fortune-telling, or divination.
+  ///
+  /// Example:
+  /// ```dart
+  /// final completeDate = MyanmarCalendar.getCompleteDate(DateTime.now());
+  /// final prompt = MyanmarCalendar.generateAIPrompt(
+  ///   completeDate,
+  ///   language: Language.english,
+  ///   type: AIPromptType.fortuneTelling,
+  /// );
+  /// ```
+  static String generateAIPrompt(
+    CompleteDate date, {
+    Language? language,
+    AIPromptType type = AIPromptType.horoscope,
+  }) {
+    return AIPromptService.generatePrompt(date, language: language, type: type);
   }
 
   /// Get astrological information for a date
