@@ -60,6 +60,26 @@
   - Automatic text scaling
   - Holiday and astrological indicators
 
+#### Date Selection Modes
+- **Added `CalendarSelectionMode`** support to `MyanmarCalendarWidget`
+  - **Single selection**: Default behavior
+  - **Range selection**: Select start and end dates with connected visual highlights and themed corners
+  - **Multi selection**: Select multiple independent dates
+- Added new callbacks: `onRangeSelected` and `onMultiSelected`
+
+#### Advanced Astrology & AI
+- **Added `HoroscopeWidget`** - A comprehensive widget for detailed astrological readings
+  - Displays Nakhat, Mahabote, and auspiciousness status
+  - Integrated AI prompt generation menu
+- **Enhanced AI Prompt Generation**
+  - Expanded `AIPromptType` to support **Horoscope**, **Fortune Telling**, and **Divination**
+  - Fully localized prompt templates in all 6 supported languages
+- **New Public API**: `MyanmarCalendar.generateAIPrompt` for easy access to the AI prompt engine
+
+#### Localization
+- **Extended localization** for all new astrological features in **Mon**, **Shan**, and **Karen**
+- Improved astrological term descriptions across all languages
+
 ### 🔧 Improvements
 - **Refactored `MyanmarCalendarWidget`** to use `OptimizedCalendarCell`
   - Reduced code by ~155 lines
@@ -72,6 +92,8 @@
   - `MediaQuery.highContrastOf()` instead of deprecated `highContrast`
   - `Color.withValues(alpha:)` instead of deprecated `withOpacity()`
   - `SemanticsService.sendAnnouncement()` with View
+- **Simplified API**: Publicly exported `AIPromptService` and `AIPromptType`
+- Improved `MyanmarCalendarTheme` with new selection style properties
 
 ### 📚 Documentation
 - Added comprehensive implementation guide
