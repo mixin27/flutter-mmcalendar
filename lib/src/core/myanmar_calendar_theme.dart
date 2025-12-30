@@ -134,6 +134,32 @@ class MyanmarCalendarTheme {
   /// Astro indicator color
   final Color astroIndicatorColor;
 
+  // Range and multi-selection styling
+
+  /// Range background color
+  final Color rangeBackgroundColor;
+
+  /// Range text color
+  final Color rangeTextColor;
+
+  /// Range start background color
+  final Color rangeStartBackgroundColor;
+
+  /// Range start text color
+  final Color rangeStartTextColor;
+
+  /// Range end background color
+  final Color rangeEndBackgroundColor;
+
+  /// Range end text color
+  final Color rangeEndTextColor;
+
+  /// Multi-selected background color
+  final Color multiSelectedBackgroundColor;
+
+  /// Multi-selected text color
+  final Color multiSelectedTextColor;
+
   /// Create a new theme
   const MyanmarCalendarTheme({
     required this.backgroundColor,
@@ -174,6 +200,14 @@ class MyanmarCalendarTheme {
     required this.newMoonTextColor,
     required this.holidayIndicatorColor,
     required this.astroIndicatorColor,
+    required this.rangeBackgroundColor,
+    required this.rangeTextColor,
+    required this.rangeStartBackgroundColor,
+    required this.rangeStartTextColor,
+    required this.rangeEndBackgroundColor,
+    required this.rangeEndTextColor,
+    required this.multiSelectedBackgroundColor,
+    required this.multiSelectedTextColor,
   });
 
   /// Default light theme
@@ -229,6 +263,14 @@ class MyanmarCalendarTheme {
       newMoonTextColor: Colors.indigo.shade800,
       holidayIndicatorColor: Colors.red.shade500,
       astroIndicatorColor: Colors.purple.shade500,
+      rangeBackgroundColor: Colors.blue.shade50,
+      rangeTextColor: Colors.blue.shade900,
+      rangeStartBackgroundColor: Colors.blue.shade700,
+      rangeStartTextColor: Colors.white,
+      rangeEndBackgroundColor: Colors.blue.shade700,
+      rangeEndTextColor: Colors.white,
+      multiSelectedBackgroundColor: Colors.blue.shade600,
+      multiSelectedTextColor: Colors.white,
     );
   }
 
@@ -285,6 +327,14 @@ class MyanmarCalendarTheme {
       newMoonTextColor: Colors.indigo.shade100,
       holidayIndicatorColor: Colors.red.shade400,
       astroIndicatorColor: Colors.purple.shade400,
+      rangeBackgroundColor: Colors.blue.shade900.withValues(alpha: 0.3),
+      rangeTextColor: Colors.blue.shade100,
+      rangeStartBackgroundColor: Colors.blue.shade600,
+      rangeStartTextColor: Colors.white,
+      rangeEndBackgroundColor: Colors.blue.shade600,
+      rangeEndTextColor: Colors.white,
+      multiSelectedBackgroundColor: Colors.blue.shade500,
+      multiSelectedTextColor: Colors.white,
     );
   }
 
@@ -303,6 +353,10 @@ class MyanmarCalendarTheme {
       todayBorderColor: primaryColor,
       selectedDateBackgroundColor: primaryColor,
       selectedDateBorderColor: primaryColor.withValues(alpha: 0.8),
+      rangeBackgroundColor: primaryColor.withValues(alpha: 0.1),
+      rangeStartBackgroundColor: primaryColor,
+      rangeEndBackgroundColor: primaryColor,
+      multiSelectedBackgroundColor: primaryColor,
     );
   }
 
@@ -346,6 +400,14 @@ class MyanmarCalendarTheme {
     Color? newMoonTextColor,
     Color? holidayIndicatorColor,
     Color? astroIndicatorColor,
+    Color? rangeBackgroundColor,
+    Color? rangeTextColor,
+    Color? rangeStartBackgroundColor,
+    Color? rangeStartTextColor,
+    Color? rangeEndBackgroundColor,
+    Color? rangeEndTextColor,
+    Color? multiSelectedBackgroundColor,
+    Color? multiSelectedTextColor,
   }) {
     return MyanmarCalendarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -401,6 +463,18 @@ class MyanmarCalendarTheme {
       holidayIndicatorColor:
           holidayIndicatorColor ?? this.holidayIndicatorColor,
       astroIndicatorColor: astroIndicatorColor ?? this.astroIndicatorColor,
+      rangeBackgroundColor: rangeBackgroundColor ?? this.rangeBackgroundColor,
+      rangeTextColor: rangeTextColor ?? this.rangeTextColor,
+      rangeStartBackgroundColor:
+          rangeStartBackgroundColor ?? this.rangeStartBackgroundColor,
+      rangeStartTextColor: rangeStartTextColor ?? this.rangeStartTextColor,
+      rangeEndBackgroundColor:
+          rangeEndBackgroundColor ?? this.rangeEndBackgroundColor,
+      rangeEndTextColor: rangeEndTextColor ?? this.rangeEndTextColor,
+      multiSelectedBackgroundColor:
+          multiSelectedBackgroundColor ?? this.multiSelectedBackgroundColor,
+      multiSelectedTextColor:
+          multiSelectedTextColor ?? this.multiSelectedTextColor,
     );
   }
 }

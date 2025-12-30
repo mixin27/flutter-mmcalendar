@@ -9,6 +9,7 @@ import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
 import 'package:flutter_mmcalendar/src/widgets/optimized_calendar_cell.dart';
 
 import '../models/shan_date.dart';
+import 'calendar_selection_mode.dart';
 
 /// A comprehensive Myanmar Calendar widget for Flutter applications
 ///
@@ -129,6 +130,24 @@ class MyanmarCalendarWidget extends StatefulWidget {
   /// Whether to show animations
   final bool enableAnimations;
 
+  /// Selection mode
+  final CalendarSelectionMode selectionMode;
+
+  /// Callback when a range is selected
+  final void Function(DateTime? start, DateTime? end)? onRangeSelected;
+
+  /// Callback when multiple dates are selected
+  final void Function(List<DateTime> selectedDates)? onMultiSelected;
+
+  /// Initial selected range start
+  final DateTime? initialSelectedRangeStart;
+
+  /// Initial selected range end
+  final DateTime? initialSelectedRangeEnd;
+
+  /// Initial multi-selected dates
+  final List<DateTime>? initialMultiSelectedDates;
+
   /// Create a new Myanmar calendar widget
   const MyanmarCalendarWidget({
     super.key,
@@ -161,6 +180,12 @@ class MyanmarCalendarWidget extends StatefulWidget {
     this.highlightWeekends = true,
     this.animationDuration = const Duration(milliseconds: 300),
     this.enableAnimations = true,
+    this.selectionMode = CalendarSelectionMode.single,
+    this.onRangeSelected,
+    this.onMultiSelected,
+    this.initialSelectedRangeStart,
+    this.initialSelectedRangeEnd,
+    this.initialMultiSelectedDates,
   });
 
   @override
@@ -173,6 +198,9 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
   late MyanmarCalendarTheme _theme;
   late DateTime _currentMonth;
   DateTime? _selectedDate;
+  DateTime? _selectedRangeStart;
+  DateTime? _selectedRangeEnd;
+  final Set<DateTime> _multiSelectedDates = {};
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late PageController _pageController;
@@ -207,6 +235,17 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
 
     // Initialize selected date
     _selectedDate = widget.selectedDate ?? widget.initialDate;
+
+    // Initialize selection states
+    _selectedRangeStart = widget.initialSelectedRangeStart;
+    _selectedRangeEnd = widget.initialSelectedRangeEnd;
+    if (widget.initialMultiSelectedDates != null) {
+      _multiSelectedDates.addAll(
+        widget.initialMultiSelectedDates!.map(
+          (d) => DateTime(d.year, d.month, d.day),
+        ),
+      );
+    }
 
     // Initialize animations
     _animationController = AnimationController(
@@ -335,10 +374,43 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
 
   /// Check if date is selected
   bool _isSelected(DateTime date) {
-    if (_selectedDate == null) return false;
-    return date.year == _selectedDate!.year &&
-        date.month == _selectedDate!.month &&
-        date.day == _selectedDate!.day;
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    switch (widget.selectionMode) {
+      case CalendarSelectionMode.single:
+        if (_selectedDate == null) return false;
+        return date.year == _selectedDate!.year &&
+            date.month == _selectedDate!.month &&
+            date.day == _selectedDate!.day;
+      case CalendarSelectionMode.range:
+        return false; // Range selection uses start/end/middle
+      case CalendarSelectionMode.multi:
+        return _multiSelectedDates.contains(dateOnly);
+    }
+  }
+
+  /// Check if date is start of range
+  bool _isRangeStart(DateTime date) {
+    if (widget.selectionMode != CalendarSelectionMode.range) return false;
+    if (_selectedRangeStart == null) return false;
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    return dateOnly.isAtSameMomentAs(_selectedRangeStart!);
+  }
+
+  /// Check if date is end of range
+  bool _isRangeEnd(DateTime date) {
+    if (widget.selectionMode != CalendarSelectionMode.range) return false;
+    if (_selectedRangeEnd == null) return false;
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    return dateOnly.isAtSameMomentAs(_selectedRangeEnd!);
+  }
+
+  /// Check if date is within range
+  bool _isInRange(DateTime date) {
+    if (widget.selectionMode != CalendarSelectionMode.range) return false;
+    if (_selectedRangeStart == null || _selectedRangeEnd == null) return false;
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    return dateOnly.isAfter(_selectedRangeStart!) &&
+        dateOnly.isBefore(_selectedRangeEnd!);
   }
 
   /// Check if date is in current month
@@ -374,14 +446,43 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
 
   /// Handle date selection
   void _onDateTap(DateTime date) {
-    if (!_isDateSelectable(date)) return;
+    if (!widget.enableSelection || !_isDateSelectable(date)) return;
+
+    final dateOnly = DateTime(date.year, date.month, date.day);
 
     setState(() {
-      _selectedDate = date;
-    });
+      switch (widget.selectionMode) {
+        case CalendarSelectionMode.single:
+          _selectedDate = dateOnly;
+          widget.onDateSelected?.call(_getCompleteDate(dateOnly));
+          break;
 
-    final completeDate = _getCompleteDate(date);
-    widget.onDateSelected?.call(completeDate);
+        case CalendarSelectionMode.range:
+          if (_selectedRangeStart == null ||
+              (_selectedRangeStart != null && _selectedRangeEnd != null)) {
+            _selectedRangeStart = dateOnly;
+            _selectedRangeEnd = null;
+          } else {
+            if (dateOnly.isBefore(_selectedRangeStart!)) {
+              _selectedRangeEnd = _selectedRangeStart;
+              _selectedRangeStart = dateOnly;
+            } else {
+              _selectedRangeEnd = dateOnly;
+            }
+          }
+          widget.onRangeSelected?.call(_selectedRangeStart, _selectedRangeEnd);
+          break;
+
+        case CalendarSelectionMode.multi:
+          if (_multiSelectedDates.contains(dateOnly)) {
+            _multiSelectedDates.remove(dateOnly);
+          } else {
+            _multiSelectedDates.add(dateOnly);
+          }
+          widget.onMultiSelected?.call(_multiSelectedDates.toList()..sort());
+          break;
+      }
+    });
   }
 
   // ============================================================================
@@ -412,10 +513,11 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
             : null,
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (widget.showHeader) _buildHeader(),
           if (widget.showWeekdayHeaders) _buildWeekdayHeaders(),
-          Expanded(child: _buildCalendarGrid()),
+          _buildCalendarGrid(),
         ],
       ),
     );
@@ -611,19 +713,23 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     final isSelectable = _isDateSelectable(date);
 
     // Use OptimizedCalendarCell for better performance and accessibility
-    return RepaintBoundary(
-      child: OptimizedCalendarCell(
-        date: completeDate,
-        isSelected: isSelected,
-        isToday: isToday,
-        isDisabled: !isSelectable,
-        isInCurrentMonth: isInCurrentMonth,
-        onTap: isSelectable ? () => _onDateTap(date) : null,
-        language: widget.language,
-        showHolidays: widget.showHolidays,
-        showAstrology: widget.showAstrology,
-        theme: _theme, // Pass the Myanmar calendar theme
-      ),
+    return OptimizedCalendarCell(
+      date: completeDate,
+      isSelected: isSelected,
+      isRangeStart: _isRangeStart(date),
+      isRangeEnd: _isRangeEnd(date),
+      isInRange: _isInRange(date),
+      isMultiSelected:
+          widget.selectionMode == CalendarSelectionMode.multi &&
+          _isSelected(date),
+      isToday: isToday,
+      isDisabled: !isSelectable,
+      isInCurrentMonth: isInCurrentMonth,
+      onTap: isSelectable ? () => _onDateTap(date) : null,
+      language: widget.language,
+      showHolidays: widget.showHolidays,
+      showAstrology: widget.showAstrology,
+      theme: _theme, // Pass the Myanmar calendar theme
     );
   }
 

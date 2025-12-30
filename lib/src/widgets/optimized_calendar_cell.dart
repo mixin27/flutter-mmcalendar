@@ -25,6 +25,18 @@ class OptimizedCalendarCell extends StatelessWidget {
   /// Whether this date is selected
   final bool isSelected;
 
+  /// Whether this date is start of a range
+  final bool isRangeStart;
+
+  /// Whether this date is end of a range
+  final bool isRangeEnd;
+
+  /// Whether this date is within a range
+  final bool isInRange;
+
+  /// Whether this date is part of multi-selection
+  final bool isMultiSelected;
+
   /// Whether this date is today
   final bool isToday;
 
@@ -63,6 +75,10 @@ class OptimizedCalendarCell extends StatelessWidget {
     super.key,
     required this.date,
     this.isSelected = false,
+    this.isRangeStart = false,
+    this.isRangeEnd = false,
+    this.isInRange = false,
+    this.isMultiSelected = false,
     this.isToday = false,
     this.isDisabled = false,
     this.isInCurrentMonth = true,
@@ -162,7 +178,13 @@ class OptimizedCalendarCell extends StatelessWidget {
     // Use theme colors if available
     if (theme != null) {
       if (isDisabled) return theme!.disabledDateBackgroundColor;
-      if (isSelected) return theme!.selectedDateBackgroundColor;
+      if (isSelected || isRangeStart || isRangeEnd || isMultiSelected) {
+        if (isRangeStart) return theme!.rangeStartBackgroundColor;
+        if (isRangeEnd) return theme!.rangeEndBackgroundColor;
+        if (isMultiSelected) return theme!.multiSelectedBackgroundColor;
+        return theme!.selectedDateBackgroundColor;
+      }
+      if (isInRange) return theme!.rangeBackgroundColor;
       if (isToday) return theme!.todayBackgroundColor;
       if (date.isFullMoon) return theme!.fullMoonBackgroundColor;
       if (date.isNewMoon) return theme!.newMoonBackgroundColor;
@@ -196,9 +218,26 @@ class OptimizedCalendarCell extends StatelessWidget {
       return BoxDecoration(
         border: Border.all(
           color: effectiveBorderColor,
-          width: isSelected ? 3 : 1,
+          width: (isSelected || isRangeStart || isRangeEnd || isMultiSelected)
+              ? 3
+              : 1,
         ),
         borderRadius: BorderRadius.circular(theme?.dateCellBorderRadius ?? 4),
+      );
+    }
+
+    // Range selection connected look
+    if (isInRange || isRangeStart || isRangeEnd) {
+      final radius = theme?.dateCellBorderRadius ?? 4;
+      return BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular((isRangeStart || !isInRange) ? radius : 0),
+          bottomLeft: Radius.circular(
+            (isRangeStart || !isInRange) ? radius : 0,
+          ),
+          topRight: Radius.circular((isRangeEnd || !isInRange) ? radius : 0),
+          bottomRight: Radius.circular((isRangeEnd || !isInRange) ? radius : 0),
+        ),
       );
     }
 
@@ -253,7 +292,13 @@ class OptimizedCalendarCell extends StatelessWidget {
 
     // Use theme colors if available
     if (theme != null) {
-      if (isSelected) return theme!.selectedDateTextColor;
+      if (isSelected || isRangeStart || isRangeEnd || isMultiSelected) {
+        if (isRangeStart) return theme!.rangeStartTextColor;
+        if (isRangeEnd) return theme!.rangeEndTextColor;
+        if (isMultiSelected) return theme!.multiSelectedTextColor;
+        return theme!.selectedDateTextColor;
+      }
+      if (isInRange) return theme!.rangeTextColor;
       if (isDisabled) return theme!.disabledDateTextColor;
       if (isToday) return theme!.todayTextColor;
       if (date.isFullMoon) return theme!.fullMoonTextColor;

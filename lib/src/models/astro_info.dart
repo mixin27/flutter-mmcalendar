@@ -36,6 +36,24 @@ class AstroInfo {
     required this.yearName,
   });
 
+  /// Whether the day is generally considered auspicious
+  bool get isAuspicious {
+    if (yatyaza.isEmpty) return false;
+    if (pyathada.isNotEmpty) return false;
+
+    final badDays = {'thamanyo', 'warameittugyi', 'yatyotema'};
+    for (final day in astrologicalDays) {
+      if (badDays.contains(day.toLowerCase())) return false;
+    }
+
+    return true;
+  }
+
+  /// Whether the day is considered highly auspicious (Amyeittasote)
+  bool get isHighlyAuspicious {
+    return astrologicalDays.any((d) => d.toLowerCase() == 'amyeittasote');
+  }
+
   @override
   String toString() {
     return 'AstroInfo(astrologicalDays: $astrologicalDays, sabbathInfo: $sabbath, yatyaza: $yatyaza, pyathada: $pyathada, nagahle: $nagahle, mahabote: $mahabote, nakhat: $nakhat, yearName: $yearName)';

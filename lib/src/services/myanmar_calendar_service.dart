@@ -248,6 +248,17 @@ class MyanmarCalendarService {
     return completeDate;
   }
 
+  /// Find auspicious days for a given Myanmar month and year
+  List<CompleteDate> findAuspiciousDays(int year, int month) {
+    final myanmarMonth = getMyanmarMonth(year, month);
+    return myanmarMonth
+        .map(
+          (md) => getCompleteDate(myanmarToWestern(md.year, md.month, md.day)),
+        )
+        .where((cd) => cd.astro.isAuspicious)
+        .toList();
+  }
+
   /// Get Myanmar dates for a month
   List<MyanmarDate> getMyanmarMonth(int year, int month) {
     final dates = <MyanmarDate>[];

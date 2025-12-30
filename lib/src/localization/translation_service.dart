@@ -1086,7 +1086,7 @@ class TranslationService {
       Language.myanmar: 'ဘင်္ဂ',
       Language.zawgyi: 'ဘဂၤ',
       Language.mon: 'ဘင်္ဂ',
-      Language.shan: 'ဘင်္ဂ',
+      Language.shan: 'ပိင်ႉၵႃႉ',
       Language.karen: 'ဘင်္ဂ',
     },
     'Atun': {
@@ -1094,7 +1094,7 @@ class TranslationService {
       Language.myanmar: 'အထွန်း',
       Language.zawgyi: 'အထြန္း',
       Language.mon: 'အထွန်း',
-      Language.shan: 'အထွန်း',
+      Language.shan: 'ဢထုၼ်း',
       Language.karen: 'အထွန်း',
     },
     'Yaza': {
@@ -1102,7 +1102,7 @@ class TranslationService {
       Language.myanmar: 'ရာဇ',
       Language.zawgyi: 'ရာဇ',
       Language.mon: 'ရာဇ',
-      Language.shan: 'ရာဇ',
+      Language.shan: 'ယႃႇၸႃႇ',
       Language.karen: 'ရာဇ',
     },
     'Adipati': {
@@ -1110,7 +1110,7 @@ class TranslationService {
       Language.myanmar: 'အဓိပတိ',
       Language.zawgyi: 'အဓိပတိ',
       Language.mon: 'အဓိပတိ',
-      Language.shan: 'အဓိပတိ',
+      Language.shan: 'ဢထိပ်ႉပတိ',
       Language.karen: 'အဓိပတိ',
     },
     'Marana': {
@@ -1118,7 +1118,7 @@ class TranslationService {
       Language.myanmar: 'မရဏ',
       Language.zawgyi: 'မရဏ',
       Language.mon: 'မရဏ',
-      Language.shan: 'မရဏ',
+      Language.shan: 'မရၼႃႇ',
       Language.karen: 'မရဏ',
     },
     'Thike': {
@@ -1126,7 +1126,7 @@ class TranslationService {
       Language.myanmar: 'သိုက်',
       Language.zawgyi: 'သိုက္',
       Language.mon: 'သိုက်',
-      Language.shan: 'သိုက်',
+      Language.shan: 'သႅၵ်ႈ',
       Language.karen: 'သိုက်',
     },
     'Puti': {
@@ -1134,7 +1134,7 @@ class TranslationService {
       Language.myanmar: 'ပုတိ',
       Language.zawgyi: 'ပုတိ',
       Language.mon: 'ပုတိ',
-      Language.shan: 'ပုတိ',
+      Language.shan: 'ပုတေႃႉ',
       Language.karen: 'ပုတိ',
     },
     'Ogre': {
@@ -1160,6 +1160,410 @@ class TranslationService {
       Language.mon: 'လူ',
       Language.shan: 'ဢၼ်ပဵၼ်ၵူၼ်',
       Language.karen: 'လူ',
+    },
+
+    // Astrological Descriptions
+    'desc_ogre': {
+      Language.english:
+          'Ogre Nakhat (Thane-Nakhat) is associated with strength and fierce energy. It is considered suitable for activities requiring boldness.',
+      Language.myanmar:
+          'ဘီလူးနက္ခတ် (သိန်းနက္ခတ်) သည် ခွန်အားနှင့် ပြင်းထန်သော စွမ်းအင်တို့နှင့် ဆက်စပ်နေသည်။ ရဲရင့်ပြတ်သားမှု လိုအပ်သော လုပ်ငန်းများအတွက် သင့်တော်သည်ဟု ယူဆကြသည်။',
+      Language.zawgyi:
+          'ဘီလူးနကၡတ္ (သိန္းနကၡတ္) သည္ ခြန္အားႏွင့္ ျပင္းထန္ေသာ စြမ္းအင္တို႔ႏွင့္ ဆက္စပ္ေနသည္။ ရဲရင့္ျပတ္သားမႈ လိုအပ္ေသာ လုပ္ငန္းမ်ားအတြက္ သင့္ေတာ္သည္ဟု ယူဆၾကသည္။',
+      Language.karen:
+          'ဘီလူးနက္ခတ် (သိန်းနက္ခတ်) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ အရဲးအရာ ဟှေအုဲင်။',
+      Language.mon:
+          'နက္ခတ်ဘုတ် (နက္ခတ်သိန်း) ဝွံ ဆက်စပ်ကဵု ဒြဟတ် ကေုာံ စွမ်းအင်သ္ကာတ်မြဟ်။ သွက်ကမၠောန် မနွံပၟိက် ကေုာံ ဂတ်ဂတ်ဂဟ် သၟဟ်အစောံရ။',
+      Language.shan:
+          'ၼၵ်ႈၶတ်ႈၽီလူး (ၼၵ်ႈၶတ်ႈသိၵ်ႈ) မိူၼ်ၼင်ႇ မီးႁႅင်းယႂ်ႇ လႄႈ မီးသႅင်လႅင်း။ သုၼ်ႇတႃႇ ၵၢၼ်ငၢၼ်း ဢၼ်လူဝ်ႇတၢင်းႁတ်းႁၢၼ်။',
+    },
+    'desc_elf': {
+      Language.english:
+          'Elf Nakhat (De-wa-Nakhat) is associated with grace, beauty, and celestial harmony. It is ideal for peaceful and creative pursuits.',
+      Language.myanmar:
+          'နတ်နက္ခတ် (ဒေဝနက္ခတ်) သည် ကျက်သရေ၊ အလှအပနှင့် ကောင်းကင်ဘုံ သဟဇာတဖြစ်မှုတို့နှင့် ဆက်စပ်နေသည်။ အေးချမ်းသာယာသော လုပ်ငန်းများနှင့် ဖန်တီးမှုဆိုင်ရာ ဝါသနာများအတွက် အထူးသင့်လျော်သည်။',
+      Language.zawgyi:
+          'နတ္နကၡတ္ (ေဒဝနကၡတ္) သည္ က်က္သေရ၊ အလွအပႏွင့္ ေကာင္းကင္ဘုံ သဟဇာတျဖစ္မႈတို႔ႏွင့္ ဆက္စပ္ေနသည္။ ေအးခ်မ္းသာယာေသာ လုပ္ငန္းမ်ားႏွင့္ ဖန္တီးမႈဆိုင္ရာ ဝါသနာမ်ားအတြက္ အထူးသင့္ေလ်ာ္သည္။',
+      Language.karen:
+          'နတ်နက္ခတ် (ဒေဝနက္ခတ်) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ ကျာ်သရေ ဟှေအုဲင်။',
+      Language.mon:
+          'နက္ခတ်ဒေဝတာ (နက္ခတ်ဒေဝ) ဝွံ ဆက်စပ်ကဵု ဂုဏ်ဝိသေသ၊ သစ္စာ ကေုာံ တင်္ခဏဥာဏ်။ သွက်ကမၠောန် မၜိုဟ်သြိုဟ် ကေုာံ ဖန်ဗဒှ်ဂဟ် ခိုဟ်သန်ရ။',
+      Language.shan:
+          'ၼၵ်ႈၶတ်ႈၽီ (ၼၵ်ႈၶတ်ႈတေႇဝႃႇ) မိူၼ်ၼင်ႇ မီးတၢင်းလႅင်း၊ တၢင်းႁၢင်ႈလီ လႄႈ တၢင်းငမ်းယဵၼ်။ သုၼ်ႇတႃႇ ၵၢၼ်ငမ်းယဵၼ် လႄႈ ၵၢၼ်သၢင်ႈပၢႆးယဵၼ်။',
+    },
+    'desc_human': {
+      Language.english:
+          'Human Nakhat (Ma-nu-tha-Nakhat) is associated with earthiness, social connections, and practical matters. It is good for community projects.',
+      Language.myanmar:
+          'လူနက္ခတ် (မနုဿနက္ခတ်) သည် လက်တွေ့ကျမှု၊ လူမှုဆက်ဆံရေးနှင့် လူမှုရေးကိစ္စရပ်များနှင့် ဆက်စပ်နေသည်။ လူမှုအကျိုးပြု လုပ်ငန်းများအတွက် ကောင်းမွန်သည်။',
+      Language.zawgyi:
+          'လူနကၡတ္ (မႏုႆနကၡတ္) သည္ လက္ေတြ႕က်မႈ၊ လူမႈဆက္ဆံေရးႏွင့္ လူမႈေရးကိစၥရပ္မ်ားႏွင့္ ဆက္စပ္ေနသည္။ လူမႈအက်ိဳးျပဳ လုပ္ငန္းမ်ားအတြက္ ေကာင္းမြန္သည္။',
+      Language.karen:
+          'လူနက္ခတ် (မနုဿနက္ခတ်) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ ဆို့ရဲး ဟှေအုဲင်။',
+      Language.mon:
+          'နက္ခတ်မနုဿ (နက္ခတ်မနုဿ) ဝွံ ဆက်စပ်ကဵု ဘဝမၞိဟ်၊ ပရေင်မၞိဟ် ကေုာံ ပရေင်ဆက်ဆောံ။ သွက်ကမၠောန် ပရေင်မၞိဟ်ဂဟ် သၟဟ်အစောံရ။',
+      Language.shan:
+          'ၼၵ်ႈၶတ်ႈၵူၼ်း (ၼၵ်ႈၶတ်ႈမၼုတ်ႉသႃႉ) မိူၼ်ၼင်ႇ မီးတၢင်းမေႃ၊ တၢင်းႁူႉ လႄႈ ၵၢၼ်တူင်ႇဝူင်းၵူၼ်း။ သုၼ်ႇတႃႇ ၵၢၼ်တူင်ႇဝူင်းၵူၼ်း။',
+    },
+    'desc_binga': {
+      Language.english:
+          'Binga (The Restless) indicates a character that is energetic, versatile, but may struggle with focus or stability.',
+      Language.myanmar:
+          'ဘင်္ဂ (ဖျက်ဆီးခြင်း) သည် တက်ကြွလှုပ်ရှားမှု၊ ဘက်စုံကျွမ်းကျင်မှုကို ညွှန်ပြသော်လည်း တည်ငြိမ်မှု သို့မဟုတ် အာရုံစူးစိုက်မှုအတွက် ရုန်းကန်ရတတ်သည်။',
+      Language.zawgyi:
+          'ဘဂၤ (ဖ်က္ဆီးျခင္း) သည္ တက္ႂကြလႈပ္ရွားမႈ၊ ဘက္စုံကြၽမ္းက်င္မႈကို ၫႊန္ျပေသာ္လည္း တည္ၿငိမ္မႈ သို႔မဟုတ္ အာ႐ုံစူးစိုက္မႈအတြက္ ႐ုန္းကန္ရတတ္သည္။',
+      Language.karen:
+          'ဘင်္ဂ (ဟှေဖျက်ဆီး) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တက်ကြွလှုပ်ရှား ဟှေအုဲင်။',
+      Language.mon:
+          'ဘင်္ဂ (ပလီုပလာ်) ဝွံ ထ္ၜးကဵု ပရေင်ချဳဒရာင် ကေုာံ ဍာ်ဒကေဝ်နာနာ ဆဂး ဝါတ်ဂါတ် ပ္ဍဲပရေင်တန်ကြန် ကေုာံ စိုတ်ဓါတ်။',
+      Language.shan:
+          'ပိင်ႉၵႃႉ (ၵၢၼ်ယႃႉလူႉ) မိူၼ်ၼင်ႇ မီးတၢင်းတူင်ႉၼိုင် လႄႈ မီးတၢင်းမေႃ ၵူႈလွင်ႈလွင်ႈ သေတႃႉ မီးတၢင်းယၢပ်ႇ တႃႇတၢင်းၼိမ် လႄႈ ဝူၼ်ႉၸႂ်။',
+    },
+    'desc_atun': {
+      Language.english:
+          'Atun (The Exalted) represents brilliance, pride, and leadership qualities. Often indicates a public-facing personality.',
+      Language.myanmar:
+          'အထွန်း (တောက်ပခြင်း) သည် ထူးကဲသော အရည်အချင်း၊ ဂုဏ်သိက္ခာနှင့် ခေါင်းဆောင်မှု အရည်အသွေးများကို ကိုယ်စားပြုသည်။ လူသိရှင်ကြား ပေါ်လွင်သော ပင်ကိုယ်စရိုက်ကို ကိုယ်စားပြုလေ့ရှိသည်။',
+      Language.zawgyi:
+          'အထြန္း (ေတာက္ပျခင္း) သည္ ထူးကဲေသာ အရည္အခ်င္း၊ ဂုဏ္သိကၡာႏွင့္ ေခါင္းေဆာင္မႈ အရည္အေသြးမ်ားကို ကိုယ္စားျပဳသည္။ လူသိရွင္ၾကား ေပၚလြင္ေသာ ပင္ကိုယ္စ႐ိုက္ကို ကိုယ္စားျပဳေလ့ရွိသည္။',
+      Language.karen:
+          'အထွန်း (ဟှေတောက်ပ) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ ခေါင်းဆောင်မှု ဟှေအုဲင်။',
+      Language.mon:
+          'အထွန်း (တောက်ပ) ဝွံ ထ္ၜးကဵု ဍာ်ဒကေဝ်တၟေင်၊ ဂုဏ်သိက္ခာ ကေုာံ ဍာ်ဒကေဝ်က္ဍိုပ်သကိုပ်။ မလေပ်နွံကဵု စိုတ်ဓါတ် မပေါ်လွင် ပ္ဍဲညးဂမၠိုင်။',
+      Language.shan:
+          'ဢထုၼ်း (ၵၢၼ်လႅင်း) မိူၼ်ၼင်ႇ မီးတၢင်းမေႃ၊ တၢင်းမီးၵုင်ႇ လႄႈ တၢင်းပဵၼ်ႁူဝ်ၼႃႈ။ မီးတၢင်းလႅင်း တႃႇတူင်ႇဝူင်းၵူၼ်း။',
+    },
+    'desc_yaza': {
+      Language.english:
+          'Yaza (The Kingly) signifies authority, responsibility, and a sense of duty toward others.',
+      Language.myanmar:
+          'ရာဇ (မင်းကဲ့သို့သော) သည် အာဏာ၊ တာဝန်ခံမှုနှင့် သူတစ်ပါးအပေါ် တာဝန်သိတတ်မှုကို ကိုယ်စားပြုသည်။',
+      Language.zawgyi:
+          'ရာဇ (မင္းကဲ့သို႔ေသာ) သည္ အာဏာ၊ တာဝန္ခံမႈႏွင့္ သူတစ္ပါးအေပၚ တာဝန္သိတတ္မႈကို ကိုယ္စားျပဳသည္။',
+      Language.karen:
+          'ရာဇ (မင်းကဲ့သို့သော) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ အာဏာ၊ တာဝန်ခံမှု ဟှေအုဲင်။',
+      Language.mon:
+          'ရာဇ (ညံင်ရဴသၟိင်) ဝွံ ထ္ၜးကဵု အဓိပတိ၊ ပရေင်တာဝန် ကေုာံ ဆန္ဒမဇ္ဇျဟ် ပ္ဍဲညးတၞဟ်။',
+      Language.shan:
+          'ယႃႇၸႃႇ (မိူၼ်ၼင်ႇၸဝ်ႈၾႃႉ) မိူၼ်ၼင်ႇ မီးဢႃႇၼႃႇ၊ တၢင်းမီးပုၼ်ႈၽွၼ်း လႄႈ တၢင်းမီးၼမ်ႉၸႂ်လီ။',
+    },
+    'desc_adipati': {
+      Language.english:
+          'Adipati (The Master) represents dominance, strategic thinking, and independence.',
+      Language.myanmar:
+          'အဓိပတိ (အရှင်သခင်) သည် လွှမ်းမိုးချုပ်ကိုင်နိုင်မှု၊ ဗျူဟာကျကျ စဉ်းစားမှုနှင့် လွတ်လပ်မှုကို ကိုယ်စားပြုသည်။',
+      Language.zawgyi:
+          'အဓိပတိ (အရွင္သခင္) သည္ လႊမ္းမိုးခ်ဳပ္ကိုင္ႏိုင္မႈ၊ ဗ်ဴဟာက်က် စဥ္းစားမႈႏွင့္ လြတ္လပ္မႈကို ကိုယ္စားျပဳသည္။',
+      Language.karen:
+          'အဓိပတိ (အရှင်သခင်) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ လွှမ်းမိုးမှု၊ လွတ်လပ်မှု ဟှေအုဲင်။',
+      Language.mon:
+          'အဓိပတိ (နာဲညး) ဝွံ ထ္ၜးကဵု ပရေင်အုပ်ချုပ်၊ ပရေင်ဗျူဟာ ကေုာံ အခေါင်ဗၠးၜး။',
+      Language.shan:
+          'ဢထိပ်ႉပတိ (ၸဝ်ႈၾႃႉ) မိူၼ်ၼင်ႇ မီးဢႃႇၼႃႇ၊ မေႃဝူၼ်ႉၸႂ် လႄႈ မီးတၢင်းလွတ်ႈလႅဝ်း။',
+    },
+    'desc_marana': {
+      Language.english:
+          'Marana (The Fragile) suggests a sensitive, thoughtful, and perhaps more introspective nature.',
+      Language.myanmar:
+          'မရဏ (ပျက်စီးခြင်း) သည် ထိခိုက်လွယ်သော၊ နက်နက်နဲနဲ စဉ်းစားတတ်သော၊ တစ်သီးပုဂ္ဂလဆန်သော သဘာဝကို ဖော်ပြသည်။',
+      Language.zawgyi:
+          'မရဏ (ပ်က္စီးျခင္း) သည္ ထိခိုက္လြယ္ေသာ၊ နက္နက္နဲနဲ စဥ္းစားတတ္ေသာ၊ တစ္သီးပုဂၢလဆန္ေသာ သဘာဝကို ေဖာ္ျပသည္။',
+      Language.karen:
+          'မရဏ (ပျက်စီးခြင်း) သည် ထိခိုက်လွယ်သော၊ နက်နက်နဲနဲ စဉ်းစားတတ်သော၊ တစ်သီးပုဂ္ဂလဆန်သော သဘာဝကို ဖော်ပြသည်။',
+      Language.mon:
+          'မရဏ (ပျက်စီးခြင်း) သည် ထိခိုက်လွယ်သော၊ နက်နက်နဲနဲ စဉ်းစားတတ်သော၊ တစ်သီးပုဂ္ဂလဆန်သော သဘာဝကို ဖော်ပြသည်။',
+      Language.shan:
+          'မရဏ (ပျက်စီးခြင်း) သည် ထိခိုက်လွယ်သော၊ နက်နက်နဲနဲ စဉ်းစားတတ်သော၊ တစ်သီးပုဂ္ဂလဆန်သော သဘာဝကို ဖော်ပြသည်။',
+    },
+    'desc_thike': {
+      Language.english:
+          'Thike (The Wealthy) indicates good fortune, resourcefulness, and ability to accumulate gains.',
+      Language.myanmar:
+          'သိုက် (သိုလှောင်ခြင်း) သည် ကံကောင်းခြင်း၊ အရင်းအမြစ် ကြွယ်ဝခြင်းနှင့် စည်းစိမ်ဥစ္စာ စုဆောင်းနိုင်စွမ်းကို ဖော်ပြသည်။',
+      Language.zawgyi: '''
+သိုက္ (သိုေလွာင္ျခင္း) သည္ ကံေကာင္းျခင္း၊ အရင္းအျမစ္ ႂကြယ္ဝျခင္းႏွင့္ စည္းစိမ္ဥစၥာစုေဆာင္းႏိုင္စြမ္းကို ေဖာ္ျပသည္။
+''',
+      Language.karen:
+          'သိုက် (ဟှေသိုလှောင်) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ စည်းစိမ်ဥစ္စာ ဟှေအုဲင်။',
+      Language.mon:
+          'သိုက် (ဂိုဟ်) ဝွံ ထ္ၜးကဵု ကံခိုဟ်၊ ဒြပ်ရတ် ကေုာံ ဍာ်ဒကေဝ် မပကောံပကေဝ် ဒြပ်ရတ်။',
+      Language.shan:
+          'သႅၵ်ႈ (ၵၢၼ်သိမ်း) မိူၼ်ၼင်ႇ မီးၵၢမ်ႇလီ၊ မီးၶူဝ်းၶွင် လႄႈ မီးတၢင်းမေႃ သိမ်းႁွမ်ၶူဝ်းၶွင်။',
+    },
+    'desc_puti': {
+      Language.english:
+          'Puti (The Rotting/Decaying) signifies transformation, resilience, and the ability to find value in what others discard.',
+      Language.myanmar:
+          'ပုတိ (ပုပ်သိုးခြင်း) သည် ပြောင်းလဲခြင်း၊ ကြံ့ကြံ့ခံနိုင်မှုနှင့် သူတစ်ပါး အသုံးမဝင်ဟု ထင်သောအရာများထဲမှ တန်ဖိုးကို ရှာဖွေနိုင်စွမ်းကို ကိုယ်စားပြုသည်။',
+      Language.zawgyi:
+          'ပုတိ (ပုပ္သိုးျခင္း) သည္ ေျပာင္းလဲျခင္း၊ ႀကံ့ႀကံ့ခံႏိုင္မႈႏွင့္ သူတစ္ပါး အသုံးမဝင္ဟု ထင္ေသာအရာမ်ားထဲမွ တန္ဖိုးကို ရွာေဖြႏိုင္စြမ္းကို ကိုယ္စားျပဳသည္။',
+      Language.karen:
+          'ပုတိ (ဟှေပုပ်သိုး) ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ ပြောင်းလဲခြင်း ဟှေအုဲင်။',
+      Language.mon:
+          'ပုတိ (ပုတိ) ဝွံ ထ္ၜးကဵု ပရေင်ပြံင်လှာဲ၊ ပရေင်ဒုင်ဒဝ် ကေုာံ ဍာ်ဒကေဝ် မဂၠာဲၚုဟ်မး နူအရာ မဟွံမွဲကဵုၚုဟ်မး။',
+      Language.shan:
+          'ပုတေႃႉ (ၵၢၼ်ၼဝ်ႈ) မိူၼ်ၼင်ႇ ၵၢၼ်လႅၵ်ႈလၢႆႈ၊ တၢင်းမီးတၢင်းယိူၼ်ႉ လႄႈ တၢင်းမေႃ ႁႃငွေးၶူဝ်းCheck နူဢရာ ဢၼ်ပိူၼ်ႈပႅတ်ႈ။',
+    },
+    'desc_thamanyo': {
+      Language.english:
+          'Thamanyo (The Restrainer) is an inauspicious day for starting new ventures or travel.',
+      Language.myanmar:
+          'သမားညိုသည် အသစ်စတင်ခြင်း သို့မဟုတ် ခရီးသွားလာခြင်းများအတွက် မသင့်တော်သော နေ့တစ်နေ့ဖြစ်သည်။',
+      Language.zawgyi:
+          'သမားညိဳသည္ အသစ္စတင္ျခင္း သို႔မဟုတ္ ခရီးသြားလာျခင္းမ်ားအတြက္ မသင့္ေတာ္ေသာ ေန႔တစ္ေန႔ျဖစ္သည္။',
+      Language.karen: 'သမားညို ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တုဟိုင် ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲသမားညို ဝွံ သွက်ဂွံစပဋိသန္ဓေတၟိ ဟွံသေင်မ္ဂး အာတရဴ ဟွံခိုဟ်ရ။',
+      Language.shan:
+          'ဝၼ်းသမႃးၺူဝ်ႇ မိူၼ်ၼင်ႇ ဝၼ်းဢမ်ႇလီ တႃႇတႄႇၵၢၼ်မႂ်ႇ ဢမ်ႇၼၼ် ၵၢၼ်ၶၢႆႉတၢင်း။',
+    },
+    'desc_amyeittasote': {
+      Language.english:
+          'Amyeittasote (The Nectar) is a highly auspicious day for celebrations and important beginnings.',
+      Language.myanmar:
+          'အမြိတ္တစုတ်သည် မင်္ဂလာအခမ်းအနားများနှင့် အရေးကြီးသော စတင်မှုများအတွက် အလွန်မင်္ဂလာရှိသော နေ့တစ်နေ့ဖြစ်သည်။',
+      Language.zawgyi:
+          'အၿမိတၱစုတ္သည္ မဂၤလာအခမ္းအနားမ်ားႏွင့္ အေရးႀကီးေသာ စတင္မႈမ်ားအတြက္ အလြန္မဂၤလာရွိေသာ ေန႔တစ္ေန႔ျဖစ္သည္။',
+      Language.karen: 'အမြိတ္တစုတ် ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ မင်္ဂလာ ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲအမြိတ္တစုတ် ဝွံ သွက်သဘင်မင်္ဂလာ ကေုာံ ပရေင်စပဋိသန္ဓေ ကိစ္စဇၞော်ဂမၠိုင် ခိုဟ်သန်ရ။',
+      Language.shan:
+          'ဝၼ်းဢမျဵၵ်ႉတၸုတ်ႉ မိူၼ်ၼင်ႇ ဝၼ်းမီးမင်ႇၵလႃႇ တႃႇပွႆး လႄႈ ၵၢၼ်တႄႇ ဢၼ်ယႂ်ႇလူင်။',
+    },
+    'desc_warameittugyi': {
+      Language.english:
+          'Warameittugyi (Major Bad Friend) is an inauspicious day particularly for social or collaborative work.',
+      Language.myanmar:
+          'ဝါရမိတ္တုကြီးသည် အထူးသဖြင့် လူမှုရေး သို့မဟုတ် ပူးပေါင်းဆောင်ရွက်ရသော အလုပ်များအတွက် မသင့်တော်သော နေ့တစ်နေ့ဖြစ်သည်။',
+      Language.zawgyi: '''
+ဝါရမိတၱဳႀကီးသည္ အထူးသျဖင့္ လူမႈေရး သို႔မဟုတ္ ပူးေပါင္းေဆာင္႐ြက္ရေသာ အလုပ္မ်ားအတြက္ မသင့္ေတာ္ေသာ ေန႔တစ္ေန႔ျဖစ္သည္။
+''',
+      Language.karen: 'ဝါရမိတ္တုကြီး ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တုဟိုင် ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲဝါရမိတ္တုကြီး ဝွံ သွက်ပရေင်မၞိဟ် ဟွံသေင်မ္ဂး ကမၠောန်မပံင်ဖက်ဂမၠိုင် ဟွံခိုဟ်ရ။',
+      Language.shan:
+          'ဝၼ်းဝႃႇရမိၵ်ႉတုႉလူင် မိူၼ်ၼင်ႇ ဝၼ်းဢမ်ႇလီ တႃႇၵၢၼ်တူင်ႇဝူင်းၵူၼ်း လႄႈ ၵၢၼ်ႁူမ်ႈမိုဝ်း။',
+    },
+    'desc_warameittunge': {
+      Language.english:
+          'Warameittunge (Minor Bad Friend) is a mildly inauspicious day.',
+      Language.myanmar:
+          'ဝါရမိတ္တုငယ်သည် အနည်းငယ် မသင့်တော်သော နေ့တစ်နေ့ဖြစ်သည်။',
+      Language.zawgyi: 'ဝါရမိတၱဳငယ္သည္ အနည္းငယ္ မသင့္ေတာ္ေသာ ေန႔တစ္ေန႔ျဖစ္သည္။',
+      Language.karen: 'ဝါရမိတ္တုငယ် ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တုဟိုင် ဟှေအုဲင်။',
+      Language.mon: 'တ္ၚဲဝါရမိတ္တုငယ် ဝွံ အောန်ညိ ဟွံခိုဟ်ရ။',
+      Language.shan: 'ဝၼ်းဝႃႇရမိၵ်ႉတုႉဢွၼ်ႇ မိူၼ်ၼင်ႇ ဝၼ်းဢမ်ႇလီဢိတ်းၼိုင်ႈ။',
+    },
+    'desc_yatpote': {
+      Language.english:
+          'Yatpote (Rotten Day) is considered poor for activities involving food, agriculture, or durable goods.',
+      Language.myanmar:
+          'ရက်ပုပ်သည် အစားအစာ၊ စိုက်ပျိုးရေး သို့မဟုတ် ရေရှည်ခံပစ္စည်းများအတွက် မသင့်တော်သော နေ့တစ်နေ့ဖြစ်သည်။',
+      Language.zawgyi:
+          'ရက္ပုပ္သည္ အစားအစာ၊ စိုက္ပ်ိဳးေရး သို႔မဟုတ္ ေရရွည္ခံပစၥည္းမ်ားအတြက္ မသင့္ေတာ္ေသာ ေန႔တစ္ေန႔ျဖစ္သည္။',
+      Language.karen: 'ရက်ပုပ် ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တုဟိုင် ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲရက်ပုပ် ဝွံ သွက်ပရေင်စၞ၊ ပရေင်ကမၠောန်ဝါဗ္ၚ ဟွံသေင်မ္ဂး ဒြပ်ရတ် မတန်တဴလံဂမၠိုင် ဟွံခိုဟ်ရ။',
+      Language.shan:
+          'ဝၼ်းဝၼ်းၼဝ်ႈ မိူၼ်ၼင်ႇ ဝၼ်းဢမ်ႇလီ တႃႇၶဝ်ႈၼမ်ႉတၢင်းၵိၼ်၊ ၵၢၼ်ၼႃး ဢမ်ႇၼၼ် ၶူဝ်းၶွင်ယိုၼ်းယၢဝ်း။',
+    },
+    'desc_thamaphyu': {
+      Language.english:
+          'Thamaphyu (The White Restrainer) is a day recommended for religious offerings and spiritual study.',
+      Language.myanmar:
+          'သမားဖြူသည် ဘာသာရေး ဆိုင်ရာ လှူဒါန်းမှုများနှင့် ဝိညာဉ်ရေးရာ လေ့လာမှုများအတွက် အကြံပြုထားသော နေ့ဖြစ်သည်။',
+      Language.zawgyi:
+          'သမားျဖဴသည္ ဘာသာေရး ဆိုင္ရာ လႉဒါန္းမႈမ်ားႏွင့္ ဝိညာဥ္ေရးရာ ေလ့လာမႈမ်ားအတြက္ အႀကံျပဳထားေသာ ေန႔ျဖစ္သည္။',
+      Language.karen: 'သမားဖြူ ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ မင်္ဂလာ ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲသမားဖြူ ဝွံ သွက်ပရေင်သာသနာ၊ ပရေင်ပူဇဴ ကေုာံ ပရေင်ကလေင်လ္ၚတ် ဝိညာဉ် ခိုဟ်သန်ရ။',
+      Language.shan:
+          'ဝၼ်းသမႃးၽိူၵ်ႇ မိူၼ်ၼင်ႇ ဝၼ်းလီ တႃႇၵၢၼ်သႃႇသၼႃႇ လႄႈ ၵၢၼ်သွၼ်ႁဵၼ်း။',
+    },
+    'desc_nagapor': {
+      Language.english:
+          'Nagapor (Dragon Burden) is inauspicious for construction or ground-breaking activities.',
+      Language.myanmar:
+          'နဂါးပေါ်သည် ဆောက်လုပ်ရေး သို့မဟုတ် မြေစတင်တူးဖော်ခြင်း လုပ်ငန်းများအတွက် မသင့်တော်သော နေ့ဖြစ်သည်။',
+      Language.zawgyi:
+          'နဂါးေပၚသည္ ေဆာက္လုပ္ေရး သို႔မဟုတ္ ေျမစတင္တူးေဖာ္ျခင္း လုပ္ငန္းမ်ားအတြက္ မသင့္ေတာ္ေသာ ေန႔ျဖစ္သည္။',
+      Language.karen: 'နဂါးပေါ် ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တုဟိုင် ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲနဂါးပေါ် ဝွံ သွက်ပရေင်သြိုင်ခၞံ ဟွံသေင်မ္ဂး ပရေင်ခါဲတိ ဟွံခိုဟ်ရ။',
+      Language.shan:
+          'ဝၼ်းၼၵႃးပေႃႇ မိူၼ်ၼင်ႇ ဝၼ်းဢမ်ႇလီ တႃႇၵၢၼ်ပူၵ်းသၢင်ႈ လႄႈ ၵၢၼ်ၶုတ်းလိၼ်။',
+    },
+    'desc_yatyotema': {
+      Language.english:
+          'Yatyotema (Broken Day) is an inauspicious day where efforts might not yield desired results.',
+      Language.myanmar:
+          'ရက်ယုတ်မာသည် ကြိုးပမ်းအားထုတ်မှုများ ထိရောက်မှုမရှိနိုင်သော မကောင်းသော နေ့ဖြစ်သည်။',
+      Language.zawgyi:
+          'ရက္ယုတ္မာသည္ ႀကိဳးပမ္းအားထုတ္မႈမ်ား ထိေရာက္မႈမရွိႏိုင္ေသာ မေကာင္းေသာ ေန႔ျဖစ္သည္။',
+      Language.karen: 'ရက်ယုတ်မာ ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တုဟိုင် ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲရက်ယုတ်မာ ဝွံ သွက်ဂွံပ္တိတ်ဒြဟတ်ဂမၠိုင် ဟွံသၟဟ်အစောံရ။',
+      Language.shan:
+          'ဝၼ်းယုတ်ႉမႃႇ မိူၼ်ၼင်ႇ ဝၼ်းဢမ်ႇလီ တႃႇၵၢၼ်တႄႇ ဢၼ်လူဝ်ႇတၢင်းၶတ်းၸႂ်။',
+    },
+    'desc_mahayatkyan': {
+      Language.english:
+          'Mahayatkyan (Great Remainder) is considered a powerful day for starting long-term projects.',
+      Language.myanmar:
+          'မဟာရက်ကြမ်းသည် ရေရှည်စီမံကိန်းများကို စတင်ရန်အတွက် အစွမ်းထက်သော နေ့တစ်နေ့အဖြစ် သတ်မှတ်သည်။',
+      Language.zawgyi:
+          'မဟာရက္ၾကမ္းသည္ ေရရွည္စီမံကိန္းမ်ားကို စတင္ရန္အတြက္ အစြမ္းထက္ေသာ ေန႔တစ္ေန႔အျဖစ္ သတ္မွတ္သည္။',
+      Language.karen: 'မဟာရက်ကြမ်း ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ မင်္ဂလာ ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲမဟာရက်ကြမ်း ဝွံ သွက်ပရေင်စပဋိသန္ဓေ ကမၠောန်ရေရှည်ဂမၠိုင် ခိုဟ်သန်ရ။',
+      Language.shan:
+          'ဝၼ်းၵျၢမ်းလူင် မိူၼ်ၼင်ႇ ဝၼ်းလီ တႃႇၵၢၼ်တႄႇ ဢၼ်တေယူႇႁိုင်။',
+    },
+    'desc_shanyat': {
+      Language.english:
+          'Shanyat (Conflict Day) is a day where disagreements are more likely; use caution in negotiations.',
+      Language.myanmar:
+          'ရှမ်းရက်သည် အငြင်းပွားမှုများ ဖြစ်ပွားနိုင်ခြေရှိသော နေ့ဖြစ်သောကြောင့် ဆွေးနွေးညှိနှိုင်းမှုများတွင် သတိရှိသင့်သည်။',
+      Language.zawgyi:
+          'ရွမ္းရက္သည္ အျငင္းပြားမႈမ်ား ျဖစ္ပြားႏိုင္ေျခရွိေသာ ေန႔ျဖစ္ေသာေၾကာင့္ ေဆြးေႏြးညႇိႏႈိင္းမႈမ်ားတြင္ သတိရွိသင့္သည္။',
+      Language.karen: 'ရှမ်းရက် ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တုဟိုင် ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲရှမ်းရက် ဝွံ သွက်ပရေင်ဆွေးနွေးညှိနှိုင်းဂမၠိုင် ဒးစွံသတိရ။',
+      Language.shan:
+          'ဝၼ်းတႆး မိူၼ်ၼင်ႇ ဝၼ်းဢၼ်လူဝ်ႇတၢင်းသတိ ပုၼ်ႈတႃႇၵၢၼ်ဢုပ်ႇၵုမ်။',
+    },
+    'desc_yatyaza': {
+      Language.english:
+          'Yatyaza (King Day) is generally auspicious for most activities, especially those involving authority.',
+      Language.myanmar:
+          'ရက်ရာဇာသည် အရာရာတွင် မင်္ဂလာရှိသောနေ့ဖြစ်ပြီး အထူးသဖြင့် အာဏာပိုင်များနှင့် ဆက်စပ်သော ကိစ္စများအတွက် ကောင်းမွန်သည်။',
+      Language.zawgyi: '''
+ရက္ရာဇာသည္ အရာရာတြင္ မဂၤလာရွိေသာေန႔ျဖစ္ၿပီး အထူးသျဖင့္ အာဏာပိုင္မ်ားႏွင့္ ဆက္စပ္ေသာ ကိစၥမ်ားအတြက္ ေကာင္းမြန္သည္။
+''',
+      Language.karen: 'ရက်ရာဇာ ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ မင်္ဂလာ ဟှေအုဲင်။',
+      Language.mon: 'တ္ၚဲရက်ရာဇာ ဝွံ သွက်ကိစ္စနာနာဂမၠိုင် ခိုဟ်သန်ရ။',
+      Language.shan: 'ဝၼ်းယႃႇၸႃႇ မိူၼ်ၼင်ႇ ဝၼ်းလီ တႃႇၵၢၼ်ငၢၼ်းၵူႈလွင်ႈလွင်ႈ။',
+    },
+    'desc_pyathada': {
+      Language.english:
+          'Pyathada (Calamity) is generally inauspicious for travel or major life events.',
+      Language.myanmar:
+          'ပြဿဒါးသည် ခရီးသွားခြင်း သို့မဟုတ် အရေးကြီးသော ဘဝဖြစ်ရပ်များအတွက် ယေဘုယျအားဖြင့် မင်္ဂလာမရှိသော နေ့ဖြစ်သည်။',
+      Language.zawgyi:
+          'ျပႆဒါးသည္ ခရီးသြားျခင္း သို႔မဟုတ္ အေရးႀကီးေသာ ဘဝျဖစ္ရပ္မ်ားအတြက္ ေယဘုယ်အားျဖင့္ မဂၤလာမရွိေသာ ေန႔ျဖစ္သည္။',
+      Language.karen: 'ပြဿဒါး ဝွေဟှဗ္ဗာန်၊ တုဟှင့်၊ တုဟိုင် ဟှေအုဲင်။',
+      Language.mon:
+          'တ္ၚဲပြဿဒါး ဝွံ သွက်အာတရဴ ဟွံသေင်မ္ဂး ကိစ္စဘဝကိစ္စဇၞော်ဂမၠိုင် ဟွံခိုဟ်ရ။',
+      Language.shan:
+          'ဝၼ်းပျတ်ႉတႃႉ မိူၼ်ၼင်ႇ ဝၼ်းဢမ်ႇလီ တႃႇၵၢၼ်ၶၢႆႉတၢင်း လႄႈ ၵၢၼ်ယႂ်ႇလူင်။',
+    },
+    'desc_not_available': {
+      Language.english: 'Details are not available.',
+      Language.myanmar: 'အသေးစိတ်အချက်အလက်များ မရှိပါ။',
+      Language.zawgyi: 'အေသးစိတ္အခ်က္အလက္မ်ား မရွိပါ။',
+      Language.karen: 'ဟွံမွဲတုဟှင့် အသေးစိတ် ဟှေအုဲင်။',
+      Language.mon: 'တင်ဂၞင် အသေးစိတ် ဟွံမွဲရ။',
+      Language.shan: 'ဢမ်ႇမီး ၶေႃႈမုၼ်း လွင်ႈတၢင်းဢမ်ႇမီး။',
+    },
+    'Horoscope Details': {
+      Language.english: 'Horoscope Details',
+      Language.myanmar: 'ဟောစာတမ်း အသေးစိတ်',
+      Language.zawgyi: 'ေဟာစာတမ္း အေသးစိတ္',
+      Language.karen: 'ဟောစာတမ်း အသေးစိတ်',
+      Language.mon: 'ဟောစာတမ်း အသေးစိတ်',
+      Language.shan: 'ၶေႃႈမုၼ်း ႁေႃၸႃႇတၢမ်း',
+    },
+    'Astrological Days': {
+      Language.english: 'Astrological Days',
+      Language.myanmar: 'နက္ခတ်ဗေဒဆိုင်ရာ နေ့ရက်များ',
+      Language.zawgyi: 'နကၡတ္ေဗဒဆိုင္ရာ ေန႔ရက္မ်ား',
+      Language.karen: 'နက္ခတ်ဗေဒဆိုင်ရာ နေ့ရက်များ',
+      Language.mon: 'တ္ၚဲနက္ခတ်ဗေဒဂမၠိုင်',
+      Language.shan: 'ဝၼ်းလႅင်ႊလၢဝ် ၼၵ်ႈၶတ်ႈ',
+    },
+    'Nakhat & Year': {
+      Language.english: 'Nakhat & Year',
+      Language.myanmar: 'နက္ခတ်နှင့် နှစ်နာမည်',
+      Language.zawgyi: 'နကၡတ္ႏွင့္ ႏွစ္နာမည္',
+      Language.karen: 'နက္ခတ်နှင့် နှစ်နာမည်',
+      Language.mon: 'နက္ခတ် ကေုာံ ယၟုသၞာံ',
+      Language.shan: 'ၼၵ်ႈၶတ်ႈ လႄႈ ၸိုဝ်ႈပီႊ',
+    },
+    'Mahabote & Characteristics': {
+      Language.english: 'Mahabote & Characteristics',
+      Language.myanmar: 'မဟာဘုတ်နှင့် ပင်ကိုယ်စရိုက်',
+      Language.zawgyi: 'မဟာဘုတ္ႏွင့္ ပင္ကိုယ္စရိုက္',
+      Language.karen: 'မဟာဘုတ်နှင့် ပင်ကိုယ်စရိုက်',
+      Language.mon: 'မဟာဘုတ် ကေုာံ ပင်ကိုယ်စရိုက်',
+      Language.shan: 'မႁႃႇပုတ်ႉ လႄႈ တၢင်းပဵၼ်ၵူၼ်း',
+    },
+    'General Info': {
+      Language.english: 'General Info',
+      Language.myanmar: 'အထွေထွေ အချက်အလက်',
+      Language.zawgyi: 'အထွေထွေ အခ်က္အလက္',
+      Language.karen: 'အထွေထွေ အချက်အလက်',
+      Language.mon: 'တင်ဂၞင် အထွေထွေ',
+      Language.shan: 'ၶေႃႈမုၼ်း တၢင်းၵူႈလွင်ႈ',
+    },
+    'Year Name': {
+      Language.english: 'Year Name',
+      Language.myanmar: 'နှစ်နာမည်',
+      Language.zawgyi: 'နှစ္နာမည္',
+      Language.karen: 'နှစ်နာမည်',
+      Language.mon: 'ယၟုသၞာံ',
+      Language.shan: 'ၸိုဝ်ႈပီႊ',
+    },
+    'Naga Head': {
+      Language.english: 'Naga Head',
+      Language.myanmar: 'နဂါးခေါင်း',
+      Language.zawgyi: 'နဂါ္ခေါင္း',
+      Language.karen: 'နဂါးခေါင်း',
+      Language.mon: 'က္ဍိုပ်နာ်',
+      Language.shan: 'ႁူဝ်ၼၵႃး',
+    },
+    'Religious Day': {
+      Language.english: 'Religious Day',
+      Language.myanmar: 'သာသနာရေးဆိုင်ရာနေ့',
+      Language.zawgyi: 'သာသနာရေးဆိုင္ရာနေ့',
+      Language.karen: 'သာသနာရေးဆိုင်ရာနေ့',
+      Language.mon: 'တ္ၚဲသာသနာ',
+      Language.shan: 'ဝၼ်းသႃႇသၼႃႇ',
+    },
+    'no_events_msg': {
+      Language.english: 'No significant astrological events for this day.',
+      Language.myanmar: 'ယနေ့အတွက် ထူးခြားသော နက္ခတ်ဗေဒ ဖြစ်ရပ်များ မရှိပါ။',
+      Language.zawgyi: 'ယန့္အတ္က္ ထူးခြားသား နကၡတ္ဗေဒ ဖြစ္ရပ္များ မရွိပါ။',
+      Language.karen: 'ယနေ့အတွက် ထူးခြားသော ဖြစ်ရပ်များ မရှိပါ။',
+      Language.mon: 'သွက်တ္ၚဲဝွံ တင်ဂၞင်ထူးခြား ဟွံမွဲရ။',
+      Language.shan: 'ဝၼ်းမိူဝ်ႈၼႆႉ ဢမ်ႇမီးလွင်ႈထူးၸႃး။',
+    },
+    'year_name_desc': {
+      Language.english: 'This year is known as @year in the 12-year cycle.',
+      Language.myanmar: 'ဤနှစ်သည် ၁၂ နှစ်စက်ဝန်းတွင် @year နှစ်ဟု လူသိများသည်။',
+      Language.zawgyi:
+          'ဤနှစ္သည္ ၁၂ နှစ္စက္ဝန္းတ္ောင္း @year နှစ္ဟု လူသိမ္းသည္။',
+      Language.karen: 'သၞာံဝွံ လူသိများသည္ @year သၞာံ။',
+      Language.mon: 'သၞာံဝွံ ပ္ဍဲသၞာံ ၁၂ ဂဟ် ဒှ်သၞာံ @year ရ။',
+      Language.shan: 'ပီႊၼႆႉ ပဵၼ်ပီႊ @year ၼႂ်းပီႊ ၁၂ မိူဝ်ႈ။',
+    },
+    'naga_head_desc': {
+      Language.english:
+          'The head of the Naga is turned towards @dir. It is recommended to avoid facing this direction for important travels.',
+      Language.myanmar:
+          'နဂါးခေါင်းသည် @dir ဘက်သို့ လှည့်နေသည်။ အရေးကြီးသော ခရီးသွားလာမှုများအတွက် ဤဘက်သို့ မျက်နှာမူခြင်းကို ရှောင်ကြဉ်ရန် အကြံပြုထားသည်။',
+      Language.zawgyi:
+          'နဂါ္ခေါင္းသည္ @dir ဘက္သို့ လှည္နေသည္။ အရေးက္ော့သော ခရီးသွားလာမှုမ်ားအတ္က္တွက္ ဤဘက္သို့ မျက်န္ာမူခြင္းကို ရှောင္ကြည္ရန္ အကြံပိုးထားသည္။',
+      Language.karen: 'နဂါးခေါင်း @dir ဘက်သို့ လှည့်နေသည်။',
+      Language.mon: 'က္ဍိုပ်နာ် ဝွံ ဝေင်ဂရီုမံင် လ္ပာ် @dir ရ။',
+      Language.shan: 'ႁူဝ်ၼၵႃး ဝၢႆႇၵႂႃႇတၢင်း @dir။',
+    },
+    'today_is_msg': {
+      Language.english: 'Today is @day.',
+      Language.myanmar: 'ယနေ့သည် @day ဖြစ်သည်။',
+      Language.zawgyi: 'ယန့္သည္ @day ဖြစ္သည္။',
+      Language.karen: 'ယနေ့သည် @day ဖြစ်သည်။',
+      Language.mon: 'တ္ၚဲဝွံ ဒှ်တ္ၚဲ @day ရ။',
+      Language.shan: 'ဝၼ်းမိူဝ်ႈၼႆႉ ပဵၼ်ဝၼ်း @day။',
     },
     'Nakhat': {
       Language.english: 'Nakhat',

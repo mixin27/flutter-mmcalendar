@@ -74,6 +74,7 @@ import 'src/models/validation_result.dart';
 import 'src/models/western_date.dart';
 import 'src/services/chronicle_service.dart';
 import 'src/services/myanmar_calendar_service.dart';
+import 'src/utils/astro_details.dart';
 import 'src/utils/calendar_utils.dart';
 import 'src/utils/package_constants.dart';
 import 'src/utils/shan_calendar_constants.dart';
@@ -108,6 +109,7 @@ export 'src/services/holiday_calculator.dart';
 export 'src/services/myanmar_calendar_service.dart';
 // Utils
 export 'src/utils/accessibility_utils.dart';
+export 'src/utils/astro_details.dart';
 export 'src/utils/calendar_constants.dart';
 export 'src/utils/calendar_utils.dart';
 export 'src/utils/chronicle_dynasties.dart';
@@ -118,6 +120,8 @@ export 'src/utils/package_constants.dart';
 // Performance and Accessibility
 export 'src/utils/performance_utils.dart';
 // Widgets
+export 'src/widgets/calendar_selection_mode.dart';
+export 'src/widgets/horoscope_widget.dart';
 export 'src/widgets/moon/moon_phase_indicator.dart';
 export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';
@@ -474,11 +478,28 @@ class MyanmarCalendar {
   }
 
   /// Get Western dates for a Myanmar month
-  ///
-  /// Returns a list of [DateTime] objects representing the Western
-  /// calendar equivalents for all days in the Myanmar month.
   static List<DateTime> getWesternDatesForMyanmarMonth(int year, int month) {
     return _serviceInstance.getWesternDatesForMyanmarMonth(year, month);
+  }
+
+  /// Find auspicious days for a given Myanmar month and year
+  static List<CompleteDate> findAuspiciousDays(int year, int month) {
+    return _serviceInstance.findAuspiciousDays(year, month);
+  }
+
+  /// Get description for Nakhat type
+  static String getNakhatDescription(String nakhat) {
+    return AstroDetails.getNakhatDescription(nakhat);
+  }
+
+  /// Get characteristics for Mahabote type
+  static String getMahaboteCharacteristics(String mahabote) {
+    return AstroDetails.getMahaboteCharacteristics(mahabote);
+  }
+
+  /// Get description for astrological days
+  static String getAstrologicalDayDescription(String dayName) {
+    return AstroDetails.getAstrologicalDayDescription(dayName);
   }
 
   // ============================================================================
