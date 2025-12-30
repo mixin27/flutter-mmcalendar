@@ -1,11 +1,21 @@
 name: Flutter CI/CD
 
 on:
-  # Runs on PRs and main branch
+  # Runs on PRs and main/develop branches
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - 'screenshots/**'
+      - '.gitignore'
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - 'screenshots/**'
+      - '.gitignore'
 
 jobs:
   build:
