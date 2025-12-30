@@ -464,6 +464,83 @@ print(prompt);
 - `AIPromptType.fortuneTelling`: Focus on future trends, wealth, and success.
 - `AIPromptType.divination`: Spiritual guidance, inner growth, and overcoming obstacles.
 
+### Sample Prompts
+
+**Horoscope**
+
+```markdown
+Please provide a detailed horoscope reading based on the following Myanmar astrological details:
+
+Western Date: Mon 1998-07-27 00:00:00
+Myanmar Date: 1360 Wagaung Waxing 04
+
+Nakhat: Elf
+Description: Elf Nakhat (De-wa-Nakhat) is associated with grace, beauty, and celestial harmony. It is ideal for peaceful and creative pursuits.
+
+Mahabote: Binga
+Characteristics: Binga (The Restless) indicates a character that is energetic, versatile, but may struggle with focus or stability.
+
+Astrological Days:
+- Thamanyo: Thamanyo (The Restrainer) is an inauspicious day for starting new ventures or travel.
+- Warameittugyi: Warameittugyi (Major Bad Friend) is an inauspicious day particularly for social or collaborative work.
+- Yatpote: Yatpote (Rotten Day) is considered poor for activities involving food, agriculture, or durable goods.
+- Nagapor: Nagapor (Dragon Burden) is inauspicious for construction or ground-breaking activities.
+
+Naga Head: North
+
+Please analyze these details based on traditional Myanmar astrology and provide insights into personality, career, and health for the near future.
+```
+
+**Fortune Telling**
+
+```markdown
+Please provide a professional fortune-telling reading based on these Burmese astrological details:
+
+Western Date: Mon 1998-07-27 00:00:00
+Myanmar Date: 1360 Wagaung Waxing 04
+
+Nakhat: Elf
+Description: Elf Nakhat (De-wa-Nakhat) is associated with grace, beauty, and celestial harmony. It is ideal for peaceful and creative pursuits.
+
+Mahabote: Binga
+Characteristics: Binga (The Restless) indicates a character that is energetic, versatile, but may struggle with focus or stability.
+
+Astrological Days:
+- Thamanyo: Thamanyo (The Restrainer) is an inauspicious day for starting new ventures or travel.
+- Warameittugyi: Warameittugyi (Major Bad Friend) is an inauspicious day particularly for social or collaborative work.
+- Yatpote: Yatpote (Rotten Day) is considered poor for activities involving food, agriculture, or durable goods.
+- Nagapor: Nagapor (Dragon Burden) is inauspicious for construction or ground-breaking activities.
+
+Naga Head: North
+
+Focus on predicting future trends in wealth, relationships, and success. Provide specific guidance and remedies if applicable according to Burmese tradition.
+```
+
+**Divination**
+
+```markdown
+Use these astrological indicators for a divination session to provide spiritual guidance:
+
+Western Date: Mon 1998-07-27 00:00:00
+Myanmar Date: 1360 Wagaung Waxing 04
+
+Nakhat: Elf
+Description: Elf Nakhat (De-wa-Nakhat) is associated with grace, beauty, and celestial harmony. It is ideal for peaceful and creative pursuits.
+
+Mahabote: Binga
+Characteristics: Binga (The Restless) indicates a character that is energetic, versatile, but may struggle with focus or stability.
+
+Astrological Days:
+- Thamanyo: Thamanyo (The Restrainer) is an inauspicious day for starting new ventures or travel.
+- Warameittugyi: Warameittugyi (Major Bad Friend) is an inauspicious day particularly for social or collaborative work.
+- Yatpote: Yatpote (Rotten Day) is considered poor for activities involving food, agriculture, or durable goods.
+- Nagapor: Nagapor (Dragon Burden) is inauspicious for construction or ground-breaking activities.
+
+Naga Head: North
+
+Provide a deep, intuitive reading focused on the spiritual path, inner growth, and overcoming obstacles.
+```
+
 ## Date Arithmetic and Utilities
 
 ### Basic Operations
