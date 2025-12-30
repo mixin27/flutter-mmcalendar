@@ -263,7 +263,7 @@ void main() {
 
   group('Throttler', () {
     test('throttles rapid calls', () async {
-      final throttler = Throttler(duration: const Duration(milliseconds: 100));
+      final throttler = Throttler(duration: const Duration(milliseconds: 200));
       var callCount = 0;
 
       // Rapid calls

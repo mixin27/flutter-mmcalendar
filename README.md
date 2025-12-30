@@ -3,7 +3,7 @@
 A comprehensive Flutter package for Myanmar calendar system with full support for date conversions, astrological calculations, holidays, and beautiful UI widgets.
 
 [![Flutter CI/CD](https://github.com/mixin27/flutter-mmcalendar/actions/workflows/flutter.yaml/badge.svg)](https://github.com/mixin27/flutter-mmcalendar/actions/workflows/flutter.yaml)
-[![codecov](https://codecov.io/github/mixin27/flutter-mmcalendar/graph/badge.svg?token=80WY0QH374)](https://codecov.io/github/mixin27/flutter-mmcalendar)
+[![codecov](https://codecov.io/gh/mixin27/flutter-mmcalendar/branch/develop/graph/badge.svg?token=80WY0QH374)](https://codecov.io/gh/mixin27/flutter-mmcalendar)
 [![pub package](https://img.shields.io/pub/v/flutter_mmcalendar.svg)](https://pub.dartlang.org/packages/flutter_mmcalendar)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 

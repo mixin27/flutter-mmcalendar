@@ -26,7 +26,8 @@ class LRUCache<K, V> {
   int _evictions = 0;
 
   /// Create an LRU cache with the specified maximum size
-  LRUCache(this.maxSize) : _cache = LinkedHashMap<K, _CacheEntry<V>>();
+  LRUCache({required this.maxSize})
+    : _cache = LinkedHashMap<K, _CacheEntry<V>>();
 
   /// Get a value from the cache
   ///

@@ -5,6 +5,11 @@ import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 void main() {
   group('MyanmarCalendarWidget Selection Tests', () {
     testWidgets('Single selection mode works', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       DateTime? selectedDate;
       await tester.pumpWidget(
         MaterialApp(
@@ -31,6 +36,11 @@ void main() {
     });
 
     testWidgets('Range selection mode works', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       DateTime? rangeStart;
       DateTime? rangeEnd;
       await tester.pumpWidget(
@@ -61,6 +71,11 @@ void main() {
     });
 
     testWidgets('Multi selection mode works', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(800, 1000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       List<DateTime> selectedDates = [];
       await tester.pumpWidget(
         MaterialApp(
