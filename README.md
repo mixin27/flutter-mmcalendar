@@ -210,7 +210,7 @@ final duration = mdt.difference(other);
 
 // Formatting
 final myanmarFormat = mdt.formatMyanmar('&y &M &P &ff');
-final westernFormat = mdt.formatWestern('%d-%m-%Y');
+final westernFormat = mdt.formatWestern('%d-%m-%yyyy');
 final complete = mdt.formatComplete();
 
 // Comparisons
@@ -387,13 +387,13 @@ final formatted = date.formatMyanmar('&y ခုနှစ် &M &P &ff');
 
 ```dart
 // Available patterns
-'%Y'     // Year (e.g., 2024)
+'%yyyy'     // Year (e.g., 2024)
 '%M'     // Month name (e.g., January)
 '%d'     // Day (e.g., 01)
 '%w'     // Weekday name (e.g., Monday)
 
 // Example usage
-final formatted = date.formatWestern('%d %M %Y');
+final formatted = date.formatWestern('%d %M %yyyy');
 // Output: 01 January 2024
 ```
 
