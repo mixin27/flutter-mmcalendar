@@ -1,6 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
-import 'package:flutter_mmcalendar/src/localization/language.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('AIPromptService & MyanmarCalendar AI Prompt Tests', () {

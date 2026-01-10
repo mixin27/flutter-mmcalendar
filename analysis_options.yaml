@@ -10,6 +10,8 @@ linter:
     public_member_api_docs: true
 
 analyzer:
+  errors:
+    avoid_redundant_argument_values: ignore
+    unused_local_variable: ignore
   exclude:
-    - test/**
     - local_tools/**
