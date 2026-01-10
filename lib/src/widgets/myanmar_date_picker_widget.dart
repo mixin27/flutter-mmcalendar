@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mmcalendar/src/core/calendar_config.dart';
-import 'package:flutter_mmcalendar/src/core/myanmar_calendar_theme.dart';
-import 'package:flutter_mmcalendar/src/localization/language.dart';
-import 'package:flutter_mmcalendar/src/localization/translation_service.dart';
-import 'package:flutter_mmcalendar/src/models/complete_date.dart';
-import 'package:flutter_mmcalendar/src/services/myanmar_calendar_service.dart';
+import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
+import '../core/myanmar_calendar_theme.dart';
 import 'myanmar_calendar_widget.dart';
 
 /// A comprehensive Myanmar Date Picker widget for Flutter applications

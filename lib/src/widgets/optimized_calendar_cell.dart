@@ -8,10 +8,9 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 import '../core/myanmar_calendar_theme.dart';
-import '../localization/language.dart';
-import '../models/complete_date.dart';
 import '../utils/accessibility_utils.dart';
 
 /// An optimized calendar cell widget

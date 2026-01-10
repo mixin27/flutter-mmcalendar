@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Shan Calendar Tests', () {

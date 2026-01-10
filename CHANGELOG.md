@@ -1,3 +1,7 @@
+## 3.2.4
+
+- Separate core calendar logic implementations by [myanmar_calendar_dart](https://pub.dev/packages/myanmar_calendar_dart) package
+
 ## 3.2.3
 
 ### 🎉 New Features

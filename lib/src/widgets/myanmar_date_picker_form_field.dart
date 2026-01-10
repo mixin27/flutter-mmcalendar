@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mmcalendar/src/core/myanmar_calendar_theme.dart';
-import 'package:flutter_mmcalendar/src/core/myanmar_date_time.dart';
-import 'package:flutter_mmcalendar/src/localization/language.dart';
+import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
+import '../core/myanmar_calendar_theme.dart';
 import 'myanmar_date_picker_widget.dart';
 
 /// Compact Myanmar date picker widget for forms

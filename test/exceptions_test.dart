@@ -1,7 +1,7 @@
-/// Tests for custom exception classes
+import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_mmcalendar/src/exceptions/calendar_exceptions.dart';
 
+/// Tests for custom exception classes
 void main() {
   group('InvalidMyanmarDateException', () {
     test('creates exception with correct message and details', () {

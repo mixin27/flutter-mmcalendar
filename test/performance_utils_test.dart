@@ -1,7 +1,7 @@
-/// Tests for performance utilities
+import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_mmcalendar/src/utils/performance_utils.dart';
 
+/// Tests for performance utilities
 void main() {
   group('LRUCache', () {
     test('stores and retrieves values', () {

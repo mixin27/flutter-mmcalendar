@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mmcalendar/src/core/calendar_config.dart';
-import 'package:flutter_mmcalendar/src/core/myanmar_calendar_theme.dart';
-import 'package:flutter_mmcalendar/src/localization/language.dart';
-import 'package:flutter_mmcalendar/src/localization/translation_service.dart';
-import 'package:flutter_mmcalendar/src/models/complete_date.dart';
-import 'package:flutter_mmcalendar/src/services/myanmar_calendar_service.dart';
-import 'package:flutter_mmcalendar/src/utils/package_constants.dart';
-import 'package:flutter_mmcalendar/src/widgets/optimized_calendar_cell.dart';
+import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart'
+    hide PackageConstants;
 
-import '../models/shan_date.dart';
+import '../core/myanmar_calendar_theme.dart';
+import '../utils/package_constants.dart';
 import 'calendar_selection_mode.dart';
+import 'optimized_calendar_cell.dart';
 
 /// A comprehensive Myanmar Calendar widget for Flutter applications
 ///

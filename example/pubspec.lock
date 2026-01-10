@@ -146,6 +146,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  myanmar_calendar_dart:
+    dependency: transitive
+    description:
+      name: myanmar_calendar_dart
+      sha256: ba7a70677ae448f844f7bd26c3864cc95ab2c6e73f7d083bf020a7047b0a8e6a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   path:
     dependency: transitive
     description:
