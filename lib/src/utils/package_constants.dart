@@ -1,5 +1,4 @@
-import 'package:flutter_mmcalendar/src/core/calendar_config.dart';
-import 'package:flutter_mmcalendar/src/localization/language.dart';
+import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 /// Package-wide constants for Myanmar Calendar
 ///
