@@ -1,3 +1,13 @@
+## 3.2.6
+
+- bumps: `myanmar_calendar_dart: ^1.1.3`
+- fix: custom holidays cache and complete date isToday wrong condition
+- fix: `MyanmarDatePickerWidget` layout issue
+
+## 3.2.5
+
+- bumps: `myanmar_calendar_dart: ^1.1.0`
+
 ## 3.2.4
 
 - Separate core calendar logic implementations by [myanmar_calendar_dart](https://pub.dev/packages/myanmar_calendar_dart) package
