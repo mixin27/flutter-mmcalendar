@@ -348,10 +348,14 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height ?? 560,
-      width: widget.width ?? 400,
+      height: widget.height,
+      width: widget.width,
       padding: widget.padding ?? const EdgeInsets.all(16.0),
       margin: widget.margin,
+      constraints: BoxConstraints(
+        maxWidth: widget.width ?? 400,
+        maxHeight: widget.height ?? double.infinity,
+      ),
       decoration: BoxDecoration(
         color: _theme.backgroundColor,
         borderRadius: BorderRadius.circular(12),
@@ -364,10 +368,11 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (widget.helpText != null) _buildHelpText(),
           if (_currentView == _calendarView) _buildTabBar(),
-          Expanded(child: _buildCurrentView()),
+          Flexible(child: _buildCurrentView()),
           if (widget.showTodayButton ||
               widget.showClearButton ||
               widget.showActionButtons)
@@ -451,32 +456,32 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
 
   /// Build calendar view
   Widget _buildCalendarView() {
-    return TabBarView(
-      controller: _tabController,
-      children: [
-        // Calendar tab
-        MyanmarCalendarWidget(
-          initialDate: _currentDate,
-          language: widget.language,
-          config: widget.config,
-          onDateSelected: _onDateSelected,
-          onMonthChanged: _onMonthChanged,
-          showHolidays: widget.showHolidays,
-          showAstrology: widget.showAstrology,
-          showWesternDates: widget.showWesternDates,
-          showMyanmarDates: widget.showMyanmarDates,
-          selectedDate: _selectedDate,
-          minDate: widget.firstDate,
-          maxDate: widget.lastDate,
-          highlightToday: widget.highlightToday,
-          highlightWeekends: widget.highlightWeekends,
-          firstDayOfWeek: widget.firstDayOfWeek,
-          theme: widget.theme ?? MyanmarCalendarTheme.defaultTheme(),
-        ),
-
-        // Year overview tab - with month access
-        _buildYearOverview(),
-      ],
+    return AnimatedBuilder(
+      animation: _tabController,
+      builder: (context, child) {
+        if (_tabController.index == 0) {
+          return MyanmarCalendarWidget(
+            initialDate: _currentDate,
+            language: widget.language,
+            config: widget.config,
+            onDateSelected: _onDateSelected,
+            onMonthChanged: _onMonthChanged,
+            showHolidays: widget.showHolidays,
+            showAstrology: widget.showAstrology,
+            showWesternDates: widget.showWesternDates,
+            showMyanmarDates: widget.showMyanmarDates,
+            selectedDate: _selectedDate,
+            minDate: widget.firstDate,
+            maxDate: widget.lastDate,
+            highlightToday: widget.highlightToday,
+            highlightWeekends: widget.highlightWeekends,
+            firstDayOfWeek: widget.firstDayOfWeek,
+            theme: widget.theme ?? MyanmarCalendarTheme.defaultTheme(),
+          );
+        } else {
+          return _buildYearOverview();
+        }
+      },
     );
   }
 
@@ -485,6 +490,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
     final currentYear = _currentDate.year;
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         // Year navigation
         Container(
@@ -532,66 +538,65 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
         ),
 
         // Month grid
-        Expanded(
-          child: GridView.builder(
-            padding: const EdgeInsets.all(8),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1.5,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-            ),
-            itemCount: 12,
-            itemBuilder: (context, index) {
-              final month = index + 1;
-              // final monthDate = DateTime(currentYear, month, 1);
-              final isSelected =
-                  _selectedDate != null &&
-                  _selectedDate!.year == currentYear &&
-                  _selectedDate!.month == month;
+        GridView.builder(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(8),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 1.5,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: 12,
+          itemBuilder: (context, index) {
+            final month = index + 1;
+            // final monthDate = DateTime(currentYear, month, 1);
+            final isSelected =
+                _selectedDate != null &&
+                _selectedDate!.year == currentYear &&
+                _selectedDate!.month == month;
 
-              // Improved month name handling
-              final monthName = _getImprovedMonthName(month);
+            // Improved month name handling
+            final monthName = _getImprovedMonthName(month);
 
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _currentDate = DateTime(_currentDate.year, month);
-                  });
-                  _tabController.animateTo(0); // Switch to calendar tab
-                },
-                child: Container(
-                  decoration: isSelected
-                      ? BoxDecoration(
-                          color: _theme.headerBackgroundColor,
-                          borderRadius: BorderRadius.circular(8),
-                        )
-                      : BoxDecoration(
-                          border: Border.all(
-                            color: _theme.borderColor.withValues(alpha: 0.3),
-                          ),
-                          borderRadius: BorderRadius.circular(8),
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _currentDate = DateTime(_currentDate.year, month);
+                });
+                _tabController.animateTo(0); // Switch to calendar tab
+              },
+              child: Container(
+                decoration: isSelected
+                    ? BoxDecoration(
+                        color: _theme.headerBackgroundColor,
+                        borderRadius: BorderRadius.circular(8),
+                      )
+                    : BoxDecoration(
+                        border: Border.all(
+                          color: _theme.borderColor.withValues(alpha: 0.3),
                         ),
-                  child: Center(
-                    child: Text(
-                      monthName,
-                      style: isSelected
-                          ? TextStyle(
-                              color: _theme.headerTextColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            )
-                          : TextStyle(
-                              color: _theme.dateCellTextColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                    ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                child: Center(
+                  child: Text(
+                    monthName,
+                    style: isSelected
+                        ? TextStyle(
+                            color: _theme.headerTextColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          )
+                        : TextStyle(
+                            color: _theme.dateCellTextColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ],
     );
@@ -603,6 +608,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
     final startYear = (currentYear / 10).floor() * 10;
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         // Year range header
         Container(
@@ -639,69 +645,68 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
         ),
 
         // Year grid
-        Expanded(
-          child: GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              childAspectRatio: 1.5,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-            ),
-            itemCount: 12, // Show 12 years
-            itemBuilder: (context, index) {
-              final year =
-                  startYear + index - 1; // Start one year before for better UX
-              final isSelected = year == currentYear;
-              final isSelectable = _isYearSelectable(year);
+        GridView.builder(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            childAspectRatio: 1.5,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: 12, // Show 12 years
+          itemBuilder: (context, index) {
+            final year =
+                startYear + index - 1; // Start one year before for better UX
+            final isSelected = year == currentYear;
+            final isSelectable = _isYearSelectable(year);
 
-              return GestureDetector(
-                onTap: isSelectable
-                    ? () {
-                        setState(() {
-                          _currentDate = DateTime(year, _currentDate.month);
-                        });
-                        _showCalendarView();
-                      }
-                    : null,
-                child: Container(
-                  decoration: isSelected
-                      ? BoxDecoration(
-                          color: _theme.headerBackgroundColor,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        )
-                      : BoxDecoration(
-                          border: Border.all(
-                            color: _theme.borderColor.withValues(alpha: 0.3),
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                          color: _theme.backgroundColor,
+            return GestureDetector(
+              onTap: isSelectable
+                  ? () {
+                      setState(() {
+                        _currentDate = DateTime(year, _currentDate.month);
+                      });
+                      _showCalendarView();
+                    }
+                  : null,
+              child: Container(
+                decoration: isSelected
+                    ? BoxDecoration(
+                        color: _theme.headerBackgroundColor,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      )
+                    : BoxDecoration(
+                        border: Border.all(
+                          color: _theme.borderColor.withValues(alpha: 0.3),
                         ),
-                  child: Center(
-                    child: Text(
-                      year.toString(),
-                      style: isSelected
-                          ? TextStyle(
-                              color: _theme.headerTextColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            )
-                          : isSelectable
-                          ? TextStyle(
-                              color: _theme.dateCellTextColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            )
-                          : TextStyle(
-                              color: _theme.disabledDateTextColor,
-                              fontSize: 16,
-                            ),
-                    ),
+                        borderRadius: BorderRadius.circular(8),
+                        color: _theme.backgroundColor,
+                      ),
+                child: Center(
+                  child: Text(
+                    year.toString(),
+                    style: isSelected
+                        ? TextStyle(
+                            color: _theme.headerTextColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )
+                        : isSelectable
+                        ? TextStyle(
+                            color: _theme.dateCellTextColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          )
+                        : TextStyle(
+                            color: _theme.disabledDateTextColor,
+                            fontSize: 16,
+                          ),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
 
         // Back button
@@ -736,6 +741,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
   /// Build month selection view
   Widget _buildMonthView() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         // Year display with tap to show year view
         Container(
@@ -755,68 +761,65 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
         ),
 
         // Month grid
-        Expanded(
-          child: GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 2.0,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-            ),
-            itemCount: 12,
-            itemBuilder: (context, index) {
-              final month = index + 1;
-              final isSelected =
-                  _selectedDate != null &&
-                  _selectedDate!.year == _currentDate.year &&
-                  _selectedDate!.month == month;
+        GridView.builder(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 2.0,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: 12,
+          itemBuilder: (context, index) {
+            final month = index + 1;
+            final isSelected =
+                _selectedDate != null &&
+                _selectedDate!.year == _currentDate.year &&
+                _selectedDate!.month == month;
 
-              final monthName = _getImprovedMonthName(month);
+            final monthName = _getImprovedMonthName(month);
 
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _currentDate = DateTime(_currentDate.year, month);
-                  });
-                  _showCalendarView();
-                },
-                child: Container(
-                  decoration: isSelected
-                      ? BoxDecoration(
-                          color: _theme.headerBackgroundColor,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        )
-                      : BoxDecoration(
-                          border: Border.all(
-                            color: _theme.headerBackgroundColor,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                          color: _theme.headerBackgroundColor.withValues(
-                            alpha: 0.3,
-                          ),
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _currentDate = DateTime(_currentDate.year, month);
+                });
+                _showCalendarView();
+              },
+              child: Container(
+                decoration: isSelected
+                    ? BoxDecoration(
+                        color: _theme.headerBackgroundColor,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      )
+                    : BoxDecoration(
+                        border: Border.all(color: _theme.headerBackgroundColor),
+                        borderRadius: BorderRadius.circular(8),
+                        color: _theme.headerBackgroundColor.withValues(
+                          alpha: 0.3,
                         ),
-                  child: Center(
-                    child: Text(
-                      monthName,
-                      style: isSelected
-                          ? TextStyle(
-                              color: _theme.headerTextColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            )
-                          : TextStyle(
-                              color: _theme.dateCellTextColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      textAlign: TextAlign.center,
-                    ),
+                      ),
+                child: Center(
+                  child: Text(
+                    monthName,
+                    style: isSelected
+                        ? TextStyle(
+                            color: _theme.headerTextColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          )
+                        : TextStyle(
+                            color: _theme.dateCellTextColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
 
         // Back button
@@ -842,6 +845,7 @@ class _MyanmarDatePickerWidgetState extends State<MyanmarDatePickerWidget>
     return Container(
       padding: const EdgeInsets.only(top: 16),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
@@ -1075,8 +1079,6 @@ Future<CompleteDate?> showMyanmarDatePicker({
           highlightWeekends: highlightWeekends,
           isModal: true,
           showActionButtons: true,
-          height: 640,
-          width: 400,
           onConfirm: (date) {
             Navigator.of(context).pop(date);
           },
