@@ -139,6 +139,7 @@ class OptimizedCalendarCell extends StatelessWidget {
       children: [
         // Western date number
         Text('${date.westernDay}', style: _getTextStyle(context)),
+
         // Optional indicators
         if (showHolidays && date.hasHolidays) ...[
           const SizedBox(height: 2),

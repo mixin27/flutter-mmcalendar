@@ -1075,7 +1075,7 @@ Future<CompleteDate?> showMyanmarDatePicker({
           highlightWeekends: highlightWeekends,
           isModal: true,
           showActionButtons: true,
-          height: 590,
+          height: 640,
           width: 400,
           onConfirm: (date) {
             Navigator.of(context).pop(date);

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
@@ -51,6 +53,7 @@ class _CalendarDemoPageState extends State<CalendarDemoPage> {
                   setState(() {
                     _selectedDate = date;
                   });
+                  log('Holidays: ${date.allHolidays.toString()}');
                 },
                 highlightToday: true,
                 highlightWeekends: true,
@@ -121,6 +124,7 @@ class _CalendarDemoPageState extends State<CalendarDemoPage> {
           Divider(),
 
           // Basic date info
+          _buildInfoRow("Has holiday", date.allHolidays.toString()),
           _buildInfoRow('Sasana Year', date.formatMyanmar(pattern: '&Sy')),
           _buildInfoRow('Myanmar Date', date.formatMyanmar()),
           _buildInfoRow('Western Date', date.formatWestern()),

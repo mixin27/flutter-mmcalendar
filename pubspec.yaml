@@ -14,7 +14,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  myanmar_calendar_dart: ^1.1.0
+  myanmar_calendar_dart: ^1.1.3
 
 dev_dependencies:
   flutter_test:
