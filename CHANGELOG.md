@@ -1,3 +1,8 @@
+## 3.2.7
+
+- bumps: `myanmar_calendar_dart: ^1.1.4`
+- Add support for flexible holidays configuration to disable holidays globally or for a specific year.
+
 ## 3.2.6
 
 - bumps: `myanmar_calendar_dart: ^1.1.3`
