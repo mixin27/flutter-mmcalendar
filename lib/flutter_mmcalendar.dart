@@ -69,18 +69,17 @@ export 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart'
 
 // Configuration
 export 'src/core/myanmar_calendar_theme.dart';
-
 // Utils
 export 'src/utils/accessibility_utils.dart';
 export 'src/utils/package_constants.dart';
-
 // Performance and Accessibility
 export 'src/utils/performance_utils.dart';
-
 // Widgets
 export 'src/widgets/calendar_selection_mode.dart';
 export 'src/widgets/horoscope_widget.dart';
+export 'src/widgets/moon/daily_moon_phase.dart';
 export 'src/widgets/moon/moon_phase_indicator.dart';
+export 'src/widgets/moon/optimized_moon_phase.dart';
 export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';
 export 'src/widgets/optimized_calendar_cell.dart';
