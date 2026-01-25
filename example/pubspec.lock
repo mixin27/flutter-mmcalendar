@@ -76,7 +76,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.2.7"
+    version: "3.2.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -150,10 +150,10 @@ packages:
     dependency: transitive
     description:
       name: myanmar_calendar_dart
-      sha256: "4e9c6c7344c408bfc6ee8d8ea0a4cf81a6259a630cec9bf1a8d4a67fe561d669"
+      sha256: "52f825438d87aefcbf0140f0e03da2866cc8aa8e214bb7a4c32becbc8c324e0d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.4"
+    version: "1.1.5"
   path:
     dependency: transitive
     description:

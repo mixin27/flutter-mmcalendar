@@ -1,3 +1,8 @@
+## 3.2.8
+
+- bumps `myanmar_calendar_dart: ^1.1.5`
+- Add moon phase widgets - `OptimizedMoonPhaseWidget` and `DailyMoonPhaseWidget`
+
 ## 3.2.7
 
 - bumps: `myanmar_calendar_dart: ^1.1.4`
