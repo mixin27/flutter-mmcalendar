@@ -1,6 +1,6 @@
 name: flutter_mmcalendar
 description: "A comprehensive Flutter package for Myanmar calendar with date conversions, astrological calculations, and multi-language support"
-version: 3.2.7
+version: 3.2.9
 homepage: https://github.com/mixin27/flutter-mmcalendar
 repository: https://github.com/mixin27/flutter-mmcalendar
 issue_tracker: https://github.com/mixin27/flutter-mmcalendar/issues
@@ -14,7 +14,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  myanmar_calendar_dart: ^1.1.4
+  myanmar_calendar_dart: ^1.1.5
 
 dev_dependencies:
   flutter_test:
