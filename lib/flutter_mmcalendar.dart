@@ -59,9 +59,14 @@
 /// For detailed documentation and examples, visit: https://pub.dev/packages/flutter_mmcalendar
 library;
 
-// Re-export myanmar_calendar_dart
-export 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart'
-    hide PackageConstants;
+// Re-export upstream package.
+export 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
+
+// Compatibility re-exports for APIs no longer exported at top-level in
+// myanmar_calendar_dart 2.x.
+export 'package:myanmar_calendar_dart/src/services/date_converter.dart';
+export 'package:myanmar_calendar_dart/src/services/myanmar_calendar_service.dart';
+export 'package:myanmar_calendar_dart/src/utils/astro_details.dart';
 
 // ============================================================================
 // CORE EXPORTS
@@ -77,9 +82,9 @@ export 'src/utils/performance_utils.dart';
 // Widgets
 export 'src/widgets/calendar_selection_mode.dart';
 export 'src/widgets/horoscope_widget.dart';
-export 'src/widgets/moon/daily_moon_phase.dart';
-export 'src/widgets/moon/moon_phase_indicator.dart';
-export 'src/widgets/moon/optimized_moon_phase.dart';
+export 'src/widgets/myanmar_calendar_toolbar.dart';
 export 'src/widgets/myanmar_calendar_widget.dart';
+export 'src/widgets/myanmar_date_picker_form_field.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';
+export 'src/widgets/myanmar_date_summary_card.dart';
 export 'src/widgets/optimized_calendar_cell.dart';

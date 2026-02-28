@@ -1,240 +1,122 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
-/// A widget that displays detailed astrological and horoscope information
+/// Rich astrological detail card with one-tap AI prompt generation.
 class HoroscopeWidget extends StatelessWidget {
-  /// The date to display horoscope for
-  final CompleteDate date;
-
-  final Language _language;
-
-  /// Primary color for headers
-  final Color? primaryColor;
-
-  /// Background color for the widget
-  final Color? backgroundColor;
-
-  /// Padding around the widget
-  final EdgeInsetsGeometry padding;
-
-  /// Create a new [HoroscopeWidget]
-  HoroscopeWidget({
+  const HoroscopeWidget({
     super.key,
     required this.date,
-    Language? language,
+    this.language = Language.english,
     this.primaryColor,
     this.backgroundColor,
-    this.padding = const EdgeInsets.all(16.0),
-  }) : _language = language ?? TranslationService.currentLanguage;
+    this.padding = const EdgeInsets.all(16),
+  });
+
+  final CompleteDate date;
+  final Language language;
+  final Color? primaryColor;
+  final Color? backgroundColor;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectivePrimaryColor = primaryColor ?? theme.colorScheme.primary;
+    final primary = primaryColor ?? theme.colorScheme.primary;
 
     return Container(
       padding: padding,
       decoration: BoxDecoration(
         color: backgroundColor ?? theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildHeader(effectivePrimaryColor),
-          const Divider(height: 24),
-          _buildSectionTitle(
-            TranslationService.translateTo('Astrological Days', _language),
-            effectivePrimaryColor,
+        children: <Widget>[
+          _buildHeader(primary),
+          const SizedBox(height: 14),
+          _buildAstroTags(),
+          const SizedBox(height: 14),
+          _InfoTile(
+            label: TranslationService.translateTo('Nakhat', language),
+            value: TranslationService.translateTo(date.astro.nakhat, language),
+            detail: MyanmarCalendar.getNakhatDescription(date.astro.nakhat),
           ),
-          _buildAstrologicalDays(),
-          const SizedBox(height: 16),
-          _buildSectionTitle(
-            TranslationService.translateTo('Nakhat & Year', _language),
-            effectivePrimaryColor,
-          ),
-          _buildDetailTile(
-            TranslationService.translateTo('Nakhat', _language),
-            TranslationService.translateTo(date.astro.nakhat, _language),
-            AstroDetails.getNakhatDescription(
-              date.astro.nakhat,
-              language: _language,
-            ),
-          ),
-          _buildDetailTile(
-            TranslationService.translateTo('Year Name', _language),
-            TranslationService.translateTo(date.astro.yearName, _language),
-            TranslationService.translateTo(
-              'year_name_desc',
-              _language,
-            ).replaceAll(
-              '@year',
-              TranslationService.translateTo(date.astro.yearName, _language),
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildSectionTitle(
-            TranslationService.translateTo(
-              'Mahabote & Characteristics',
-              _language,
-            ),
-            effectivePrimaryColor,
-          ),
-          _buildDetailTile(
-            TranslationService.translateTo('Mahabote', _language),
-            TranslationService.translateTo(date.astro.mahabote, _language),
-            AstroDetails.getMahaboteCharacteristics(
+          _InfoTile(
+            label: TranslationService.translateTo('Mahabote', language),
+            value: TranslationService.translateTo(
               date.astro.mahabote,
-              language: _language,
+              language,
+            ),
+            detail: MyanmarCalendar.getMahaboteCharacteristics(
+              date.astro.mahabote,
             ),
           ),
-          const SizedBox(height: 16),
-          _buildSectionTitle(
-            TranslationService.translateTo('General Info', _language),
-            effectivePrimaryColor,
-          ),
-          _buildDetailTile(
-            TranslationService.translateTo('Naga Head', _language),
-            TranslationService.translateTo(date.astro.nagahle, _language),
-            TranslationService.translateTo(
-              'naga_head_desc',
-              _language,
-            ).replaceAll(
-              '@dir',
-              TranslationService.translateTo(date.astro.nagahle, _language),
+          _InfoTile(
+            label: TranslationService.translateTo('Year Name', language),
+            value: TranslationService.translateTo(
+              date.astro.yearName,
+              language,
             ),
-          ),
-          if (date.astro.sabbath.isNotEmpty)
-            _buildDetailTile(
-              TranslationService.translateTo('Religious Day', _language),
-              TranslationService.translateTo(date.astro.sabbath, _language),
-              TranslationService.translateTo(
-                'today_is_msg',
-                _language,
-              ).replaceAll(
-                '@day',
-                TranslationService.translateTo(date.astro.sabbath, _language),
-              ),
-            ),
-          const SizedBox(height: 24),
-          _buildAIPromptButton(context, effectivePrimaryColor),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAIPromptButton(BuildContext context, Color primaryColor) {
-    return Center(
-      child: PopupMenuButton<AIPromptType>(
-        onSelected: (type) => _copyAIPrompt(context, type),
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: AIPromptType.horoscope,
-            child: Row(
-              children: [
-                const Icon(Icons.auto_awesome, size: 20),
-                const SizedBox(width: 12),
-                Text(TranslationService.translateTo('Horoscope', _language)),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: AIPromptType.fortuneTelling,
-            child: Row(
-              children: [
-                const Icon(Icons.monetization_on, size: 20),
-                const SizedBox(width: 12),
-                Text(
-                  TranslationService.translateTo('Fortune Telling', _language),
+            detail: TranslationService.translateTo('year_name_desc', language)
+                .replaceAll(
+                  '@year',
+                  TranslationService.translateTo(date.astro.yearName, language),
                 ),
-              ],
-            ),
           ),
-          PopupMenuItem(
-            value: AIPromptType.divination,
-            child: Row(
-              children: [
-                const Icon(Icons.self_improvement, size: 20),
-                const SizedBox(width: 12),
-                Text(TranslationService.translateTo('Divination', _language)),
-              ],
+          if (date.astro.nagahle.isNotEmpty)
+            _InfoTile(
+              label: TranslationService.translateTo('Naga Head', language),
+              value: TranslationService.translateTo(
+                date.astro.nagahle,
+                language,
+              ),
+              detail: TranslationService.translateTo('naga_head_desc', language)
+                  .replaceAll(
+                    '@dir',
+                    TranslationService.translateTo(
+                      date.astro.nagahle,
+                      language,
+                    ),
+                  ),
             ),
-          ),
+          const SizedBox(height: 14),
+          _buildPromptButton(context, primary),
         ],
-        child: ElevatedButton.icon(
-          onPressed: null, // PopupMenuButton handles tap
-          icon: const Icon(Icons.auto_awesome),
-          label: Text(
-            TranslationService.translateTo('Generate AI Prompt', _language),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
-            disabledBackgroundColor: primaryColor,
-            foregroundColor: Colors.white,
-            disabledForegroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-        ),
       ),
     );
   }
 
-  void _copyAIPrompt(BuildContext context, AIPromptType type) {
-    final prompt = MyanmarCalendar.generateAIPrompt(
-      date,
-      language: _language,
-      type: type,
+  Widget _buildHeader(Color primary) {
+    final myanmarDateText = MyanmarCalendar.formatMyanmar(
+      date.myanmar,
+      pattern: '&y &M &P &ff',
+      language: language,
     );
-    Clipboard.setData(ClipboardData(text: prompt)).then((_) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              TranslationService.translateTo('Prompt Copied', _language),
-            ),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
-    });
-  }
 
-  Widget _buildHeader(Color primaryColor) {
     return Row(
-      children: [
-        Icon(Icons.auto_awesome, color: primaryColor),
-        const SizedBox(width: 12),
+      children: <Widget>[
+        Icon(Icons.auto_awesome, color: primary),
+        const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               Text(
-                TranslationService.translateTo('Horoscope Details', _language),
+                TranslationService.translateTo('Horoscope Details', language),
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: primary,
                 ),
               ),
               Text(
-                date.myanmar.format(language: _language),
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                myanmarDateText,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),
@@ -243,136 +125,134 @@ class HoroscopeWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: color.withValues(alpha: 0.8),
-          letterSpacing: 1.1,
+  Widget _buildAstroTags() {
+    final tags = <String>[
+      if (date.astro.yatyaza.isNotEmpty) date.astro.yatyaza,
+      if (date.astro.pyathada.isNotEmpty) date.astro.pyathada,
+      ...date.astro.astrologicalDays,
+      if (date.astro.sabbath.isNotEmpty) date.astro.sabbath,
+    ];
+
+    if (tags.isEmpty) {
+      return Text(
+        TranslationService.translateTo('no_events_msg', language),
+        style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+      );
+    }
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: tags
+          .map(
+            (tag) => Chip(
+              label: Text(
+                TranslationService.translateTo(tag, language),
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              backgroundColor: Colors.indigo.withValues(alpha: 0.08),
+              side: BorderSide(color: Colors.indigo.withValues(alpha: 0.2)),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _buildPromptButton(BuildContext context, Color primary) {
+    return PopupMenuButton<AIPromptType>(
+      onSelected: (AIPromptType type) => _copyPrompt(context, type),
+      itemBuilder: (BuildContext context) {
+        return const <PopupMenuEntry<AIPromptType>>[
+          PopupMenuItem<AIPromptType>(
+            value: AIPromptType.horoscope,
+            child: Text('Horoscope'),
+          ),
+          PopupMenuItem<AIPromptType>(
+            value: AIPromptType.fortuneTelling,
+            child: Text('Fortune Telling'),
+          ),
+          PopupMenuItem<AIPromptType>(
+            value: AIPromptType.divination,
+            child: Text('Divination'),
+          ),
+        ];
+      },
+      child: FilledButton.icon(
+        onPressed: null,
+        icon: const Icon(Icons.copy_all),
+        label: Text(
+          TranslationService.translateTo('Generate AI Prompt', language),
+        ),
+        style: FilledButton.styleFrom(
+          backgroundColor: primary,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: primary,
+          disabledForegroundColor: Colors.white,
+          minimumSize: const Size(double.infinity, 44),
         ),
       ),
     );
   }
 
-  Widget _buildAstrologicalDays() {
-    final days = date.astro.astrologicalDays;
-    final yatyaza = date.astro.yatyaza;
-    final pyathada = date.astro.pyathada;
+  void _copyPrompt(BuildContext context, AIPromptType type) {
+    final prompt = MyanmarCalendar.generateAIPrompt(
+      date,
+      language: language,
+      type: type,
+    );
 
-    final allDays = <String>[];
-    if (yatyaza.isNotEmpty) allDays.add(yatyaza);
-    if (pyathada.isNotEmpty) allDays.add(pyathada);
-    allDays.addAll(days);
-
-    if (allDays.isEmpty) {
-      return Text(
-        TranslationService.translateTo('no_events_msg', _language),
-        style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
-      );
+    Clipboard.setData(ClipboardData(text: prompt));
+    if (!context.mounted) {
+      return;
     }
 
-    return Column(
-      children: allDays.map((day) {
-        final isGood =
-            day.toLowerCase() == 'yatyaza' ||
-            day.toLowerCase() == 'amyeittasote' ||
-            day.toLowerCase() == 'mahayatkyan';
-        final isBad =
-            day.toLowerCase().contains('pyathada') ||
-            day.toLowerCase() == 'thamanyo' ||
-            day.toLowerCase() == 'yatyotema';
-
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: isGood
-                ? Colors.green.withValues(alpha: 0.05)
-                : isBad
-                ? Colors.red.withValues(alpha: 0.05)
-                : Colors.blue.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: isGood
-                  ? Colors.green.withValues(alpha: 0.2)
-                  : isBad
-                  ? Colors.red.withValues(alpha: 0.2)
-                  : Colors.blue.withValues(alpha: 0.2),
-            ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                isGood
-                    ? Icons.check_circle_outline
-                    : isBad
-                    ? Icons.error_outline
-                    : Icons.info_outline,
-                size: 16,
-                color: isGood
-                    ? Colors.green
-                    : isBad
-                    ? Colors.red
-                    : Colors.blue,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      TranslationService.translateTo(day, _language),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: isGood
-                            ? Colors.green.shade700
-                            : isBad
-                            ? Colors.red.shade700
-                            : Colors.blue.shade700,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      AstroDetails.getAstrologicalDayDescription(
-                        day,
-                        language: _language,
-                      ),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          TranslationService.translateTo('Prompt Copied', language),
+        ),
+        behavior: SnackBarBehavior.floating,
+      ),
     );
   }
+}
 
-  Widget _buildDetailTile(String label, String value, String description) {
+class _InfoTile extends StatelessWidget {
+  const _InfoTile({
+    required this.label,
+    required this.value,
+    required this.detail,
+  });
+
+  final String label;
+  final String value;
+  final String detail;
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                '$label: ',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-            ],
+        children: <Widget>[
+          RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.bodyMedium,
+              children: <TextSpan>[
+                TextSpan(
+                  text: '$label: ',
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                TextSpan(text: value),
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
-            description,
-            style: const TextStyle(fontSize: 12, color: Colors.blueGrey),
+            detail,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.blueGrey),
           ),
         ],
       ),

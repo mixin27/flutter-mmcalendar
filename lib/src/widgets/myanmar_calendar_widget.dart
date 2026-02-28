@@ -1,150 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart'
-    hide PackageConstants;
+// ignore_for_file: public_member_api_docs
 
+import 'package:flutter/material.dart';
+import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
+
+import '../core/calendar_repository.dart';
 import '../core/myanmar_calendar_theme.dart';
-import '../utils/package_constants.dart';
 import 'calendar_selection_mode.dart';
+import 'internal/calendar_grid_utils.dart';
+import 'internal/calendar_localization_utils.dart';
+import 'myanmar_calendar_toolbar.dart';
 import 'optimized_calendar_cell.dart';
 
-/// A comprehensive Myanmar Calendar widget for Flutter applications
-///
-/// This widget displays a full calendar view with Myanmar dates, Western dates,
-/// holidays, astrological information, and supports multiple languages.
-///
-/// ## Features
-/// - Full calendar view with Myanmar and Western dates
-/// - Holiday highlighting and information
-/// - Astrological day marking
-/// - Multi-language support
-/// - Customizable themes and styling
-/// - Touch interaction and date selection
-/// - Month/year navigation
-/// - Today highlighting
-/// - Weekend highlighting
-/// - Custom date cell rendering
-///
-/// ## Example Usage
-///
-/// ```dart
-/// MyanmarCalendarWidget(
-///   initialDate: DateTime.now(),
-///   language: Language.myanmar,
-///   onDateSelected: (date) {
-///     print('Selected: ${date.formatComplete()}');
-///   },
-///   showHolidays: true,
-///   showAstrology: true,
-///   theme: MyanmarCalendarTheme.traditional(),
-/// )
-/// ```
 class MyanmarCalendarWidget extends StatefulWidget {
-  /// Initial date to display (defaults to today)
-  final DateTime? initialDate;
-
-  /// Language for display (defaults to English)
-  final Language language;
-
-  /// Calendar configuration
-  final CalendarConfig? config;
-
-  /// Callback when a date is selected
-  final void Function(CompleteDate date)? onDateSelected;
-
-  /// Callback when month changes
-  final void Function(DateTime month)? onMonthChanged;
-
-  /// Whether to show holidays
-  final bool showHolidays;
-
-  /// Whether to show astrological information
-  final bool showAstrology;
-
-  /// Whether to show Western dates
-  final bool showWesternDates;
-
-  /// Whether to show Myanmar dates
-  final bool showMyanmarDates;
-
-  /// Whether to show weekday headers
-  final bool showWeekdayHeaders;
-
-  /// Whether to use weekday short name
-  final bool isCompactWeekday;
-
-  /// Whether to show month/year header
-  final bool showHeader;
-
-  /// Whether to show navigation buttons
-  final bool showNavigation;
-
-  /// Whether to enable date selection
-  final bool enableSelection;
-
-  /// Custom theme for the calendar
-  final MyanmarCalendarTheme? theme;
-
-  /// Custom cell builder
-  final Widget Function(BuildContext context, CompleteDate date)? cellBuilder;
-
-  /// Custom header builder
-  final Widget Function(BuildContext context, DateTime month)? headerBuilder;
-
-  /// Height of the calendar
-  final double? height;
-
-  /// Width of the calendar
-  final double? width;
-
-  /// Padding around the calendar
-  final EdgeInsetsGeometry? padding;
-
-  /// Margin around the calendar
-  final EdgeInsetsGeometry? margin;
-
-  /// First day of week (0=Saturday, 1=Sunday, etc.) - Myanmar weekday system
-  final int firstDayOfWeek;
-
-  /// Selected date
-  final DateTime? selectedDate;
-
-  /// Minimum selectable date
-  final DateTime? minDate;
-
-  /// Maximum selectable date
-  final DateTime? maxDate;
-
-  /// Whether to highlight today
-  final bool highlightToday;
-
-  /// Whether to highlight weekends
-  final bool highlightWeekends;
-
-  /// Animation duration for transitions
-  final Duration animationDuration;
-
-  /// Whether to show animations
-  final bool enableAnimations;
-
-  /// Selection mode
-  final CalendarSelectionMode selectionMode;
-
-  /// Callback when a range is selected
-  final void Function(DateTime? start, DateTime? end)? onRangeSelected;
-
-  /// Callback when multiple dates are selected
-  final void Function(List<DateTime> selectedDates)? onMultiSelected;
-
-  /// Initial selected range start
-  final DateTime? initialSelectedRangeStart;
-
-  /// Initial selected range end
-  final DateTime? initialSelectedRangeEnd;
-
-  /// Initial multi-selected dates
-  final List<DateTime>? initialMultiSelectedDates;
-
-  /// Create a new Myanmar calendar widget
   const MyanmarCalendarWidget({
     super.key,
     this.initialDate,
@@ -168,7 +35,7 @@ class MyanmarCalendarWidget extends StatefulWidget {
     this.width,
     this.padding,
     this.margin,
-    this.firstDayOfWeek = 1, // Sunday in Myanmar weekday system
+    this.firstDayOfWeek = 1,
     this.selectedDate,
     this.minDate,
     this.maxDate,
@@ -184,484 +51,309 @@ class MyanmarCalendarWidget extends StatefulWidget {
     this.initialMultiSelectedDates,
   });
 
+  final DateTime? initialDate;
+  final Language language;
+  final CalendarConfig? config;
+  final void Function(CompleteDate date)? onDateSelected;
+  final void Function(DateTime month)? onMonthChanged;
+  final bool showHolidays;
+  final bool showAstrology;
+  final bool showWesternDates;
+  final bool showMyanmarDates;
+  final bool showWeekdayHeaders;
+  final bool isCompactWeekday;
+  final bool showHeader;
+  final bool showNavigation;
+  final bool enableSelection;
+  final MyanmarCalendarTheme? theme;
+  final Widget Function(BuildContext context, CompleteDate date)? cellBuilder;
+  final Widget Function(BuildContext context, DateTime month)? headerBuilder;
+  final double? height;
+  final double? width;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final int firstDayOfWeek;
+  final DateTime? selectedDate;
+  final DateTime? minDate;
+  final DateTime? maxDate;
+  final bool highlightToday;
+  final bool highlightWeekends;
+  final Duration animationDuration;
+  final bool enableAnimations;
+  final CalendarSelectionMode selectionMode;
+  final void Function(DateTime? start, DateTime? end)? onRangeSelected;
+  final void Function(List<DateTime> selectedDates)? onMultiSelected;
+  final DateTime? initialSelectedRangeStart;
+  final DateTime? initialSelectedRangeEnd;
+  final List<DateTime>? initialMultiSelectedDates;
+
   @override
   State<MyanmarCalendarWidget> createState() => _MyanmarCalendarWidgetState();
 }
 
-class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
-    with TickerProviderStateMixin {
-  late MyanmarCalendarService _service;
+class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget> {
+  late CalendarRepository _repository;
   late MyanmarCalendarTheme _theme;
-  late DateTime _currentMonth;
-  DateTime? _selectedDate;
-  DateTime? _selectedRangeStart;
-  DateTime? _selectedRangeEnd;
-  final Set<DateTime> _multiSelectedDates = {};
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late PageController _pageController;
+  late DateTime _visibleMonth;
 
-  // Cache for complete dates to avoid recalculation
-  final Map<String, CompleteDate> _dateCache = {};
+  DateTime? _selectedDate;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+  final Set<DateTime> _multiSelected = <DateTime>{};
 
   @override
   void initState() {
     super.initState();
-    _initializeWidget();
-  }
-
-  void _initializeWidget() {
-    // Initialize service and configuration
-    _service = MyanmarCalendarService(
+    _repository = CalendarRepository(
+      language: widget.language,
       config: widget.config,
-      defaultLanguage: widget.language,
     );
-
-    // Ensure TranslationService is set to correct language
-    TranslationService.setLanguage(widget.language);
-
-    // Initialize theme
     _theme = widget.theme ?? MyanmarCalendarTheme.defaultTheme();
 
-    // Initialize current month
-    _currentMonth = DateTime(
-      (widget.initialDate ?? DateTime.now()).year,
-      (widget.initialDate ?? DateTime.now()).month,
-    );
+    final now = widget.initialDate ?? DateTime.now();
+    _visibleMonth = DateTime(now.year, now.month);
+    _selectedDate = _normalizeOrNull(widget.selectedDate ?? widget.initialDate);
+    _rangeStart = _normalizeOrNull(widget.initialSelectedRangeStart);
+    _rangeEnd = _normalizeOrNull(widget.initialSelectedRangeEnd);
 
-    // Initialize selected date
-    _selectedDate = widget.selectedDate ?? widget.initialDate;
-
-    // Initialize selection states
-    _selectedRangeStart = widget.initialSelectedRangeStart;
-    _selectedRangeEnd = widget.initialSelectedRangeEnd;
     if (widget.initialMultiSelectedDates != null) {
-      _multiSelectedDates.addAll(
-        widget.initialMultiSelectedDates!.map(
-          (d) => DateTime(d.year, d.month, d.day),
-        ),
+      _multiSelected.addAll(
+        widget.initialMultiSelectedDates!
+            .map(CalendarGridUtils.normalize)
+            .toSet(),
       );
     }
+  }
 
-    // Initialize animations
-    _animationController = AnimationController(
-      duration: widget.animationDuration,
-      vsync: this,
-    );
+  @override
+  void didUpdateWidget(covariant MyanmarCalendarWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    _repository.reconfigure(language: widget.language, config: widget.config);
 
-    // Initialize page controller
-    _pageController = PageController();
+    if (widget.theme != oldWidget.theme) {
+      _theme = widget.theme ?? MyanmarCalendarTheme.defaultTheme();
+    }
 
-    // Start animation
-    if (widget.enableAnimations) {
-      _animationController.forward();
+    if (widget.selectedDate != oldWidget.selectedDate) {
+      _selectedDate = _normalizeOrNull(widget.selectedDate);
     }
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _pageController.dispose();
+    _repository.clear();
     super.dispose();
   }
 
-  @override
-  void didUpdateWidget(MyanmarCalendarWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Update service if configuration changed
-    if (widget.config != oldWidget.config ||
-        widget.language != oldWidget.language) {
-      _service = MyanmarCalendarService(
-        config: widget.config,
-        defaultLanguage: widget.language,
-      );
-      _dateCache.clear(); // Clear cache when configuration changes
-    }
-
-    // Update theme if changed
-    if (widget.theme != oldWidget.theme) {
-      _theme = widget.theme ?? MyanmarCalendarTheme.defaultTheme();
-    }
-
-    // Update selected date if changed
-    if (widget.selectedDate != oldWidget.selectedDate) {
-      _selectedDate = widget.selectedDate;
-    }
+  DateTime _normalize(DateTime value) {
+    return CalendarGridUtils.normalize(value);
   }
 
-  // ============================================================================
-  // HELPER METHODS
-  // ============================================================================
-
-  /// Get complete date information with caching
-  CompleteDate _getCompleteDate(DateTime date) {
-    final key = '${date.year}-${date.month}-${date.day}';
-    if (!_dateCache.containsKey(key)) {
-      _dateCache[key] = _service.getCompleteDate(date);
-    }
-    return _dateCache[key]!;
+  DateTime? _normalizeOrNull(DateTime? value) {
+    return value == null ? null : _normalize(value);
   }
 
-  /// Get dates for current month view
-  List<DateTime> _getCalendarDates() {
-    final firstDayOfMonth = DateTime(_currentMonth.year, _currentMonth.month);
-    final lastDayOfMonth = DateTime(
-      _currentMonth.year,
-      _currentMonth.month + 1,
-      0,
-    );
-
-    // Calculate the start date (may be from previous month)
-    var startDate = firstDayOfMonth;
-
-    // Convert DateTime weekday (1=Monday, 7=Sunday) to Myanmar weekday (0=Saturday, 1=Sunday, ..., 6=Friday)
-    final firstDayMyanmarWeekday = (firstDayOfMonth.weekday + 1) % 7;
-
-    // Calculate how many days back we need to go to reach the first day of week
-    final daysBack = (firstDayMyanmarWeekday - widget.firstDayOfWeek + 7) % 7;
-    if (daysBack > 0) {
-      startDate = firstDayOfMonth.subtract(Duration(days: daysBack));
-    }
-
-    // Calculate the end date (may be from next month)
-    var endDate = lastDayOfMonth;
-    final lastDayMyanmarWeekday = (lastDayOfMonth.weekday + 1) % 7;
-    final daysForward = (widget.firstDayOfWeek + 6 - lastDayMyanmarWeekday) % 7;
-    if (daysForward > 0) {
-      endDate = lastDayOfMonth.add(Duration(days: daysForward));
-    }
-
-    // Generate all dates for the calendar grid (should be exactly 42 dates = 6 weeks × 7 days)
-    final dates = <DateTime>[];
-    var currentDate = startDate;
-    while (!currentDate.isAfter(endDate) && dates.length < 42) {
-      dates.add(currentDate);
-      currentDate = currentDate.add(const Duration(days: 1));
-    }
-
-    // Ensure we always have exactly 42 dates for a 6×7 grid
-    while (dates.length < 42) {
-      dates.add(currentDate);
-      currentDate = currentDate.add(const Duration(days: 1));
-    }
-
-    return dates;
+  bool _same(DateTime a, DateTime b) {
+    return CalendarGridUtils.isSameDate(a, b);
   }
 
-  /// Check if date is selectable
   bool _isDateSelectable(DateTime date) {
-    if (!widget.enableSelection) return false;
-    if (widget.minDate != null && date.isBefore(widget.minDate!)) return false;
-    if (widget.maxDate != null && date.isAfter(widget.maxDate!)) return false;
+    if (!widget.enableSelection) {
+      return false;
+    }
+    if (widget.minDate != null && date.isBefore(_normalize(widget.minDate!))) {
+      return false;
+    }
+    if (widget.maxDate != null && date.isAfter(_normalize(widget.maxDate!))) {
+      return false;
+    }
     return true;
   }
 
-  /// Check if date is today
   bool _isToday(DateTime date) {
-    final now = DateTime.now();
-    return date.year == now.year &&
-        date.month == now.month &&
-        date.day == now.day;
+    return _same(date, DateTime.now());
   }
 
-  /// Check if date is selected
-  bool _isSelected(DateTime date) {
-    final dateOnly = DateTime(date.year, date.month, date.day);
-    switch (widget.selectionMode) {
-      case CalendarSelectionMode.single:
-        if (_selectedDate == null) return false;
-        return date.year == _selectedDate!.year &&
-            date.month == _selectedDate!.month &&
-            date.day == _selectedDate!.day;
-      case CalendarSelectionMode.range:
-        return false; // Range selection uses start/end/middle
-      case CalendarSelectionMode.multi:
-        return _multiSelectedDates.contains(dateOnly);
-    }
-  }
-
-  /// Check if date is start of range
-  bool _isRangeStart(DateTime date) {
-    if (widget.selectionMode != CalendarSelectionMode.range) return false;
-    if (_selectedRangeStart == null) return false;
-    final dateOnly = DateTime(date.year, date.month, date.day);
-    return dateOnly.isAtSameMomentAs(_selectedRangeStart!);
-  }
-
-  /// Check if date is end of range
-  bool _isRangeEnd(DateTime date) {
-    if (widget.selectionMode != CalendarSelectionMode.range) return false;
-    if (_selectedRangeEnd == null) return false;
-    final dateOnly = DateTime(date.year, date.month, date.day);
-    return dateOnly.isAtSameMomentAs(_selectedRangeEnd!);
-  }
-
-  /// Check if date is within range
-  bool _isInRange(DateTime date) {
-    if (widget.selectionMode != CalendarSelectionMode.range) return false;
-    if (_selectedRangeStart == null || _selectedRangeEnd == null) return false;
-    final dateOnly = DateTime(date.year, date.month, date.day);
-    return dateOnly.isAfter(_selectedRangeStart!) &&
-        dateOnly.isBefore(_selectedRangeEnd!);
-  }
-
-  /// Check if date is in current month
   bool _isInCurrentMonth(DateTime date) {
-    return date.year == _currentMonth.year && date.month == _currentMonth.month;
+    return date.year == _visibleMonth.year && date.month == _visibleMonth.month;
   }
 
-  /// Navigate to previous month
-  void _goToPreviousMonth() {
-    setState(() {
-      _currentMonth = DateTime(_currentMonth.year, _currentMonth.month - 1);
-    });
-    widget.onMonthChanged?.call(_currentMonth);
-    _animateTransition();
+  bool _isSingleSelected(DateTime date) {
+    return _selectedDate != null && _same(date, _selectedDate!);
   }
 
-  /// Navigate to next month
-  void _goToNextMonth() {
-    setState(() {
-      _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + 1);
-    });
-    widget.onMonthChanged?.call(_currentMonth);
-    _animateTransition();
+  bool _isRangeStart(DateTime date) {
+    return _rangeStart != null && _same(date, _rangeStart!);
   }
 
-  /// Animate transition
-  void _animateTransition() {
-    if (widget.enableAnimations) {
-      _animationController.reset();
-      _animationController.forward();
+  bool _isRangeEnd(DateTime date) {
+    return _rangeEnd != null && _same(date, _rangeEnd!);
+  }
+
+  bool _isInRange(DateTime date) {
+    if (_rangeStart == null || _rangeEnd == null) {
+      return false;
     }
+    return date.isAfter(_rangeStart!) && date.isBefore(_rangeEnd!);
   }
 
-  /// Handle date selection
-  void _onDateTap(DateTime date) {
-    if (!widget.enableSelection || !_isDateSelectable(date)) return;
+  void _goToPreviousMonth() {
+    _goToMonth(DateTime(_visibleMonth.year, _visibleMonth.month - 1));
+  }
 
-    final dateOnly = DateTime(date.year, date.month, date.day);
+  void _goToNextMonth() {
+    _goToMonth(DateTime(_visibleMonth.year, _visibleMonth.month + 1));
+  }
+
+  void _goToMonth(DateTime month) {
+    setState(() {
+      _visibleMonth = DateTime(month.year, month.month);
+    });
+    widget.onMonthChanged?.call(_visibleMonth);
+  }
+
+  void _onDateTap(DateTime date) {
+    final normalized = _normalize(date);
+    if (!_isDateSelectable(normalized)) {
+      return;
+    }
 
     setState(() {
       switch (widget.selectionMode) {
         case CalendarSelectionMode.single:
-          _selectedDate = dateOnly;
-          widget.onDateSelected?.call(_getCompleteDate(dateOnly));
+          _selectedDate = normalized;
+          widget.onDateSelected?.call(_repository.getCompleteDate(normalized));
           break;
-
         case CalendarSelectionMode.range:
-          if (_selectedRangeStart == null ||
-              (_selectedRangeStart != null && _selectedRangeEnd != null)) {
-            _selectedRangeStart = dateOnly;
-            _selectedRangeEnd = null;
+          if (_rangeStart == null || _rangeEnd != null) {
+            _rangeStart = normalized;
+            _rangeEnd = null;
+          } else if (normalized.isBefore(_rangeStart!)) {
+            _rangeEnd = _rangeStart;
+            _rangeStart = normalized;
           } else {
-            if (dateOnly.isBefore(_selectedRangeStart!)) {
-              _selectedRangeEnd = _selectedRangeStart;
-              _selectedRangeStart = dateOnly;
-            } else {
-              _selectedRangeEnd = dateOnly;
-            }
+            _rangeEnd = normalized;
           }
-          widget.onRangeSelected?.call(_selectedRangeStart, _selectedRangeEnd);
+          widget.onRangeSelected?.call(_rangeStart, _rangeEnd);
           break;
-
         case CalendarSelectionMode.multi:
-          if (_multiSelectedDates.contains(dateOnly)) {
-            _multiSelectedDates.remove(dateOnly);
+          if (_multiSelected.contains(normalized)) {
+            _multiSelected.remove(normalized);
           } else {
-            _multiSelectedDates.add(dateOnly);
+            _multiSelected.add(normalized);
           }
-          widget.onMultiSelected?.call(_multiSelectedDates.toList()..sort());
+          final sorted = _multiSelected.toList()
+            ..sort((a, b) => a.compareTo(b));
+          widget.onMultiSelected?.call(sorted);
           break;
       }
     });
   }
 
-  // ============================================================================
-  // BUILD METHODS
-  // ============================================================================
+  String _buildWesternMonthTitle() {
+    return '${CalendarLocalizationUtils.westernMonth(_visibleMonth.month, widget.language)} ${_visibleMonth.year}';
+  }
+
+  String _buildMyanmarMonthTitle() {
+    final date = _repository.getMyanmarDate(_visibleMonth);
+    return _repository.formatMyanmar(
+      date,
+      pattern: '&M &y',
+      language: widget.language,
+    );
+  }
+
+  String _buildHeaderTitle() {
+    if (widget.showWesternDates) {
+      return _buildWesternMonthTitle();
+    }
+    return _buildMyanmarMonthTitle();
+  }
+
+  String? _buildHeaderSubtitle() {
+    if (widget.showWesternDates && widget.showMyanmarDates) {
+      return _buildMyanmarMonthTitle();
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height,
       width: widget.width,
-      padding: widget.padding ?? const EdgeInsets.all(8.0),
+      height: widget.height,
       margin: widget.margin,
+      padding: widget.padding ?? _theme.calendarPadding,
       decoration: BoxDecoration(
         color: _theme.backgroundColor,
         borderRadius: BorderRadius.circular(_theme.borderRadius),
-        border: _theme.borderWidth > 0
-            ? Border.all(color: _theme.borderColor, width: _theme.borderWidth)
-            : null,
-        boxShadow: _theme.elevation > 0
-            ? [
+        border: Border.all(
+          color: _theme.borderColor,
+          width: _theme.borderWidth,
+        ),
+        boxShadow: _theme.elevation <= 0
+            ? null
+            : <BoxShadow>[
                 BoxShadow(
-                  color: _theme.borderColor.withValues(alpha: 0.1),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: _theme.elevation,
                   offset: const Offset(0, 2),
                 ),
-              ]
-            : null,
+              ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (widget.showHeader) _buildHeader(),
-          if (widget.showWeekdayHeaders) _buildWeekdayHeaders(),
-          _buildCalendarGrid(),
-        ],
-      ),
-    );
-  }
-
-  /// Build calendar header with month/year and navigation
-  Widget _buildHeader() {
-    return Container(
-      height: PackageConstants.getDimension('headerHeight'),
-      decoration: BoxDecoration(
-        color: _theme.headerBackgroundColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(_theme.borderRadius),
-          topRight: Radius.circular(_theme.borderRadius),
-        ),
-      ),
-      child:
-          widget.headerBuilder?.call(context, _currentMonth) ??
-          Row(
-            children: [
-              if (widget.showNavigation) _buildNavigationButton(true),
-              Expanded(child: _buildMonthYearTitle()),
-              if (widget.showNavigation) _buildNavigationButton(false),
-            ],
-          ),
-    );
-  }
-
-  /// Build month/year title
-  Widget _buildMonthYearTitle() {
-    final myanmarDate = _service.westernToMyanmar(_currentMonth);
-    final shanDate = ShanDate.fromMyanmarDate(myanmarDate);
-
-    return InkWell(
-      onTap: () => _showMonthYearPicker(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (widget.language == Language.shan) ...[
-              Text(
-                'ပီ ${shanDate.year} ${shanDate.monthName}',
-                style: _theme.headerTextStyle.copyWith(
-                  color: _theme.headerTextColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              if (widget.showWesternDates)
-                Text(
-                  '(${_service.formatWesternDate(_service.myanmarToWesternDate(myanmarDate.year, myanmarDate.month, myanmarDate.day), pattern: '%M %yyyy', language: widget.language)})',
-                  style: _theme.headerSubtitleStyle?.copyWith(
-                    color: _theme.headerTextColor.withValues(alpha: 0.7),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-            ] else if (widget.showMyanmarDates) ...[
-              // Regular Myanmar Date Display
-              if (widget.showMyanmarDates) ...[
-                Text(
-                  _service.formatMyanmarDate(
-                    myanmarDate,
-                    pattern: '&y &M',
-                    language: widget.language,
-                  ),
-                  style: _theme.headerTextStyle.copyWith(
-                    color: _theme.headerTextColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-              if (widget.showWesternDates) ...[
-                Text(
-                  _service.formatWesternDate(
-                    _service.myanmarToWesternDate(
-                      myanmarDate.year,
-                      myanmarDate.month,
-                      myanmarDate.day,
-                    ),
-                    pattern: '%M %yyyy',
-                    language: widget.language,
-                  ),
-                  style: _theme.headerSubtitleStyle?.copyWith(
-                    color: _theme.headerTextColor.withValues(alpha: 0.8),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ],
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            if (widget.showHeader) _buildHeader(context),
+            if (widget.showWeekdayHeaders) _buildWeekdayHeader(context),
+            _buildGrid(context),
           ],
         ),
       ),
     );
   }
 
-  /// Build navigation button
-  Widget _buildNavigationButton(bool isPrevious) {
-    return IconButton(
-      icon: Icon(
-        isPrevious ? Icons.chevron_left : Icons.chevron_right,
-        color: _theme.headerTextColor,
-        size: PackageConstants.getDimension('iconSize'),
-      ),
-      onPressed: isPrevious ? _goToPreviousMonth : _goToNextMonth,
-      tooltip: isPrevious
-          ? TranslationService.translate('previousMonth')
-          : TranslationService.translate('nextMonth'),
+  Widget _buildHeader(BuildContext context) {
+    if (widget.headerBuilder != null) {
+      return widget.headerBuilder!(context, _visibleMonth);
+    }
+
+    return MyanmarCalendarToolbar(
+      month: _visibleMonth,
+      language: widget.language,
+      theme: _theme,
+      title: _buildHeaderTitle(),
+      subtitle: _buildHeaderSubtitle(),
+      showNavigation: widget.showNavigation,
+      onPrevious: _goToPreviousMonth,
+      onNext: _goToNextMonth,
     );
   }
 
-  /// Build weekday headers
-  Widget _buildWeekdayHeaders() {
+  Widget _buildWeekdayHeader(BuildContext context) {
     return Container(
-      height: widget.isCompactWeekday ? 40 : 50,
       color: _theme.weekdayHeaderBackgroundColor,
       padding: _theme.weekdayHeaderPadding,
       child: Row(
-        children: List.generate(7, (index) {
-          final myanmarWeekdayIndex = (widget.firstDayOfWeek + index) % 7;
-
-          String weekdayName = TranslationService.getWeekdayName(
-            myanmarWeekdayIndex,
+        children: List<Widget>.generate(7, (index) {
+          final weekday = (widget.firstDayOfWeek + index) % 7;
+          final label = CalendarLocalizationUtils.weekday(
+            weekday,
             widget.language,
+            compact: widget.isCompactWeekday,
           );
-
-          if (widget.isCompactWeekday) {
-            weekdayName = TranslationService.getShortWeekdayName(
-              myanmarWeekdayIndex,
-              widget.language,
-            );
-          }
-
           final isWeekend =
-              widget.highlightWeekends &&
-              (myanmarWeekdayIndex == 0 || myanmarWeekdayIndex == 1);
-
+              widget.highlightWeekends && (weekday == 0 || weekday == 1);
           return Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              child: Text(
-                weekdayName,
-                textAlign: TextAlign.center,
-                style: _theme.weekdayHeaderTextStyle.copyWith(
-                  color: isWeekend
-                      ? _theme.headerBackgroundColor
-                      : _theme.weekdayHeaderTextColor,
-                  fontWeight: FontWeight.w600,
-                ),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: _theme.weekdayHeaderTextStyle.copyWith(
+                color: isWeekend
+                    ? _theme.headerBackgroundColor
+                    : _theme.weekdayHeaderTextColor,
               ),
             ),
           );
@@ -670,313 +362,59 @@ class _MyanmarCalendarWidgetState extends State<MyanmarCalendarWidget>
     );
   }
 
-  /// Build calendar grid
-  Widget _buildCalendarGrid() {
-    final dates = _getCalendarDates();
+  Widget _buildGrid(BuildContext context) {
+    final dates = CalendarGridUtils.buildMonthGrid(
+      _visibleMonth,
+      firstDayOfWeek: widget.firstDayOfWeek,
+    );
 
-    return widget.enableAnimations
-        ? FadeTransition(opacity: _fadeAnimation, child: _buildGrid(dates))
-        : _buildGrid(dates);
-  }
-
-  /// Build the actual grid
-  Widget _buildGrid(List<DateTime> dates) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: 0,
       ),
       itemCount: dates.length,
-      itemBuilder: (context, index) {
+      itemBuilder: (BuildContext context, int index) {
         final date = dates[index];
-        return _buildDateCell(date);
+        final completeDate = _repository.getCompleteDate(date);
+
+        if (widget.cellBuilder != null) {
+          return GestureDetector(
+            onTap: _isDateSelectable(date) ? () => _onDateTap(date) : null,
+            child: widget.cellBuilder!(context, completeDate),
+          );
+        }
+
+        return OptimizedCalendarCell(
+          date: completeDate,
+          isSelected: widget.selectionMode == CalendarSelectionMode.single
+              ? _isSingleSelected(date)
+              : false,
+          isRangeStart:
+              widget.selectionMode == CalendarSelectionMode.range &&
+              _isRangeStart(date),
+          isRangeEnd:
+              widget.selectionMode == CalendarSelectionMode.range &&
+              _isRangeEnd(date),
+          isInRange:
+              widget.selectionMode == CalendarSelectionMode.range &&
+              _isInRange(date),
+          isMultiSelected:
+              widget.selectionMode == CalendarSelectionMode.multi &&
+              _multiSelected.contains(date),
+          isToday: widget.highlightToday && _isToday(date),
+          isDisabled: !_isDateSelectable(date),
+          isInCurrentMonth: _isInCurrentMonth(date),
+          onTap: _isDateSelectable(date) ? () => _onDateTap(date) : null,
+          language: widget.language,
+          showHolidays: widget.showHolidays,
+          showAstrology: widget.showAstrology,
+          theme: _theme,
+        );
       },
     );
-  }
-
-  /// Build individual date cell
-  Widget _buildDateCell(DateTime date) {
-    if (widget.cellBuilder != null) {
-      final completeDate = _getCompleteDate(date);
-      return widget.cellBuilder!(context, completeDate);
-    }
-
-    final completeDate = _getCompleteDate(date);
-    final isToday = _isToday(date);
-    final isSelected = _isSelected(date);
-    final isInCurrentMonth = _isInCurrentMonth(date);
-    final isSelectable = _isDateSelectable(date);
-
-    // Use OptimizedCalendarCell for better performance and accessibility
-    return OptimizedCalendarCell(
-      date: completeDate,
-      isSelected: isSelected,
-      isRangeStart: _isRangeStart(date),
-      isRangeEnd: _isRangeEnd(date),
-      isInRange: _isInRange(date),
-      isMultiSelected:
-          widget.selectionMode == CalendarSelectionMode.multi &&
-          _isSelected(date),
-      isToday: isToday,
-      isDisabled: !isSelectable,
-      isInCurrentMonth: isInCurrentMonth,
-      onTap: isSelectable ? () => _onDateTap(date) : null,
-      language: widget.language,
-      showHolidays: widget.showHolidays,
-      showAstrology: widget.showAstrology,
-      theme: _theme, // Pass the Myanmar calendar theme
-    );
-  }
-
-  // String _formatMoonPhase(int moonPhase) {
-  //   final str = TranslationService.getMoonPhaseName(moonPhase);
-  //   return str.length > 5 ? str.substring(1, 6) : str.substring(1, 5);
-  // }
-
-  /// Show month/year picker
-  void _showMonthYearPicker() {
-    showDialog(
-      context: context,
-      builder: (context) => _MonthYearPickerDialog(
-        initialDate: _currentMonth,
-        language: widget.language,
-        service: _service,
-        theme: _theme,
-        onDateSelected: (selectedDate) {
-          setState(() {
-            _currentMonth = DateTime(selectedDate.year, selectedDate.month);
-          });
-          widget.onMonthChanged?.call(_currentMonth);
-          _animateTransition();
-        },
-      ),
-    );
-  }
-}
-
-// ============================================================================
-// MYANMAR CALENDAR THEME
-// ============================================================================
-
-// ============================================================================
-// MONTH/YEAR PICKER DIALOG
-// ============================================================================
-
-class _MonthYearPickerDialog extends StatefulWidget {
-  final DateTime initialDate;
-  final Language language;
-  final MyanmarCalendarService service;
-  final MyanmarCalendarTheme theme;
-  final void Function(DateTime) onDateSelected;
-
-  const _MonthYearPickerDialog({
-    required this.initialDate,
-    required this.language,
-    required this.service,
-    required this.theme,
-    required this.onDateSelected,
-  });
-
-  @override
-  State<_MonthYearPickerDialog> createState() => _MonthYearPickerDialogState();
-}
-
-class _MonthYearPickerDialogState extends State<_MonthYearPickerDialog> {
-  late DateTime _selectedDate;
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedDate = widget.initialDate;
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        width: 300,
-        height: 400,
-        color: widget.theme.backgroundColor,
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Text(
-              TranslationService.translate('Select Month and Year'),
-              style: widget.theme.headerTextStyle.copyWith(
-                color: widget.theme.dateCellTextColor,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Column(
-                children: [
-                  _buildYearSelector(),
-                  const SizedBox(height: 16),
-                  _buildMonthGrid(),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: widget.theme.headerBackgroundColor,
-                  ),
-                  child: Text(TranslationService.translate('Cancel')),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    widget.onDateSelected(_selectedDate);
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.theme.headerBackgroundColor,
-                    foregroundColor: widget.theme.headerTextColor,
-                  ),
-                  child: Text(TranslationService.translate('OK')),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildYearSelector() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.chevron_left),
-          color: widget.theme.dateCellTextColor,
-          onPressed: () {
-            setState(() {
-              _selectedDate = DateTime(
-                _selectedDate.year - 1,
-                _selectedDate.month,
-              );
-            });
-          },
-        ),
-        Text(
-          _selectedDate.year.toString(),
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: widget.theme.dateCellTextColor,
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.chevron_right),
-          color: widget.theme.dateCellTextColor,
-          onPressed: () {
-            setState(() {
-              _selectedDate = DateTime(
-                _selectedDate.year + 1,
-                _selectedDate.month,
-              );
-            });
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMonthGrid() {
-    return Expanded(
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 2.0,
-        ),
-        itemCount: 12,
-        itemBuilder: (context, index) {
-          final month = index + 1;
-          final isSelected = month == _selectedDate.month;
-
-          // Improved month name handling
-          final monthName = _getMonthName(month);
-
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedDate = DateTime(_selectedDate.year, month);
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: isSelected ? widget.theme.headerBackgroundColor : null,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: widget.theme.dateCellTextColor.withValues(alpha: 0.1),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  monthName,
-                  style: TextStyle(
-                    color: isSelected
-                        ? widget.theme.headerTextColor
-                        : widget.theme.dateCellTextColor,
-                    fontWeight: isSelected
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  /// Improved month name handling with better abbreviation logic
-  String _getMonthName(int month) {
-    final monthName = TranslationService.getWesternMonthName(
-      month - 1, // Convert to 0-based index
-      widget.language,
-    );
-
-    // Smart abbreviation based on language and name length
-    return _createSmartAbbreviation(monthName);
-  }
-
-  /// Create smart abbreviation for month names
-  String _createSmartAbbreviation(String monthName) {
-    // Handle different languages appropriately
-    switch (widget.language) {
-      case Language.myanmar:
-      case Language.zawgyi:
-        // For Myanmar script, try to keep meaningful parts
-        if (monthName.length <= 4) return monthName;
-        return monthName.substring(0, 4);
-
-      case Language.english:
-        // For English, use standard 3-letter abbreviations
-        if (monthName.length <= 3) return monthName;
-        return monthName.substring(0, 3);
-
-      default:
-        // For other languages, use adaptive approach
-        if (monthName.length <= 4) return monthName;
-        return monthName.length > 6
-            ? monthName.substring(0, 4)
-            : monthName.substring(0, 3);
-    }
   }
 }

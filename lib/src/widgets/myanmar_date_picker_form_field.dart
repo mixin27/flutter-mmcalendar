@@ -1,57 +1,13 @@
+// ignore_for_file: public_member_api_docs
+
 import 'package:flutter/material.dart';
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 import '../core/myanmar_calendar_theme.dart';
+import 'internal/calendar_localization_utils.dart';
 import 'myanmar_date_picker_widget.dart';
 
-/// Compact Myanmar date picker widget for forms
 class MyanmarDatePickerFormField extends StatefulWidget {
-  /// Form field label
-  final String? labelText;
-
-  /// Hint text when no date is selected
-  final String? hintText;
-
-  /// Current selected date
-  final MyanmarDateTime? value;
-
-  /// Callback when date changes
-  final void Function(MyanmarDateTime?)? onChanged;
-
-  /// Callback to save form field value
-  final void Function(MyanmarDateTime?)? onSaved;
-
-  /// Validation function
-  final String? Function(MyanmarDateTime?)? validator;
-
-  /// Minimum selectable date
-  final MyanmarDateTime? firstDate;
-
-  /// Maximum selectable date
-  final MyanmarDateTime? lastDate;
-
-  /// Language for display
-  final Language language;
-
-  /// Whether the field is enabled
-  final bool enabled;
-
-  /// Whether to show Western dates
-  final bool showWesternDates;
-
-  /// Whether to show holidays
-  final bool showHolidays;
-
-  /// Date picker dialog title
-  final String? pickerTitle;
-
-  /// Custom input decoration
-  final InputDecoration? decoration;
-
-  /// Custom theme for date picker
-  final MyanmarCalendarTheme? theme;
-
-  /// Create a new myanmar date picker form field
   const MyanmarDatePickerFormField({
     super.key,
     this.labelText,
@@ -71,6 +27,22 @@ class MyanmarDatePickerFormField extends StatefulWidget {
     this.theme,
   });
 
+  final String? labelText;
+  final String? hintText;
+  final MyanmarDateTime? value;
+  final void Function(MyanmarDateTime?)? onChanged;
+  final void Function(MyanmarDateTime?)? onSaved;
+  final String? Function(MyanmarDateTime?)? validator;
+  final MyanmarDateTime? firstDate;
+  final MyanmarDateTime? lastDate;
+  final Language language;
+  final bool enabled;
+  final bool showWesternDates;
+  final bool showHolidays;
+  final String? pickerTitle;
+  final InputDecoration? decoration;
+  final MyanmarCalendarTheme? theme;
+
   @override
   State<MyanmarDatePickerFormField> createState() =>
       _MyanmarDatePickerFormFieldState();
@@ -78,28 +50,30 @@ class MyanmarDatePickerFormField extends StatefulWidget {
 
 class _MyanmarDatePickerFormFieldState
     extends State<MyanmarDatePickerFormField> {
-  MyanmarDateTime? _selectedDate;
+  MyanmarDateTime? _selected;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.value;
+    _selected = widget.value;
   }
 
   @override
-  void didUpdateWidget(MyanmarDatePickerFormField oldWidget) {
+  void didUpdateWidget(covariant MyanmarDatePickerFormField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.value != oldWidget.value) {
-      _selectedDate = widget.value;
+      _selected = widget.value;
     }
   }
 
-  Future<void> _showDatePicker() async {
-    if (!widget.enabled) return;
+  Future<void> _openPicker(FormFieldState<MyanmarDateTime> field) async {
+    if (!widget.enabled) {
+      return;
+    }
 
-    final result = await showMyanmarDatePicker(
+    final selected = await showMyanmarDatePicker(
       context: context,
-      initialDate: _selectedDate?.toDateTime(),
+      initialDate: _selected?.toDateTime(),
       firstDate: widget.firstDate?.toDateTime(),
       lastDate: widget.lastDate?.toDateTime(),
       language: widget.language,
@@ -109,74 +83,65 @@ class _MyanmarDatePickerFormFieldState
       theme: widget.theme,
     );
 
-    if (result != null) {
-      setState(() {
-        _selectedDate = MyanmarDateTime.fromMyanmarDate(result.myanmar);
-      });
-      widget.onChanged?.call(_selectedDate);
+    if (!mounted || selected == null) {
+      return;
     }
+
+    final value = MyanmarDateTime.fromMyanmarDate(selected.myanmar);
+    setState(() {
+      _selected = value;
+    });
+    field.didChange(value);
+    widget.onChanged?.call(value);
   }
 
-  String _getDisplayText() {
-    if (_selectedDate == null) {
-      return widget.hintText ?? _getLocalizedHint();
+  String _displayText() {
+    if (_selected == null) {
+      return widget.hintText ??
+          CalendarLocalizationUtils.selectDate(widget.language);
     }
 
-    final myanmarText = _selectedDate!.formatMyanmar(null, widget.language);
-    if (widget.showWesternDates) {
-      final westernText = _selectedDate!.formatWestern(
-        '%MMM %dd, %yyyy',
-        widget.language,
-      );
-      return '$myanmarText ($westernText)';
+    final mm = _selected!.formatMyanmar(null, widget.language);
+    if (!widget.showWesternDates) {
+      return mm;
     }
-    return myanmarText;
-  }
 
-  String _getLocalizedHint() {
-    switch (widget.language) {
-      case Language.myanmar:
-        return 'ရက်စွဲရွေးချယ်ပါ';
-      case Language.mon:
-        return 'ရုဲစုတ် တ္ၚဲ';
-      case Language.karen:
-        return 'နံၣ်ထဲးကလးဒ်';
-      case Language.shan:
-        return 'လိၵ်ႈထၢႆး ဝၼ်း';
-      default:
-        return 'Select date';
-    }
+    final western = _selected!.formatWestern(
+      '%MMM %dd, %yyyy',
+      widget.language,
+    );
+    return '$mm  ·  $western';
   }
 
   @override
   Widget build(BuildContext context) {
-    final effectiveDecoration =
+    final decoration =
         widget.decoration ??
         InputDecoration(
           labelText: widget.labelText,
-          hintText: widget.hintText ?? _getLocalizedHint(),
-          suffixIcon: const Icon(Icons.calendar_today),
+          hintText: widget.hintText,
+          suffixIcon: const Icon(Icons.calendar_month),
         );
 
     return FormField<MyanmarDateTime>(
-      initialValue: _selectedDate,
-      onSaved: widget.onSaved,
+      initialValue: _selected,
       validator: widget.validator,
+      onSaved: widget.onSaved,
       builder: (FormFieldState<MyanmarDateTime> field) {
         return InputDecorator(
-          decoration: effectiveDecoration.copyWith(errorText: field.errorText),
-          isEmpty: _selectedDate == null,
+          decoration: decoration.copyWith(errorText: field.errorText),
+          isEmpty: _selected == null,
           child: InkWell(
-            onTap: widget.enabled ? _showDatePicker : null,
-            child: Container(
-              constraints: const BoxConstraints(minHeight: 48),
-              alignment: Alignment.centerLeft,
+            onTap: () => _openPicker(field),
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: Text(
-                _getDisplayText(),
+                _displayText(),
                 style: TextStyle(
-                  color: _selectedDate == null
+                  color: _selected == null
                       ? Theme.of(context).hintColor
-                      : null,
+                      : Theme.of(context).textTheme.bodyMedium?.color,
                 ),
               ),
             ),
@@ -187,36 +152,7 @@ class _MyanmarDatePickerFormFieldState
   }
 }
 
-/// Simple Myanmar date input field
 class MyanmarDateField extends StatelessWidget {
-  /// Current date value
-  final MyanmarDateTime? value;
-
-  /// Callback when date changes
-  final void Function(MyanmarDateTime?) onChanged;
-
-  /// Input decoration
-  final InputDecoration? decoration;
-
-  /// Whether the field is enabled
-  final bool enabled;
-
-  /// Language for display
-  final Language language;
-
-  /// Whether to show Western dates
-  final bool showWesternDates;
-
-  /// Minimum selectable date
-  final MyanmarDateTime? firstDate;
-
-  /// Maximum selectable date
-  final MyanmarDateTime? lastDate;
-
-  /// Custom theme for date picker
-  final MyanmarCalendarTheme? theme;
-
-  /// Create a myanmar date field
   const MyanmarDateField({
     super.key,
     required this.value,
@@ -230,20 +166,37 @@ class MyanmarDateField extends StatelessWidget {
     this.theme,
   });
 
+  final MyanmarDateTime? value;
+  final void Function(MyanmarDateTime?) onChanged;
+  final InputDecoration? decoration;
+  final bool enabled;
+  final Language language;
+  final bool showWesternDates;
+  final MyanmarDateTime? firstDate;
+  final MyanmarDateTime? lastDate;
+  final MyanmarCalendarTheme? theme;
+
   @override
   Widget build(BuildContext context) {
+    final text = value == null
+        ? ''
+        : value!.formatComplete(
+            myanmarPattern: '&y &M &P &ff',
+            westernPattern: '%MMM %dd, %yyyy',
+            language: language,
+          );
+
     return TextFormField(
       readOnly: true,
       enabled: enabled,
+      controller: TextEditingController(text: text),
       decoration: (decoration ?? const InputDecoration()).copyWith(
-        suffixIcon: const Icon(Icons.calendar_today),
+        suffixIcon: const Icon(Icons.calendar_month),
       ),
-      controller: TextEditingController(
-        text: value?.formatMyanmar(null, language) ?? '',
-      ),
-      onTap: enabled
-          ? () async {
-              final result = await showMyanmarDatePicker(
+      onTap: !enabled
+          ? null
+          : () async {
+              final selected = await showMyanmarDatePicker(
                 context: context,
                 initialDate: value?.toDateTime(),
                 firstDate: firstDate?.toDateTime(),
@@ -252,11 +205,11 @@ class MyanmarDateField extends StatelessWidget {
                 showWesternDates: showWesternDates,
                 theme: theme,
               );
-              if (result != null) {
-                onChanged(MyanmarDateTime.fromMyanmarDate(result.myanmar));
+
+              if (selected != null) {
+                onChanged(MyanmarDateTime.fromMyanmarDate(selected.myanmar));
               }
-            }
-          : null,
+            },
     );
   }
 }

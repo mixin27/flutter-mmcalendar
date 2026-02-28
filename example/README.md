@@ -1,17 +1,26 @@
 # flutter_mmcalendar_example
 
-A new Flutter project.
+Showcase app for `flutter_mmcalendar` after the full v2.0.0 refactor.
 
-## Getting Started
+## What this demo includes
 
-This project is a starting point for a Flutter application.
+- Calendar screen with single/range/multi selection modes
+- Inline date picker + dialog/fullscreen picker flows
+- Form integration with `MyanmarDatePickerFormField`
+- Date summary card and horoscope/astrology detail view
+- Language toggles (English / Myanmar / Shan)
+- Holiday and astrology visibility toggles
 
-A few resources to get you started if this is your first Flutter project:
+## Run locally
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```bash
+cd example
+flutter pub get
+flutter run
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Then use bottom navigation to explore:
+
+- `Calendar`
+- `Picker`
+- `Insights`
