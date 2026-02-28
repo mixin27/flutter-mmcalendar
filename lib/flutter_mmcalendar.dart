@@ -82,6 +82,9 @@ export 'src/utils/performance_utils.dart';
 // Widgets
 export 'src/widgets/calendar_selection_mode.dart';
 export 'src/widgets/horoscope_widget.dart';
+export 'src/widgets/moon/daily_moon_phase_widget.dart';
+export 'src/widgets/moon/moon_phase_painter.dart';
+export 'src/widgets/moon/moon_phase_view.dart';
 export 'src/widgets/myanmar_calendar_toolbar.dart';
 export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_form_field.dart';

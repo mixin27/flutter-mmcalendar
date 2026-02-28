@@ -531,6 +531,8 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
           showNavigation: false,
         ),
         const SizedBox(height: 12),
+        _buildMoonPhaseShowcase(context),
+        const SizedBox(height: 12),
         MyanmarDateSummaryCard(
           date: _selectedCompleteDate,
           language: _language,
@@ -546,6 +548,81 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
           backgroundColor: Colors.white,
         ),
       ],
+    );
+  }
+
+  Widget _buildMoonPhaseShowcase(BuildContext context) {
+    final selectedDate = _selectedCompleteDate.western.toDateTime();
+    final around = List<DateTime>.generate(
+      7,
+      (int index) => selectedDate.add(Duration(days: index - 3)),
+    );
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Daily Moon Phase (CustomPainter)',
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 118,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: around.length,
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(width: 10),
+              itemBuilder: (BuildContext context, int index) {
+                final date = around[index];
+                final complete = MyanmarCalendar.getCompleteDate(date);
+                return Container(
+                  width: 86,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      DailyMoonPhaseWidget.fromCompleteDate(
+                        complete,
+                        language: _language,
+                        size: 38,
+                        showIllumination: true,
+                        showLabel: false,
+                        labelStyle: Theme.of(context).textTheme.labelSmall
+                            ?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '${date.month}/${date.day}',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
