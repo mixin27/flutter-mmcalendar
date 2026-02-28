@@ -1,8 +1,6 @@
-/// Accessibility utilities for Myanmar Calendar widgets
-///
-/// This file provides utilities and helpers for making the Myanmar Calendar
-/// package accessible to all users, including those using screen readers
-/// and other assistive technologies.
+// ignore_for_file: public_member_api_docs
+
+/// Accessibility helpers for Myanmar calendar widgets.
 library;
 
 import 'package:flutter/material.dart';
@@ -10,12 +8,8 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
-/// Accessibility helper for calendar widgets
+/// Semantic label and announcement helpers for calendar widgets.
 class CalendarAccessibility {
-  /// Generate semantic label for a calendar date
-  ///
-  /// Creates a descriptive label that screen readers can announce,
-  /// including Myanmar date, Western date, holidays, and special days.
   static String generateDateLabel(
     CompleteDate date, {
     Language language = Language.english,
@@ -24,85 +18,82 @@ class CalendarAccessibility {
     bool isSelected = false,
     bool isToday = false,
   }) {
-    final buffer = StringBuffer();
+    final parts = <String>[];
 
-    // Add selection state
     if (isSelected) {
-      buffer.write('Selected. ');
+      parts.add('Selected');
     }
-
-    // Add today indicator
     if (isToday) {
-      buffer.write('Today. ');
+      parts.add('Today');
     }
 
-    // Add Myanmar date
-    buffer.write('Myanmar date: ${date.formatMyanmar()}. ');
+    final myanmar = MyanmarCalendar.formatMyanmar(
+      date.myanmar,
+      pattern: '&y &M &P &ff',
+      language: language,
+    );
+    final western = MyanmarCalendar.formatWestern(
+      date.western,
+      pattern: '%yyyy-%mm-%dd',
+      language: language,
+    );
 
-    // Add Western date
-    buffer.write('Western date: ${date.formatWestern()}. ');
+    parts.add('Myanmar date: $myanmar');
+    parts.add('Western date: $western');
+    parts.add(TranslationService.getWeekdayName(date.weekday, language));
 
-    // Add weekday
-    buffer.write('${date.westernWeekdayName}. ');
-
-    // Add holidays
     if (includeHolidays && date.hasHolidays) {
-      buffer.write('Holiday: ${date.allHolidays.join(", ")}. ');
+      parts.add('Holiday: ${date.allHolidays.join(', ')}');
     }
 
-    // Add astrological information
     if (includeAstrology) {
       if (date.isSabbath) {
-        buffer.write('Sabbath day. ');
+        parts.add('Sabbath');
       }
       if (date.isFullMoon) {
-        buffer.write('Full moon. ');
+        parts.add('Full moon');
       }
       if (date.isNewMoon) {
-        buffer.write('New moon. ');
+        parts.add('New moon');
       }
     }
 
-    return buffer.toString().trim();
+    return '${parts.join('. ')}.';
   }
 
-  /// Generate semantic label for month navigation
   static String generateMonthLabel(DateTime month, Language language) {
-    final monthName = _getMonthName(month.month, language);
-    return '$monthName ${month.year}';
+    final name = TranslationService.getWesternMonthName(month.month, language);
+    return '$name ${month.year}';
   }
 
-  /// Generate semantic hint for date selection
   static String getDateSelectionHint({
     bool isSelectable = true,
     bool isDisabled = false,
   }) {
     if (isDisabled) {
-      return 'This date is disabled and cannot be selected';
+      return 'This date is disabled';
     }
     if (isSelectable) {
-      return 'Double tap to select this date';
+      return 'Double tap to select';
     }
     return '';
   }
 
-  /// Generate semantic hint for navigation buttons
   static String getNavigationHint(String direction) {
     switch (direction.toLowerCase()) {
       case 'previous':
       case 'left':
-        return 'Navigate to previous month';
+        return 'Go to previous month';
       case 'next':
       case 'right':
-        return 'Navigate to next month';
+        return 'Go to next month';
       case 'today':
-        return 'Go to today\'s date';
+        return 'Jump to today';
       default:
         return 'Navigate';
     }
   }
 
-  /// Create semantic properties for a calendar cell
   static SemanticsProperties createCellSemantics(
     CompleteDate date, {
     required VoidCallback? onTap,
@@ -129,49 +120,27 @@ class CalendarAccessibility {
     );
   }
 
-  /// Announce a message to screen readers
   static void announce(BuildContext context, String message) {
     final view = View.of(context);
     SemanticsService.sendAnnouncement(view, message, TextDirection.ltr);
   }
 
-  /// Announce date selection
   static void announceDateSelection(BuildContext context, CompleteDate date) {
-    final message = 'Selected ${date.formatWestern()}';
-    announce(context, message);
+    final text = MyanmarCalendar.formatWestern(
+      date.western,
+      pattern: '%yyyy-%mm-%dd',
+      language: Language.english,
+    );
+    announce(context, 'Selected $text');
   }
 
-  /// Announce month change
   static void announceMonthChange(BuildContext context, DateTime month) {
-    final message =
-        'Showing ${_getMonthName(month.month, Language.english)} ${month.year}';
-    announce(context, message);
-  }
-
-  /// Get month name for the given language
-  static String _getMonthName(int month, Language language) {
-    // This is a simplified version - should use actual localization
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return monthNames[month - 1];
+    announce(context, 'Showing ${generateMonthLabel(month, Language.english)}');
   }
 }
 
-/// Keyboard navigation handler for calendar widgets
 class CalendarKeyboardHandler {
-  /// Handle keyboard navigation for calendar
+  /// Handles keyboard navigation semantics for calendar-like grids.
   static KeyEventResult handleKeyEvent(
     FocusNode focusNode,
     KeyEvent event, {
@@ -190,43 +159,48 @@ class CalendarKeyboardHandler {
     }
 
     final key = event.logicalKey;
-
     if (key == LogicalKeyboardKey.arrowUp) {
       onArrowUp();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.arrowDown) {
+    }
+    if (key == LogicalKeyboardKey.arrowDown) {
       onArrowDown();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.arrowLeft) {
+    }
+    if (key == LogicalKeyboardKey.arrowLeft) {
       onArrowLeft();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.arrowRight) {
+    }
+    if (key == LogicalKeyboardKey.arrowRight) {
       onArrowRight();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.enter) {
+    }
+    if (key == LogicalKeyboardKey.enter) {
       onEnter();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.space) {
+    }
+    if (key == LogicalKeyboardKey.space) {
       onSpace();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.escape && onEscape != null) {
+    }
+    if (key == LogicalKeyboardKey.escape && onEscape != null) {
       onEscape();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.home && onHome != null) {
+    }
+    if (key == LogicalKeyboardKey.home && onHome != null) {
       onHome();
       return KeyEventResult.handled;
-    } else if (key == LogicalKeyboardKey.end && onEnd != null) {
+    }
+    if (key == LogicalKeyboardKey.end && onEnd != null) {
       onEnd();
       return KeyEventResult.handled;
     }
-
     return KeyEventResult.ignored;
   }
 }
 
-/// Focus management utilities for calendar widgets
 class CalendarFocusManager {
-  /// Create a focus node with accessibility labels
+  /// Creates focus nodes with consistent defaults for calendar controls.
   static FocusNode createFocusNode({
     String? debugLabel,
     bool skipTraversal = false,
@@ -239,7 +213,6 @@ class CalendarFocusManager {
     );
   }
 
-  /// Request focus with announcement
   static void requestFocusWithAnnouncement(
     BuildContext context,
     FocusNode focusNode,
@@ -250,14 +223,12 @@ class CalendarFocusManager {
   }
 }
 
-/// High contrast theme helper
 class HighContrastHelper {
-  /// Check if high contrast mode is enabled
+  /// Returns true when high-contrast mode is enabled.
   static bool isHighContrastEnabled(BuildContext context) {
     return MediaQuery.highContrastOf(context);
   }
 
-  /// Get high contrast color
   static Color getHighContrastColor(
     BuildContext context,
     Color normalColor,
@@ -266,7 +237,6 @@ class HighContrastHelper {
     return isHighContrastEnabled(context) ? highContrastColor : normalColor;
   }
 
-  /// Get high contrast border
   static BoxDecoration getHighContrastBorder(
     BuildContext context, {
     Color? borderColor,
@@ -285,58 +255,49 @@ class HighContrastHelper {
   }
 }
 
-/// Text scaling helper for accessibility
 class TextScalingHelper {
-  /// Get scaled font size
+  /// Calculates scaled font size with an upper cap.
   static double getScaledFontSize(
     BuildContext context,
     double baseFontSize, {
     double maxScale = 2.0,
   }) {
-    final textScaler = MediaQuery.textScalerOf(context);
-    final scaledSize = textScaler.scale(baseFontSize);
-    // Clamp the scaled size between base and base * maxScale
-    return scaledSize.clamp(baseFontSize, baseFontSize * maxScale);
+    final scaled = MediaQuery.textScalerOf(context).scale(baseFontSize);
+    return scaled.clamp(baseFontSize, baseFontSize * maxScale);
   }
 
-  /// Check if large text is enabled
   static bool isLargeTextEnabled(BuildContext context, {double? fontSize}) {
-    final textScaler = MediaQuery.textScalerOf(context);
-    return textScaler.scale(fontSize ?? 14.0) > 1.3;
+    return MediaQuery.textScalerOf(context).scale(fontSize ?? 14) > 1.3;
   }
 
-  /// Get accessible text style
   static TextStyle getAccessibleTextStyle(
     BuildContext context,
     TextStyle baseStyle, {
     double? minFontSize,
     double? maxFontSize,
   }) {
-    final textScaler = MediaQuery.textScalerOf(context);
-    final baseFontSize = baseStyle.fontSize ?? 14.0;
-    var fontSize = textScaler.scale(baseFontSize);
+    final base = baseStyle.fontSize ?? 14;
+    var size = MediaQuery.textScalerOf(context).scale(base);
 
-    if (minFontSize != null && fontSize < minFontSize) {
-      fontSize = minFontSize;
+    if (minFontSize != null && size < minFontSize) {
+      size = minFontSize;
     }
-    if (maxFontSize != null && fontSize > maxFontSize) {
-      fontSize = maxFontSize;
+    if (maxFontSize != null && size > maxFontSize) {
+      size = maxFontSize;
     }
 
-    return baseStyle.copyWith(fontSize: fontSize);
+    return baseStyle.copyWith(fontSize: size);
   }
 }
 
-/// Accessibility testing helper
 class AccessibilityTestHelper {
-  /// Validate semantic properties
+  /// Basic semantic assertions used by widget tests.
   static List<String> validateSemantics(SemanticsProperties properties) {
     final issues = <String>[];
 
-    if (properties.label == null || properties.label!.isEmpty) {
+    if ((properties.label ?? '').isEmpty) {
       issues.add('Missing semantic label');
     }
-
     if (properties.button == true && properties.onTap == null) {
       issues.add('Button has no onTap callback');
     }
@@ -344,10 +305,7 @@ class AccessibilityTestHelper {
     return issues;
   }
 
-  /// Check if widget is accessible
   static bool isAccessible(Widget widget) {
-    // This is a simplified check - in real implementation,
-    // you would traverse the widget tree
     return widget is Semantics || widget is MergeSemantics;
   }
 }

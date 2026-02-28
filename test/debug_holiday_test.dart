@@ -4,18 +4,20 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('Debug holiday calculation for July 27, 2026', () {
     MyanmarCalendar.configure(
-      customHolidays: [
+      customHolidayRules: [
         CustomHoliday(
           id: 'holiday_today',
           name: "Today's Custom Holiday",
           type: HolidayType.other,
-          predicate: (m, w) => w.month == 1 && w.day == 16,
+          matcher: (context) =>
+              context.westernDate.month == 1 && context.westernDate.day == 16,
         ),
         CustomHoliday(
           id: 'my_birthday',
           name: 'My Birthday',
           type: HolidayType.other,
-          predicate: (m, w) => w.month == 7 && w.day == 27,
+          matcher: (context) =>
+              context.westernDate.month == 7 && context.westernDate.day == 27,
         ),
       ],
     );

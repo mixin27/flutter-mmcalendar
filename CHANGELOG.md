@@ -1,3 +1,42 @@
+## 3.3.0
+
+### Major Refactor
+
+- Full package refactor aligned with `myanmar_calendar_dart: ^2.0.0`
+- Rebuilt calendar and picker widget architecture for clearer separation of concerns
+- Added internal widget repository/grid/localization utility layers
+
+### New Widgets & UX
+
+- Added reusable `MyanmarCalendarToolbar`
+- Added reusable `MyanmarDateSummaryCard`
+- Reworked `MyanmarCalendarWidget` for cleaner selection-state handling
+- Reworked `MyanmarDatePickerWidget` with:
+  - Responsive footer actions (no overflow on longer localized labels)
+  - Scrollable year selector for long-range year selection
+  - Improved month/year constraint handling from `firstDate` / `lastDate`
+
+### Moon Phase System
+
+- Added new CustomPainter-based moon phase components:
+  - `MoonPhasePainter`
+  - `MoonPhaseView`
+  - `DailyMoonPhaseWidget`
+  - `MoonPhaseMath` helpers for daily phase/illumination mapping
+- Added moon phase timeline showcase in example app
+
+### Docs
+
+- Comprehensive README rewrite for current APIs and widgets
+- Inline documentation refresh across core/widget public files
+- Changelog refreshed to document the new architecture and widget APIs
+
+### Tests & Analysis
+
+- Added moon phase widget/math tests
+- Updated tests for `myanmar_calendar_dart 2.x` custom holiday API
+- Package-level `flutter analyze` / `flutter test` checks passing
+
 ## 3.2.8
 
 - bumps `myanmar_calendar_dart: ^1.1.5`
@@ -155,7 +194,7 @@ All new features are properly exported from the main library:
 
 ## 3.2.0
 
-- Added `Cache` system: See [Cache Docs](https://github.com/mixin27/flutter-mmcalendar/blob/main/cache.md) for usage.
+- Added `Cache` system for faster repeated calendar lookups.
 
 ## 3.1.1
 
