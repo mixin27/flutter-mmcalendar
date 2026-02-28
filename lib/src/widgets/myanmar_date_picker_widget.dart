@@ -10,6 +10,10 @@ import 'internal/calendar_localization_utils.dart';
 import 'myanmar_calendar_widget.dart';
 import 'myanmar_date_summary_card.dart';
 
+/// Inline Myanmar date picker with calendar/year modes.
+///
+/// This widget is the shared implementation used by both modal and fullscreen
+/// picker helpers.
 class MyanmarDatePickerWidget extends StatefulWidget {
   const MyanmarDatePickerWidget({
     super.key,
@@ -720,6 +724,7 @@ class _ModeButton extends StatelessWidget {
   }
 }
 
+/// Shows a dialog-based Myanmar date picker and returns selected date.
 Future<CompleteDate?> showMyanmarDatePicker({
   required BuildContext context,
   DateTime? initialDate,
@@ -776,6 +781,7 @@ Future<CompleteDate?> showMyanmarDatePicker({
   );
 }
 
+/// Shows a fullscreen Myanmar date picker page and returns selected date.
 Future<CompleteDate?> showMyanmarDatePickerFullscreen({
   required BuildContext context,
   DateTime? initialDate,

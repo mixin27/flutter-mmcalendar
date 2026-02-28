@@ -1,62 +1,16 @@
-/// Myanmar Calendar Package
+/// Flutter-first Myanmar calendar UI toolkit built on top of
+/// `myanmar_calendar_dart`.
 ///
-/// A comprehensive Flutter package for Myanmar calendar with date conversions,
-/// astrological calculations, holiday information, and multi-language support.
+/// This package re-exports the core calculation API and adds composable Flutter
+/// widgets such as:
 ///
-/// Author: Kyaw Zayar Tun
-/// Website: https://www.kyawzayartun.com
-/// GitHub:  https://github.com/mixin27/flutter-mmcalendar
-/// License: MIT
+/// - [MyanmarCalendarWidget] for month views
+/// - [MyanmarDatePickerWidget] and modal pickers
+/// - [HoroscopeWidget] and summary cards
+/// - CustomPainter-based moon phase widgets
 ///
-/// ## Features
-///
-/// - **Date Conversions**: Bidirectional conversion between Myanmar and Western calendars
-/// - **Astrological Information**: Complete astrological calculations including watat years, moon phases
-/// - **Holiday Calculations**: Myanmar holidays, religious days, cultural celebrations
-/// - **Multi-language Support**: Myanmar (Unicode), Myanmar (Zawgyi), Mon, Shan, Karen, English
-/// - **Formatting Services**: Flexible date formatting with localization
-/// - **UI Widgets**: Ready-to-use calendar widgets and date pickers
-/// - **Validation**: Comprehensive date validation with detailed error messages
-/// - **Utilities**: Helper functions for date calculations and manipulations
-///
-/// ## Quick Start
-///
-/// ```dart
-/// import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
-///
-/// // Get today's Myanmar date
-/// final today = MyanmarCalendar.today();
-/// print('Today: ${today.formatMyanmar()}');
-///
-/// // Convert dates
-/// final myanmarDate = MyanmarCalendar.fromWestern(2024, 1, 1);
-/// final westernDate = MyanmarCalendar.fromMyanmar(1385, 10, 1);
-///
-/// // Get complete date information
-/// final completeDate = MyanmarCalendar.getCompleteDate(DateTime.now());
-/// print('Holidays: ${completeDate.allHolidays}');
-/// print('Astrological days: ${completeDate.astrologicalDays}');
-/// ```
-///
-/// ## Widgets
-///
-/// ```dart
-/// // Myanmar Calendar Widget
-/// MyanmarCalendarWidget(
-///   onDateSelected: (date) => print('Selected: $date'),
-///   initialDate: DateTime.now(),
-///   language: Language.myanmar,
-/// )
-///
-/// // Myanmar Date Picker
-/// final date = await showMyanmarDatePicker(
-///   context: context,
-///   initialDate: DateTime.now(),
-///   language: Language.english,
-/// );
-/// ```
-///
-/// For detailed documentation and examples, visit: https://pub.dev/packages/flutter_mmcalendar
+/// The package targets responsive mobile/desktop layouts, accessibility, and
+/// production-ready customization via [MyanmarCalendarTheme].
 library;
 
 // Re-export upstream package.

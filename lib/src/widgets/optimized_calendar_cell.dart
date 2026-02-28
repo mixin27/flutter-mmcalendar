@@ -9,6 +9,9 @@ import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 import '../core/myanmar_calendar_theme.dart';
 import '../utils/accessibility_utils.dart';
 
+/// High-performance day cell for calendar grids.
+///
+/// Uses [RepaintBoundary] + semantic labels and supports range/multi states.
 class OptimizedCalendarCell extends StatelessWidget {
   const OptimizedCalendarCell({
     super.key,
@@ -207,6 +210,7 @@ class OptimizedCalendarCell extends StatelessWidget {
 }
 
 class OptimizedCalendarCellBuilder {
+  /// Convenience builder for simple integrations.
   static Widget build({
     required BuildContext context,
     required CompleteDate date,

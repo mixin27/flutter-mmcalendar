@@ -2,14 +2,20 @@
 
 /// Date-grid helpers shared by calendar and picker widgets.
 class CalendarGridUtils {
+  /// Normalizes a value to date-only precision.
   static DateTime normalize(DateTime value) {
     return DateTime(value.year, value.month, value.day);
   }
 
+  /// Returns true when [a] and [b] represent the same day.
   static bool isSameDate(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
+  /// Builds a fixed-size month grid suitable for calendar UIs.
+  ///
+  /// The result always has `rows * 7` items and includes leading/trailing days
+  /// from adjacent months.
   static List<DateTime> buildMonthGrid(
     DateTime visibleMonth, {
     int firstDayOfWeek = 1,

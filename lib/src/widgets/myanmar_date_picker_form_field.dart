@@ -7,6 +7,7 @@ import '../core/myanmar_calendar_theme.dart';
 import 'internal/calendar_localization_utils.dart';
 import 'myanmar_date_picker_widget.dart';
 
+/// `FormField` wrapper for selecting [MyanmarDateTime] values.
 class MyanmarDatePickerFormField extends StatefulWidget {
   const MyanmarDatePickerFormField({
     super.key,
@@ -153,6 +154,7 @@ class _MyanmarDatePickerFormFieldState
 }
 
 class MyanmarDateField extends StatelessWidget {
+  /// Read-only text field variant that opens the Myanmar date picker on tap.
   const MyanmarDateField({
     super.key,
     required this.value,

@@ -4,6 +4,7 @@ import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 /// Lightweight localization helpers for widget labels.
 class CalendarLocalizationUtils {
+  /// Translates [key] with optional [fallback] when key is missing.
   static String tr(String key, Language language, {String? fallback}) {
     final translated = TranslationService.translateTo(key, language);
     if (translated == key && fallback != null) {
@@ -12,6 +13,7 @@ class CalendarLocalizationUtils {
     return translated;
   }
 
+  /// Localized weekday label from Myanmar weekday index.
   static String weekday(
     int myanmarWeekday,
     Language language, {
@@ -23,10 +25,12 @@ class CalendarLocalizationUtils {
     return TranslationService.getWeekdayName(myanmarWeekday, language);
   }
 
+  /// Localized western month name.
   static String westernMonth(int month, Language language) {
     return TranslationService.getWesternMonthName(month, language);
   }
 
+  /// Localized short western month name.
   static String shortWesternMonth(int month, Language language) {
     return TranslationService.getShortWesternMonthName(month, language);
   }

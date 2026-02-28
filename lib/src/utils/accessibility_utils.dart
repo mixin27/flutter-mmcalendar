@@ -8,6 +8,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
+/// Semantic label and announcement helpers for calendar widgets.
 class CalendarAccessibility {
   static String generateDateLabel(
     CompleteDate date, {
@@ -139,6 +140,7 @@ class CalendarAccessibility {
 }
 
 class CalendarKeyboardHandler {
+  /// Handles keyboard navigation semantics for calendar-like grids.
   static KeyEventResult handleKeyEvent(
     FocusNode focusNode,
     KeyEvent event, {
@@ -198,6 +200,7 @@ class CalendarKeyboardHandler {
 }
 
 class CalendarFocusManager {
+  /// Creates focus nodes with consistent defaults for calendar controls.
   static FocusNode createFocusNode({
     String? debugLabel,
     bool skipTraversal = false,
@@ -221,6 +224,7 @@ class CalendarFocusManager {
 }
 
 class HighContrastHelper {
+  /// Returns true when high-contrast mode is enabled.
   static bool isHighContrastEnabled(BuildContext context) {
     return MediaQuery.highContrastOf(context);
   }
@@ -252,6 +256,7 @@ class HighContrastHelper {
 }
 
 class TextScalingHelper {
+  /// Calculates scaled font size with an upper cap.
   static double getScaledFontSize(
     BuildContext context,
     double baseFontSize, {
@@ -286,6 +291,7 @@ class TextScalingHelper {
 }
 
 class AccessibilityTestHelper {
+  /// Basic semantic assertions used by widget tests.
   static List<String> validateSemantics(SemanticsProperties properties) {
     final issues = <String>[];
 

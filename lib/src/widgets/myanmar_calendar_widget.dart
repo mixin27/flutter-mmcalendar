@@ -11,6 +11,13 @@ import 'internal/calendar_localization_utils.dart';
 import 'myanmar_calendar_toolbar.dart';
 import 'optimized_calendar_cell.dart';
 
+/// Month-based calendar widget with Myanmar date integration.
+///
+/// Supports:
+/// - Single/range/multi selection modes
+/// - Holiday and astrology indicators
+/// - Custom header/cell builders
+/// - Min/max date constraints
 class MyanmarCalendarWidget extends StatefulWidget {
   const MyanmarCalendarWidget({
     super.key,
