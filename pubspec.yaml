@@ -8,13 +8,13 @@ funding:
   - https://www.buymeacoffee.com/kyawzayartun98
 
 environment:
-  sdk: ^3.10.4
+  sdk: ^3.11.0
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  myanmar_calendar_dart: ^1.1.5
+  myanmar_calendar_dart: ^2.0.0
 
 dev_dependencies:
   flutter_test:
