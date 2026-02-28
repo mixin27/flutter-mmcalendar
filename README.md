@@ -215,10 +215,6 @@ If you are migrating from older `flutter_mmcalendar` versions:
 - Moon widgets are now CustomPainter-based (`MoonPhaseView`, `DailyMoonPhaseWidget`)
 - Some legacy docs/examples from older versions were removed in favor of current APIs
 
-## Contributing
-
-PRs are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md).
-
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
