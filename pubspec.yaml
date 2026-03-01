@@ -1,6 +1,6 @@
 name: flutter_mmcalendar
 description: "A Flutter-first UI toolkit for Myanmar calendar apps"
-version: 3.3.0
+version: 3.3.1
 homepage: https://github.com/mixin27/flutter-mmcalendar
 repository: https://github.com/mixin27/flutter-mmcalendar
 issue_tracker: https://github.com/mixin27/flutter-mmcalendar/issues
@@ -14,7 +14,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  myanmar_calendar_dart: ^2.0.0
+  myanmar_calendar_dart: ^2.0.1
 
 dev_dependencies:
   flutter_test:

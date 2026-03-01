@@ -1,3 +1,7 @@
+## 3.3.1
+
+- bumps `myanmar_calendar_dart: ^2.0.1`
+
 ## 3.3.0
 
 ### Major Refactor
