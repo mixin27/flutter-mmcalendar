@@ -46,7 +46,8 @@ class MmCalendarThemeData extends ThemeExtension<MmCalendarThemeData> {
       accent: scheme.primary,
       onAccent: scheme.onPrimary,
       accentContainer: scheme.primaryContainer,
-      surface: scheme.surfaceContainerLow,
+      // White cards on a grey page in light mode; lifted cards in dark.
+      surface: dark ? scheme.surfaceContainer : scheme.surfaceContainerLowest,
       surfaceVariant: scheme.surfaceContainerHighest,
       ink: scheme.onSurface,
       muted: scheme.onSurfaceVariant,

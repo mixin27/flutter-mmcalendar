@@ -18,6 +18,15 @@ library;
 export 'package:myanmar_calendar_dart/ai.dart';
 export 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
+// 4.0 adaptive primitives: Material, Cupertino and Glass.
+export 'src/adaptive/mm_buttons.dart';
+export 'src/adaptive/mm_chip.dart';
+export 'src/adaptive/mm_glass.dart';
+export 'src/adaptive/mm_list.dart';
+export 'src/adaptive/mm_overlays.dart';
+export 'src/adaptive/mm_pressable.dart';
+export 'src/adaptive/mm_segmented.dart';
+export 'src/adaptive/mm_surface.dart';
 export 'src/core/myanmar_calendar_theme.dart';
 // 4.0 foundation: scope, theme, style, selection, controller.
 export 'src/foundation/calendar_selection.dart';
