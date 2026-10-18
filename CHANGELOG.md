@@ -1,3 +1,32 @@
+## 4.0.0
+
+Builds on `myanmar_calendar_dart: ^3.0.0`. This package re-exports the core
+library, so its breaking changes are breaking here too. See the README's
+migration notes and the
+[core changelog](https://pub.dev/packages/myanmar_calendar_dart/changelog).
+
+### Breaking
+
+- `MyanmarCalendar.generateAIPrompt` is removed in the core. Use
+  `AIPromptService.generatePrompt`, which `flutter_mmcalendar` still exports
+  (it now re-exports `package:myanmar_calendar_dart/ai.dart`).
+- `getCacheStatistics()` returns `CalendarCacheStatistics` instead of a map;
+  `toMap()` gives the old shape.
+- The unused exception classes `DateConversionException`,
+  `DateOutOfRangeException`, `CacheException`,
+  `AstrologicalCalculationException` and `HolidayCalculationException` are
+  removed.
+- Holidays follow the reference calendar: 1 January is a public holiday only
+  from 2018 to 2021, and Tazaungmon 14 is a public holiday. The Shan year
+  turns over at Nadaw 1.
+
+### Fixed
+
+- Calendar and picker cells look days up by their civil date
+  (`getCompleteDateFor`), so the device's time zone can't shift a cell to
+  the neighbouring day.
+- `PackageConstants.version` matches the package version again.
+
 ## 3.3.2
 
 - bumps `myanmar_calendar_dart: ^2.0.2`

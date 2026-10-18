@@ -23,7 +23,7 @@ A Flutter-first UI toolkit for Myanmar calendar apps, powered by
 
 ```yaml
 dependencies:
-  flutter_mmcalendar: ^3.3.0
+  flutter_mmcalendar: ^4.0.0
 ```
 
 ```bash
@@ -208,9 +208,30 @@ Showcase includes:
 
 ## Migration Notes
 
-If you are migrating from older `flutter_mmcalendar` versions:
+### 3.x to 4.0
 
-- Core dependency is now `myanmar_calendar_dart 2.x`
+4.0 builds on `myanmar_calendar_dart` 3.0, which this package re-exports, so
+the core's breaking changes reach your code too. See the
+[core changelog](https://pub.dev/packages/myanmar_calendar_dart/changelog)
+for the full list. The ones you're most likely to meet:
+
+- `MyanmarCalendar.generateAIPrompt(date, ...)` is now
+  `AIPromptService.generatePrompt(date, ...)`. It's still exported from
+  `flutter_mmcalendar`.
+- `getCacheStatistics()` returns a typed `CalendarCacheStatistics`. Read
+  `stats.hits` or `stats.totalMemoryEntries`, or call `stats.toMap()` for
+  the old map.
+- `DateConversionException`, `DateOutOfRangeException`, `CacheException`,
+  `AstrologicalCalculationException` and `HolidayCalculationException` are
+  gone. Catch `MyanmarCalendarException` or one of the four that remain.
+- `parseMyanmar` and `parseWestern` throw `DateParseException`; use
+  `tryParseMyanmar` / `tryParseWestern` for `null` instead.
+- Holidays now match the reference calendar: 1 January is a public holiday
+  only from 2018 to 2021. The Shan year turns over at Nadaw 1.
+
+### Older versions
+
+- Core dependency moved to `myanmar_calendar_dart 2.x` in 3.3.0
 - Picker and calendar internals are fully refactored
 - Moon widgets are now CustomPainter-based (`MoonPhaseView`, `DailyMoonPhaseWidget`)
 - Some legacy docs/examples from older versions were removed in favor of current APIs
