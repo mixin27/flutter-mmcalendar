@@ -1,6 +1,6 @@
 name: flutter_mmcalendar
-description: "A comprehensive Flutter package for Myanmar calendar with date conversions, astrological calculations, and multi-language support"
-version: 3.3.0
+description: "Myanmar calendar widgets for Flutter in Material 3, Cupertino and Liquid Glass: month, lunar month and year views, pickers, holidays, moon phases and astrology."
+version: 4.0.0
 homepage: https://github.com/mixin27/flutter-mmcalendar
 repository: https://github.com/mixin27/flutter-mmcalendar
 issue_tracker: https://github.com/mixin27/flutter-mmcalendar/issues
@@ -9,17 +9,21 @@ funding:
 
 environment:
   sdk: ^3.11.0
-  flutter: ">=1.17.0"
+  flutter: ">=3.41.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  myanmar_calendar_dart: ^2.0.0
+  myanmar_calendar_dart: ^3.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+flutter:
+  shaders:
+    - shaders/liquid_glass.frag
 
 platforms:
   android:
@@ -37,9 +41,19 @@ topics:
   - myanmar-calendar-view
 
 screenshots:
-  - description: Myanmar calendar widget demo.
-    path: screenshots/calendar_widget.png
-  - description: Myanmar date picker widget demo.
-    path: screenshots/date_picker_widget.png
-  - description: Other information demo.
-    path: screenshots/others.png
+  - description: Month calendar with Western and Myanmar dates, in Liquid Glass.
+    path: screenshots/calendar_glass_light.jpg
+  - description: The same calendar in Material 3, dark.
+    path: screenshots/calendar_material_dark.jpg
+  - description: Myanmar date wheel picker in a glass sheet.
+    path: screenshots/wheels_glass_light.jpg
+  - description: A Myanmar month by fortnight, in Myanmar.
+    path: screenshots/lunar_month_myanmar.jpg
+  - description: Today, moon countdown, holidays and astrology, dark glass.
+    path: screenshots/day_glass_dark.jpg
+  - description: Converter, date arithmetic and AI prompts, Cupertino.
+    path: screenshots/tools_cupertino_light.jpg
+  - description: Tablet layout with the day beside the calendar.
+    path: screenshots/ipad_calendar_cupertino_light.jpg
+  - description: Day details on a tablet, in Myanmar.
+    path: screenshots/ipad_day_glass_light.jpg
