@@ -158,6 +158,8 @@ class MmListRow extends StatelessWidget {
                 child: subtitle!,
               ),
         leading: leading,
+        // Room for a date column or a moon, not just an icon.
+        leadingSize: 44,
         trailing:
             trailing ??
             (onTap == null ? null : const CupertinoListTileChevron()),

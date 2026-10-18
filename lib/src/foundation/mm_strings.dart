@@ -45,6 +45,24 @@ class MmStrings {
     'Month': 'လ',
     'Day': 'ရက်',
     'days': 'ရက်',
+    'Dates': 'ရက်စွဲများ',
+    'Moon': 'လ',
+    'Holidays': 'ရုံးပိတ်ရက်များ',
+    'Astrology': 'ဗေဒင်',
+    'Shan year': 'ရှမ်းနှစ်',
+    'No holidays': 'ရုံးပိတ်ရက် မရှိ',
+    'Copy': 'ကူးယူရန်',
+    'Tomorrow': 'မနက်ဖြန်',
+    'in': '',
+    'days later': 'ရက်အကြာ',
+    'Upcoming holidays': 'လာမည့် ရုံးပိတ်ရက်များ',
+    'Public holiday': 'ရုံးပိတ်ရက်',
+    'Religious': 'ဘာသာရေး',
+    'Cultural': 'ယဉ်ကျေးမှု',
+    'Anniversary': 'နှစ်ပတ်လည်နေ့',
+    'Other': 'အခြား',
+    'Custom': 'ကိုယ်ပိုင်',
+    'lit': 'လင်း',
   };
 
   String _t(String key) {
@@ -138,6 +156,68 @@ class MmStrings {
     }
     return '${language.digits(count)} ${_t('days')}';
   }
+
+  /// The day details' dates section.
+  String get dates => _t('Dates');
+
+  /// The moon section.
+  String get moon => _t('Moon');
+
+  /// The holidays section.
+  String get holidays => _t('Holidays');
+
+  /// The astrology section.
+  String get astrology => _t('Astrology');
+
+  /// "Shan year".
+  String get shanYear => _t('Shan year');
+
+  /// "Myanmar year", from the core's translations.
+  String get myanmarYear => _t('Myanmar Year');
+
+  /// "Sasana year", from the core's translations.
+  String get sasanaYear => _t('Sasana Year');
+
+  /// Shown when a day has no holidays.
+  String get noHolidays => _t('No holidays');
+
+  /// The copy button's tooltip.
+  String get copy => _t('Copy');
+
+  /// "Upcoming holidays".
+  String get upcomingHolidays => _t('Upcoming holidays');
+
+  /// "Today", "Tomorrow" or "in 8 days".
+  String daysUntil(int days) {
+    if (days == 0) return today;
+    if (days == 1) return _t('Tomorrow');
+    if (language == Language.english &&
+        !TranslationService.hasTranslation('days later', language)) {
+      return 'in $days days';
+    }
+    return '${language.digits(days)} ${_t('days later')}';
+  }
+
+  /// What kind of holiday [type] is: "Public holiday", "Religious"...
+  String holidayType(HolidayType type) => _t(switch (type) {
+    HolidayType.public => 'Public holiday',
+    HolidayType.religious => 'Religious',
+    HolidayType.cultural => 'Cultural',
+    HolidayType.myanmarAnniversary ||
+    HolidayType.otherAnniversary => 'Anniversary',
+    HolidayType.other => 'Other',
+  });
+
+  /// A custom holiday's label.
+  String get customHoliday => _t('Custom');
+
+  /// "62% lit".
+  String percentLit(int percent) => language == Language.english
+      ? '$percent% lit'
+      : '${language.digits(percent)}% ${_t('lit')}';
+
+  /// A core term (Sabbath, Yatyaza, Human, East...) in this language.
+  String term(String key) => TranslationService.translateTo(key, language);
 
   /// "3 events", in this language's digits.
   String eventCount(int count) {

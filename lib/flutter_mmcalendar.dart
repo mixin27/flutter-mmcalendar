@@ -39,6 +39,13 @@ export 'src/calendars/myanmar_week_strip.dart';
 export 'src/calendars/myanmar_year_calendar.dart';
 export 'src/core/myanmar_calendar_theme.dart';
 // 4.0 foundation: scope, theme, style, selection, controller.
+// 4.0 day information.
+export 'src/day/astrology_card.dart';
+export 'src/day/day_badges.dart';
+export 'src/day/holiday_list.dart';
+export 'src/day/myanmar_date_text.dart';
+export 'src/day/myanmar_day_details.dart';
+export 'src/day/myanmar_today_card.dart';
 export 'src/foundation/calendar_selection.dart';
 export 'src/foundation/language_locale.dart';
 export 'src/foundation/mm_calendar_theme_data.dart';
@@ -50,6 +57,8 @@ export 'src/foundation/myanmar_day_data.dart';
 export 'src/foundation/today_builder.dart';
 // 3.x widgets and their theme (above), replaced step by step by 4.0 widgets.
 export 'src/moon/moon_glyph.dart';
+export 'src/moon/moon_phase_strip.dart';
+export 'src/moon/next_moon_countdown.dart';
 // 4.0 pickers.
 export 'src/pickers/myanmar_date_form_field.dart';
 export 'src/pickers/myanmar_date_picker.dart';
