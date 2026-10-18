@@ -10,9 +10,11 @@ void main() {
     });
 
     test('calculates holidays correctly', () {
-      final myanmarDate = MyanmarCalendar.fromWestern(2024, 1, 1);
+      // Independence Day. Since myanmar_calendar_dart 3, 1 January is a
+      // public holiday only from 2018 to 2021, as in the reference.
+      final myanmarDate = MyanmarCalendar.fromWestern(2024, 1, 4);
       final holidayInfo = service.getHolidayInfo(myanmarDate.myanmarDate);
-      expect(holidayInfo.allHolidays, isNotEmpty);
+      expect(holidayInfo.has(HolidayId.independenceDay), isTrue);
     });
 
     test('validates Myanmar dates correctly', () {

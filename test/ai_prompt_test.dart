@@ -2,13 +2,13 @@ import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('AIPromptService & MyanmarCalendar AI Prompt Tests', () {
-    test('generateAIPrompt should support different types', () {
+  group('AIPromptService', () {
+    test('generatePrompt should support different types', () {
       final dateTime = DateTime(2024, 5, 20);
       final date = MyanmarCalendar.getCompleteDate(dateTime);
 
       // Horoscope Type
-      final promptH = MyanmarCalendar.generateAIPrompt(
+      final promptH = AIPromptService.generatePrompt(
         date,
         language: Language.english,
         type: AIPromptType.horoscope,
@@ -16,7 +16,7 @@ void main() {
       expect(promptH, contains('horoscope reading'));
 
       // Fortune Telling Type
-      final promptF = MyanmarCalendar.generateAIPrompt(
+      final promptF = AIPromptService.generatePrompt(
         date,
         language: Language.english,
         type: AIPromptType.fortuneTelling,
@@ -25,7 +25,7 @@ void main() {
       expect(promptF, contains('wealth, relationships, and success'));
 
       // Divination Type
-      final promptD = MyanmarCalendar.generateAIPrompt(
+      final promptD = AIPromptService.generatePrompt(
         date,
         language: Language.english,
         type: AIPromptType.divination,
@@ -34,22 +34,19 @@ void main() {
       expect(promptD, contains('spiritual path'));
     });
 
-    test(
-      'generateAIPrompt should respect specified language for all types',
-      () {
-        final dateTime = DateTime(2024, 5, 20);
-        final date = MyanmarCalendar.getCompleteDate(dateTime);
+    test('generatePrompt should respect specified language for all types', () {
+      final dateTime = DateTime(2024, 5, 20);
+      final date = MyanmarCalendar.getCompleteDate(dateTime);
 
-        final promptMM = MyanmarCalendar.generateAIPrompt(
-          date,
-          language: Language.myanmar,
-          type: AIPromptType.fortuneTelling,
-        );
+      final promptMM = AIPromptService.generatePrompt(
+        date,
+        language: Language.myanmar,
+        type: AIPromptType.fortuneTelling,
+      );
 
-        expect(promptMM, contains('ဗေဒင်ဟောစာတမ်း'));
-        expect(promptMM, contains('စည်းစိမ်ဥစ္စာ'));
-        expect(promptMM, contains('ယတြာ'));
-      },
-    );
+      expect(promptMM, contains('ဗေဒင်ဟောစာတမ်း'));
+      expect(promptMM, contains('စည်းစိမ်ဥစ္စာ'));
+      expect(promptMM, contains('ယတြာ'));
+    });
   });
 }

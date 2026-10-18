@@ -51,7 +51,15 @@ void main() {
       final shanToday = MyanmarCalendar.todayInShan();
       final myanmarToday = MyanmarCalendar.today().myanmarYear;
 
-      expect(shanToday.year, myanmarToday + 733);
+      // The Shan year turns over at Nadaw 1, months before Myanmar New Year.
+      expect(shanToday.year - myanmarToday, anyOf(732, 733));
+    });
+
+    test('Shan year turns over at Nadaw', () {
+      expect(MyanmarCalendar.getCompleteDateFor(2026, 5, 10).shan.year, 2120);
+      final nadaw = MyanmarCalendar.getMyanmarMonth(1388, 9).first;
+      final day = MyanmarDateTime.fromMyanmarDate(nadaw).toDateTime();
+      expect(MyanmarCalendar.getCompleteDate(day).shan.year, 2121);
     });
   });
 }

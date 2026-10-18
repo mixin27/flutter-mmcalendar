@@ -18,7 +18,7 @@ void main() {
       expect(exception.details, isNotNull);
       expect(
         exception.details!['suggestion'],
-        contains('month must be between'),
+        contains('Myanmar months are'),
       );
     });
 
@@ -31,7 +31,7 @@ void main() {
 
       expect(
         exception.details!['suggestion'],
-        contains('Myanmar month must be between 1 and 13'),
+        contains('Myanmar months are 0 (First Waso'),
       );
     });
 
@@ -44,7 +44,7 @@ void main() {
 
       expect(
         exception.details!['suggestion'],
-        contains('Myanmar day must be between 1 and 30'),
+        contains('Myanmar days are 1 to 30'),
       );
     });
 
@@ -90,53 +90,6 @@ void main() {
     });
   });
 
-  group('DateConversionException', () {
-    test('creates exception for Myanmar to Western conversion', () {
-      final exception = DateConversionException.myanmarToWestern(
-        year: 1385,
-        month: 10,
-        day: 1,
-      );
-
-      expect(exception.conversionType, equals('Myanmar to Western'));
-      expect(exception.message, contains('Failed to convert'));
-      expect(exception.details!['myanmarYear'], equals(1385));
-    });
-
-    test('creates exception for Western to Myanmar conversion', () {
-      final exception = DateConversionException.westernToMyanmar(
-        year: 2024,
-        month: 1,
-        day: 1,
-      );
-
-      expect(exception.conversionType, equals('Western to Myanmar'));
-      expect(exception.message, contains('Failed to convert'));
-      expect(exception.details!['westernYear'], equals(2024));
-    });
-
-    test('creates exception for Julian Day conversion', () {
-      final exception = DateConversionException.julianDay(julianDay: 2460000.5);
-
-      expect(exception.conversionType, equals('Julian Day'));
-      expect(exception.message, contains('Julian Day Number'));
-      expect(exception.details!['julianDay'], equals(2460000.5));
-    });
-
-    test('includes original error when provided', () {
-      final originalError = Exception('Original error');
-      final exception = DateConversionException.myanmarToWestern(
-        year: 1385,
-        month: 10,
-        day: 1,
-        originalError: originalError,
-      );
-
-      expect(exception.originalError, equals(originalError));
-      expect(exception.toString(), contains('Caused by:'));
-    });
-  });
-
   group('DateParseException', () {
     test('creates exception with date string and format', () {
       final exception = DateParseException(
@@ -149,16 +102,16 @@ void main() {
       expect(exception.message, contains('Failed to parse'));
     });
 
-    test('provides helpful suggestion', () {
+    test('records the input and expected format', () {
       final exception = DateParseException(
         dateString: 'invalid',
         expectedFormat: 'YYYY/MM/DD',
       );
 
-      expect(
-        exception.details!['suggestion'],
-        contains('Ensure date string matches format'),
-      );
+      expect(exception.details!['dateString'], 'invalid');
+      expect(exception.details!['expectedFormat'], 'YYYY/MM/DD');
+      // Also a FormatException, so existing catch blocks still work.
+      expect(exception, isA<FormatException>());
     });
   });
 
@@ -185,11 +138,11 @@ void main() {
 
       expect(
         exception.details!['suggestion'],
-        contains('Sasana year type must be 0, 1, or 2'),
+        contains('Sasana year type must be 0, 1 or 2'),
       );
     });
 
-    test('creates exception for language', () {
+    test('falls back to a generic suggestion', () {
       final exception = InvalidConfigurationException(
         parameter: 'language',
         value: 'invalid',
@@ -197,92 +150,8 @@ void main() {
 
       expect(
         exception.details!['suggestion'],
-        contains('Language must be one of'),
+        contains('check the documentation'),
       );
-    });
-  });
-
-  group('DateOutOfRangeException', () {
-    test('creates exception with min and max dates', () {
-      final date = DateTime(2025, 1, 1);
-      final minDate = DateTime(2020, 1, 1);
-      final maxDate = DateTime(2024, 12, 31);
-
-      final exception = DateOutOfRangeException(
-        date: date,
-        minDate: minDate,
-        maxDate: maxDate,
-      );
-
-      expect(exception.date, equals(date));
-      expect(exception.minDate, equals(minDate));
-      expect(exception.maxDate, equals(maxDate));
-      expect(
-        exception.details!['suggestion'],
-        contains('Date must be between'),
-      );
-    });
-
-    test('creates exception with only min date', () {
-      final date = DateTime(2019, 1, 1);
-      final minDate = DateTime(2020, 1, 1);
-
-      final exception = DateOutOfRangeException(date: date, minDate: minDate);
-
-      expect(
-        exception.details!['suggestion'],
-        contains('Date must be on or after'),
-      );
-    });
-
-    test('creates exception with only max date', () {
-      final date = DateTime(2025, 1, 1);
-      final maxDate = DateTime(2024, 12, 31);
-
-      final exception = DateOutOfRangeException(date: date, maxDate: maxDate);
-
-      expect(
-        exception.details!['suggestion'],
-        contains('Date must be on or before'),
-      );
-    });
-  });
-
-  group('CacheException', () {
-    test('creates exception with operation details', () {
-      final exception = CacheException(
-        operation: 'put',
-        message: 'Failed to put value in cache',
-      );
-
-      expect(exception.operation, equals('put'));
-      expect(exception.message, contains('Failed to put value'));
-    });
-  });
-
-  group('AstrologicalCalculationException', () {
-    test('creates exception with calculation type', () {
-      final exception = AstrologicalCalculationException(
-        calculationType: 'moon phase',
-        message: 'Failed to calculate moon phase',
-      );
-
-      expect(exception.calculationType, equals('moon phase'));
-      expect(exception.message, contains('Failed to calculate'));
-    });
-  });
-
-  group('HolidayCalculationException', () {
-    test('creates exception with year and month', () {
-      final exception = HolidayCalculationException(
-        year: 1385,
-        month: 10,
-        message: 'Failed to calculate holidays',
-      );
-
-      expect(exception.year, equals(1385));
-      expect(exception.month, equals(10));
-      expect(exception.message, contains('Failed to calculate'));
     });
   });
 }

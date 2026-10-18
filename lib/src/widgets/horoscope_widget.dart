@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myanmar_calendar_dart/ai.dart';
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 /// Rich astrological detail card with one-tap AI prompt generation.
@@ -195,7 +196,7 @@ class HoroscopeWidget extends StatelessWidget {
   }
 
   void _copyPrompt(BuildContext context, AIPromptType type) {
-    final prompt = MyanmarCalendar.generateAIPrompt(
+    final prompt = AIPromptService.generatePrompt(
       date,
       language: language,
       type: type,

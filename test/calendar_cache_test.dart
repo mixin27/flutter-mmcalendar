@@ -52,14 +52,14 @@ void main() {
     //   }
 
     //   var stats = MyanmarCalendar.getCacheStatistics();
-    //   var entriesBefore = stats['total_memory_entries'] as int;
+    //   var entriesBefore = stats.totalMemoryEntries;
     //   expect(entriesBefore, greaterThan(0));
 
     //   // Clear cache
     //   MyanmarCalendar.clearCache();
 
     //   stats = MyanmarCalendar.getCacheStatistics();
-    //   var entriesAfter = stats['total_memory_entries'] as int;
+    //   var entriesAfter = stats.totalMemoryEntries;
     //   expect(entriesAfter, 0);
     // });
 
@@ -73,9 +73,9 @@ void main() {
     //   MyanmarCalendar.fromWestern(2024, 1, 3);
 
     //   final stats = MyanmarCalendar.getCacheStatistics();
-    //   final totalRequests = stats['total_requests'] as int;
-    //   final hits = stats['hits'] as int;
-    //   final misses = stats['misses'] as int;
+    //   final totalRequests = stats.totalRequests;
+    //   final hits = stats.hits;
+    //   final misses = stats.misses;
 
     //   expect(totalRequests, greaterThan(0));
     //   expect(totalRequests, equals(hits + misses));
@@ -88,7 +88,7 @@ void main() {
       );
 
       final stats = MyanmarCalendar.getCacheStatistics();
-      final totalEntries = stats['total_memory_entries'] as int;
+      final totalEntries = stats.totalMemoryEntries;
 
       expect(totalEntries, greaterThan(0));
     });
@@ -105,11 +105,8 @@ void main() {
       final highPerfStats = highPerf.getStatistics();
       final memEfficientStats = memEfficient.getStatistics();
 
-      final highPerfMax =
-          (highPerfStats['caches'] as Map)['complete_date']['maxSize'] as int;
-      final memEfficientMax =
-          (memEfficientStats['caches'] as Map)['complete_date']['maxSize']
-              as int;
+      final highPerfMax = highPerfStats.completeDate.maxSize;
+      final memEfficientMax = memEfficientStats.completeDate.maxSize;
 
       expect(highPerfMax, greaterThan(memEfficientMax));
     });
@@ -126,8 +123,8 @@ void main() {
       }
 
       final stats = service.getCacheStatistics();
-      final enabled = stats['enabled'] as bool;
-      final totalEntries = stats['total_memory_entries'] as int;
+      final enabled = stats.enabled;
+      final totalEntries = stats.totalMemoryEntries;
 
       expect(enabled, false);
       expect(totalEntries, 0);
@@ -143,7 +140,7 @@ void main() {
       }
 
       final stats = MyanmarCalendar.getCacheStatistics();
-      final totalEntries = stats['total_memory_entries'] as int;
+      final totalEntries = stats.totalMemoryEntries;
 
       expect(totalEntries, greaterThan(0));
     });
@@ -154,14 +151,14 @@ void main() {
     //   MyanmarCalendar.fromWestern(2024, 1, 2);
 
     //   var stats = MyanmarCalendar.getCacheStatistics();
-    //   var totalBefore = stats['total_requests'] as int;
+    //   var totalBefore = stats.totalRequests;
     //   expect(totalBefore, greaterThan(0));
 
     //   // Reset
     //   MyanmarCalendar.resetCacheStatistics();
 
     //   stats = MyanmarCalendar.getCacheStatistics();
-    //   var totalAfter = stats['total_requests'] as int;
+    //   var totalAfter = stats.totalRequests;
     //   expect(totalAfter, 0);
     // });
 
@@ -184,7 +181,7 @@ void main() {
     //   }
 
     //   final stats = MyanmarCalendar.getCacheStatistics();
-    //   final totalEntries = stats['total_memory_entries'] as int;
+    //   final totalEntries = stats.totalMemoryEntries;
 
     //   expect(totalEntries, greaterThan(0));
     // });
@@ -195,15 +192,13 @@ void main() {
       MyanmarCalendar.fromWestern(2024, 1, 1);
 
       var stats = MyanmarCalendar.getCacheStatistics();
-      var defaultMax =
-          (stats['caches'] as Map)['complete_date']['maxSize'] as int;
+      var defaultMax = stats.completeDate.maxSize;
 
       // Reconfigure to high performance
       MyanmarCalendar.configureCache(const CacheConfig.highPerformance());
 
       stats = MyanmarCalendar.getCacheStatistics();
-      var highPerfMax =
-          (stats['caches'] as Map)['complete_date']['maxSize'] as int;
+      var highPerfMax = stats.completeDate.maxSize;
 
       // Should have different max sizes
       expect(highPerfMax, greaterThan(defaultMax));
@@ -229,24 +224,22 @@ void main() {
 
     test('Cache statistics have correct structure', () {
       final stats = MyanmarCalendar.getCacheStatistics();
+      expect(stats.totalRequests, stats.hits + stats.misses);
+      expect(stats.hitRate, inInclusiveRange(0.0, 1.0));
 
-      // Check required fields exist
-      expect(stats.containsKey('enabled'), true);
-      expect(stats.containsKey('hits'), true);
-      expect(stats.containsKey('misses'), true);
-      expect(stats.containsKey('total_requests'), true);
-      expect(stats.containsKey('hit_rate_percent'), true);
-      expect(stats.containsKey('caches'), true);
-      expect(stats.containsKey('total_memory_entries'), true);
-
-      // Check types
-      expect(stats['enabled'], isA<bool>());
-      expect(stats['hits'], isA<int>());
-      expect(stats['misses'], isA<int>());
-      expect(stats['total_requests'], isA<int>());
-      expect(stats['hit_rate_percent'], isA<String>());
-      expect(stats['caches'], isA<Map>());
-      expect(stats['total_memory_entries'], isA<int>());
+      // The map form keeps the 2.x keys.
+      expect(
+        stats.toMap().keys,
+        containsAll(<String>[
+          'enabled',
+          'hits',
+          'misses',
+          'total_requests',
+          'hit_rate_percent',
+          'caches',
+          'total_memory_entries',
+        ]),
+      );
     });
 
     test('Cache handles edge case dates', () {
@@ -283,7 +276,7 @@ void main() {
     //   }
 
     //   final stats = MyanmarCalendar.getCacheStatistics();
-    //   expect(stats['total_memory_entries'], greaterThan(0));
+    //   expect(stats.totalMemoryEntries, greaterThan(0));
     // });
 
     test('Cache works with date conversion', () {
@@ -322,7 +315,7 @@ void main() {
 
     //   // Check cache was used
     //   final stats = MyanmarCalendar.getCacheStatistics();
-    //   final hits = stats['hits'] as int;
+    //   final hits = stats.hits;
     //   print("hits: $hits");
     //   expect(hits, greaterThan(50)); // Most should be hits
     // });

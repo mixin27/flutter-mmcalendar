@@ -13,11 +13,13 @@
 /// production-ready customization via [MyanmarCalendarTheme].
 library;
 
-// Re-export upstream package.
+// Re-export upstream package. AI prompts are a separate library in
+// myanmar_calendar_dart 3; HoroscopeWidget uses them, so they stay here.
+export 'package:myanmar_calendar_dart/ai.dart';
 export 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
-// Compatibility re-exports for APIs no longer exported at top-level in
-// myanmar_calendar_dart 2.x.
+// Compatibility re-exports for APIs not exported at top-level in
+// myanmar_calendar_dart.
 export 'package:myanmar_calendar_dart/src/services/date_converter.dart';
 export 'package:myanmar_calendar_dart/src/services/myanmar_calendar_service.dart';
 export 'package:myanmar_calendar_dart/src/utils/astro_details.dart';
