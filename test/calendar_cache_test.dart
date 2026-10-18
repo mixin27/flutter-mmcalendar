@@ -25,7 +25,7 @@ void main() {
     });
 
     test('Cache stores CompleteDate', () {
-      final service = MyanmarCalendarService.withIndependentCache(
+      final service = MyanmarCalendarClient(
         config: const CalendarConfig(),
         cacheConfig: CacheConfig(enableCaching: true),
       );
@@ -112,7 +112,7 @@ void main() {
     });
 
     test('Disabled cache does not store data', () {
-      final service = MyanmarCalendarService.withIndependentCache(
+      final service = MyanmarCalendarClient(
         config: const CalendarConfig(),
         cacheConfig: CacheConfig.disabled(),
       );
@@ -205,12 +205,12 @@ void main() {
     });
 
     test('Multiple services can coexist', () {
-      final service1 = MyanmarCalendarService.withIndependentCache(
+      final service1 = MyanmarCalendarClient(
         config: const CalendarConfig(),
         cacheConfig: CacheConfig(enableCaching: true),
       );
 
-      final service2 = MyanmarCalendarService.withIndependentCache(
+      final service2 = MyanmarCalendarClient(
         config: const CalendarConfig(),
         cacheConfig: CacheConfig.memoryEfficient(),
       );

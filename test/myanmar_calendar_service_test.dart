@@ -2,11 +2,11 @@ import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('MyanmarCalendarService Tests', () {
-    late MyanmarCalendarService service;
+  group('MyanmarCalendarClient', () {
+    late MyanmarCalendarClient service;
 
     setUp(() {
-      service = MyanmarCalendarService();
+      service = MyanmarCalendarClient();
     });
 
     test('calculates holidays correctly', () {
@@ -18,9 +18,9 @@ void main() {
     });
 
     test('validates Myanmar dates correctly', () {
-      expect(service.validateMyanmarDate(1387, 9, 22).isValid, isTrue);
-      expect(service.validateMyanmarDate(1385, 15, 1).isValid, isFalse);
-      expect(service.validateMyanmarDate(1385, 1, 32).isValid, isFalse);
+      expect(service.validateMyanmar(1387, 9, 22).isValid, isTrue);
+      expect(service.validateMyanmar(1385, 15, 1).isValid, isFalse);
+      expect(service.validateMyanmar(1385, 1, 32).isValid, isFalse);
     });
   });
 }

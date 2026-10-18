@@ -13,29 +13,22 @@
 /// production-ready customization via [MyanmarCalendarTheme].
 library;
 
-// Re-export upstream package. AI prompts are a separate library in
-// myanmar_calendar_dart 3; HoroscopeWidget uses them, so they stay here.
+// The core library, and its AI prompt library (a separate import in
+// myanmar_calendar_dart 3).
 export 'package:myanmar_calendar_dart/ai.dart';
 export 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
-// Compatibility re-exports for APIs not exported at top-level in
-// myanmar_calendar_dart.
-export 'package:myanmar_calendar_dart/src/services/date_converter.dart';
-export 'package:myanmar_calendar_dart/src/services/myanmar_calendar_service.dart';
-export 'package:myanmar_calendar_dart/src/utils/astro_details.dart';
-
-// ============================================================================
-// CORE EXPORTS
-// ============================================================================
-
-// Configuration
 export 'src/core/myanmar_calendar_theme.dart';
-// Utils
-export 'src/utils/accessibility_utils.dart';
-export 'src/utils/package_constants.dart';
-// Performance and Accessibility
-export 'src/utils/performance_utils.dart';
-// Widgets
+// 4.0 foundation: scope, theme, style, selection, controller.
+export 'src/foundation/calendar_selection.dart';
+export 'src/foundation/language_locale.dart';
+export 'src/foundation/mm_calendar_theme_data.dart';
+export 'src/foundation/mm_visual_style.dart';
+export 'src/foundation/myanmar_calendar_controller.dart';
+export 'src/foundation/myanmar_calendar_scope.dart';
+export 'src/foundation/myanmar_day_data.dart';
+export 'src/foundation/today_builder.dart';
+// 3.x widgets and their theme (above), replaced step by step by 4.0 widgets.
 export 'src/widgets/calendar_selection_mode.dart';
 export 'src/widgets/horoscope_widget.dart';
 export 'src/widgets/moon/daily_moon_phase_widget.dart';
@@ -46,4 +39,3 @@ export 'src/widgets/myanmar_calendar_widget.dart';
 export 'src/widgets/myanmar_date_picker_form_field.dart';
 export 'src/widgets/myanmar_date_picker_widget.dart';
 export 'src/widgets/myanmar_date_summary_card.dart';
-export 'src/widgets/optimized_calendar_cell.dart';

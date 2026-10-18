@@ -16,10 +16,7 @@ void main() {
       expect(exception.month, equals(15));
       expect(exception.day, equals(1));
       expect(exception.details, isNotNull);
-      expect(
-        exception.details!['suggestion'],
-        contains('Myanmar months are'),
-      );
+      expect(exception.details!['suggestion'], contains('Myanmar months are'));
     });
 
     test('provides helpful suggestion for invalid month', () {
