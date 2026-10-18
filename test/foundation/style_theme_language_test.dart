@@ -69,6 +69,12 @@ void main() {
       expect(light.copyWith(cellRadius: 4), isNot(light));
     });
 
+    test('stacked labels get room for Myanmar script', () {
+      expect(light.lineHeight(Language.english, 1.1), 1.1);
+      expect(light.lineHeight(Language.myanmar, 1.1), closeTo(1.35, 1e-9));
+      expect(light.lineHeight(Language.shan, 1.5), 1.5);
+    });
+
     test('adds Myanmar fonts and a taller line for Myanmar script', () {
       const base = TextStyle(fontSize: 14, height: 1.2);
       expect(light.textStyle(base, Language.english).height, 1.2);

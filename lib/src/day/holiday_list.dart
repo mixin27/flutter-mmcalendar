@@ -105,7 +105,7 @@ class HolidayList extends StatelessWidget {
     final language = scope.language;
     TextStyle ts(double size, Color c, [FontWeight? w]) => theme
         .textStyle(TextStyle(fontSize: size, color: c, fontWeight: w), language)
-        .copyWith(height: 1.15);
+        .copyWith(height: theme.lineHeight(language, 1.15));
 
     return TodayBuilder(
       clock: clock,

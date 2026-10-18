@@ -157,6 +157,13 @@ class MmCalendarThemeData extends ThemeExtension<MmCalendarThemeData> {
     HolidayType.other => otherHoliday,
   };
 
+  /// A tight line height for stacked labels: [latin] for English, and
+  /// enough room for Myanmar script's tall stacked marks otherwise.
+  double lineHeight(Language language, double latin) =>
+      language == Language.english
+      ? latin
+      : (myanmarLineHeight - .25 > latin ? myanmarLineHeight - .25 : latin);
+
   /// [style] with the Myanmar font fallback and, for Myanmar-script
   /// languages, the taller line height.
   TextStyle textStyle(TextStyle style, Language language) {
