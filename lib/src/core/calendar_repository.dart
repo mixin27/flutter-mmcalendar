@@ -49,7 +49,12 @@ class CalendarRepository {
       return cached;
     }
 
-    final complete = _service.getCompleteDate(dateOnly, language: _language);
+    final complete = _service.getCompleteDateFor(
+      dateOnly.year,
+      dateOnly.month,
+      dateOnly.day,
+      language: _language,
+    );
     _cache[key] = complete;
     return complete;
   }
