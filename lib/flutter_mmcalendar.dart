@@ -27,17 +27,29 @@ export 'src/adaptive/mm_overlays.dart';
 export 'src/adaptive/mm_pressable.dart';
 export 'src/adaptive/mm_segmented.dart';
 export 'src/adaptive/mm_surface.dart';
+// 4.0 calendars.
+export 'src/calendars/calendar_layout.dart' show CalendarLayout;
+export 'src/calendars/myanmar_agenda.dart';
+export 'src/calendars/myanmar_calendar_header.dart';
+export 'src/calendars/myanmar_day_cell.dart';
+export 'src/calendars/myanmar_lunar_month_calendar.dart';
+export 'src/calendars/myanmar_mini_month.dart';
+export 'src/calendars/myanmar_month_calendar.dart';
+export 'src/calendars/myanmar_week_strip.dart';
+export 'src/calendars/myanmar_year_calendar.dart';
 export 'src/core/myanmar_calendar_theme.dart';
 // 4.0 foundation: scope, theme, style, selection, controller.
 export 'src/foundation/calendar_selection.dart';
 export 'src/foundation/language_locale.dart';
 export 'src/foundation/mm_calendar_theme_data.dart';
+export 'src/foundation/mm_strings.dart';
 export 'src/foundation/mm_visual_style.dart';
 export 'src/foundation/myanmar_calendar_controller.dart';
 export 'src/foundation/myanmar_calendar_scope.dart';
 export 'src/foundation/myanmar_day_data.dart';
 export 'src/foundation/today_builder.dart';
 // 3.x widgets and their theme (above), replaced step by step by 4.0 widgets.
+export 'src/moon/moon_glyph.dart';
 export 'src/widgets/calendar_selection_mode.dart';
 export 'src/widgets/horoscope_widget.dart';
 export 'src/widgets/moon/daily_moon_phase_widget.dart';
