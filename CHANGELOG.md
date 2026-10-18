@@ -1,3 +1,6 @@
+## 3.3.2
+
+- bumps `myanmar_calendar_dart: ^2.0.2`
 ## 3.3.1
 
 - bumps `myanmar_calendar_dart: ^2.0.1`
