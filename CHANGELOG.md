@@ -1,35 +1,66 @@
 ## 4.0.0
 
-Builds on `myanmar_calendar_dart: ^3.0.0`. This package re-exports the core
-library, so its breaking changes are breaking here too. See the README's
-migration notes and the
-[core changelog](https://pub.dev/packages/myanmar_calendar_dart/changelog).
+A rewrite of every widget. The calendar UI now renders as Material 3,
+Cupertino or Liquid Glass from one scope and one theme, and shows what
+`myanmar_calendar_dart` computes: holiday types, Sabbath, moon days,
+astrology, the Shan and Sasana years and the chronicles. See the README's
+"Migrating from 3.x" section.
 
 ### Breaking
 
-- `MyanmarCalendar.generateAIPrompt` is removed in the core. Use
-  `AIPromptService.generatePrompt`, which `flutter_mmcalendar` still exports
-  (it now re-exports `package:myanmar_calendar_dart/ai.dart`).
-- `getCacheStatistics()` returns `CalendarCacheStatistics` instead of a map;
-  `toMap()` gives the old shape.
-- The unused exception classes `DateConversionException`,
-  `DateOutOfRangeException`, `CacheException`,
-  `AstrologicalCalculationException` and `HolidayCalculationException` are
-  removed.
-- Holidays follow the reference calendar: 1 January is a public holiday only
-  from 2018 to 2021, and Tazaungmon 14 is a public holiday. The Shan year
-  turns over at Nadaw 1.
+- Requires `myanmar_calendar_dart: ^3.0.1` and Flutter 3.41 (Dart 3.11).
+  The core library is still re-exported, so its 3.0 changes apply here too
+  ([core changelog](https://pub.dev/packages/myanmar_calendar_dart/changelog)):
+  `MyanmarCalendar.generateAIPrompt` is now `AIPromptService.generatePrompt`,
+  `getCacheStatistics()` is typed, several exception classes are gone, and
+  holidays follow the reference calendar.
+- Every 3.x widget is replaced (see the README's migration table):
+  `MyanmarCalendarWidget`, `MyanmarDatePickerWidget`,
+  `showMyanmarDatePickerFullscreen`, `MyanmarDatePickerFormField`,
+  `MyanmarDateField`, `MyanmarCalendarToolbar`, `MyanmarDateSummaryCard`,
+  `HoroscopeWidget`, `MoonPhaseView`, `DailyMoonPhaseWidget`,
+  `MoonPhasePainter`, `OptimizedCalendarCell` and `CalendarSelectionMode`.
+- `MyanmarCalendarTheme` is replaced by `MmCalendarThemeData`, a
+  `ThemeExtension` built from the app's `ColorScheme`.
+- `showMyanmarDatePicker` has new parameters and returns `CompleteDate`.
+- Removed `PackageConstants`, the performance utilities, the accessibility
+  helpers, and the re-exports of `myanmar_calendar_dart`'s `src/` files.
+
+### Added
+
+- **Foundation:** `MyanmarCalendarScope` (one client, language or the app
+  locale, style, theme, week start), `MmVisualStyle`, `MmCalendarThemeData`,
+  `MyanmarCalendarController` with `SingleSelection`, `RangeSelection` and
+  `MultiSelection`, `MyanmarDayData`, `TodayBuilder`, `MmStrings` and
+  `languageForLocale`.
+- **Adaptive primitives:** `MmGlass` (a refraction shader on Impeller, with
+  a blur fallback on Skia and web and an opaque surface for high contrast),
+  `MmSurface`, `MmButton`, `MmIconButton`, `MmChip`, `MmSegmented`,
+  `MmListGroup`, `MmListRow`, `showMmSheet` and `showMmPopover`.
+- **Calendars:** `MyanmarMonthCalendar` (swipe paging, five cell styles,
+  keyboard navigation, events), `MyanmarWeekStrip`, `MyanmarMiniMonth`,
+  `MyanmarYearCalendar`, `MyanmarLunarMonthCalendar` (a Myanmar month by
+  fortnight) and `MyanmarAgenda`.
+- **Pickers:** `showMyanmarDatePicker`, `showMyanmarDateRangePicker`,
+  `showMyanmarMultiDatePicker`, the inline `MyanmarDatePicker`,
+  `MyanmarDateWheelPicker`, `MyanmarMonthYearPicker` and
+  `MyanmarDateFormField`.
+- **Day information:** `MyanmarDateText`, `MyanmarTodayCard`,
+  `MyanmarDayDetails`, `HolidayBadge`, `HolidayList`, `AstroBadges`,
+  `AstrologyCard`, `NagahleCompass`, `MoonGlyph`, `MoonPhaseStrip` and
+  `NextMoonCountdown`.
+- **Tools:** `MyanmarDateConverter`, `DateDifferenceCard`, `AIPromptAction`
+  and `ChronicleCard`.
+- Screen-reader labels in the calendar's language, text that scales without
+  overflowing, and right-to-left support.
+- The example is a gallery of every widget, with switches for style, theme,
+  language, platform and week start.
 
 ### Fixed
 
-- Calendar and picker cells look days up by their civil date
-  (`getCompleteDateFor`), so the device's time zone can't shift a cell to
-  the neighbouring day.
-- `PackageConstants.version` matches the package version again.
+- Days are looked up by their civil date, so the device's time zone can't
+  shift a cell to the neighbouring day.
 
-## 3.3.2
-
-- bumps `myanmar_calendar_dart: ^2.0.2`
 ## 3.3.1
 
 - bumps `myanmar_calendar_dart: ^2.0.1`

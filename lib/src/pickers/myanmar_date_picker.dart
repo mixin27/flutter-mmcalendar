@@ -176,24 +176,39 @@ class _MyanmarDatePickerState extends State<MyanmarDatePicker> {
           },
         ),
       ),
-      _Mode.wheels => Padding(
-        key: const ValueKey('wheels'),
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: MyanmarDateWheelPicker(
-          initialDate:
-              controller.selection.days.firstOrNull ?? controller.visibleMonth,
-          style: widget.style,
-          onChanged: (day) {
-            final d = DateTime(
-              day.western.year,
-              day.western.month,
-              day.western.day,
-            );
-            controller.jumpTo(d);
-            controller.select(d);
-          },
-        ),
-      ),
+      _Mode.wheels => () {
+        // The wheels always show a day, so that day is the selection.
+        final shown = DateUtils.dateOnly(
+          controller.selection.days.firstOrNull ??
+              (widget.clock ?? DateTime.now)(),
+        );
+        if (controller.selection.isEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && controller.selection.isEmpty) {
+              controller
+                ..jumpTo(shown)
+                ..select(shown);
+            }
+          });
+        }
+        return Padding(
+          key: const ValueKey('wheels'),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: MyanmarDateWheelPicker(
+            initialDate: shown,
+            style: widget.style,
+            onChanged: (day) {
+              final d = DateTime(
+                day.western.year,
+                day.western.month,
+                day.western.day,
+              );
+              controller.jumpTo(d);
+              controller.select(d);
+            },
+          ),
+        );
+      }(),
     };
 
     return Column(

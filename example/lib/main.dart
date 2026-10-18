@@ -13,7 +13,7 @@ void main() {
   // Load the glass shader before the first frame, so glass doesn't start on
   // the fallback.
   MmGlass.precache();
-  runApp(const GalleryApp());
+  runApp(GalleryApp(initialSettings: GallerySettings.fromEnvironment()));
 }
 
 /// The flutter_mmcalendar gallery: every widget, in every style.
@@ -91,7 +91,8 @@ class GalleryHome extends StatefulWidget {
 }
 
 class _GalleryHomeState extends State<GalleryHome> {
-  int _index = 0;
+  // GALLERY_SECTION picks the first section, for screenshots.
+  int _index = const int.fromEnvironment('GALLERY_SECTION');
 
   @override
   Widget build(BuildContext context) {

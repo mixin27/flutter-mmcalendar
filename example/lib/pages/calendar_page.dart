@@ -139,7 +139,8 @@ class _CalendarPageState extends State<CalendarPage> {
     }
 
     if (width >= 700) {
-      // Tablet: the calendar and the day side by side.
+      // Tablet: the calendar and the day side by side. In a tall portrait
+      // window the calendar stays roughly square instead of stretching.
       return Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
         child: Row(
@@ -151,7 +152,17 @@ class _CalendarPageState extends State<CalendarPage> {
                 children: [
                   _cellStyles(),
                   const SizedBox(height: 12),
-                  Expanded(child: _calendar()),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, box) => Align(
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          height: box.maxHeight.clamp(0, box.maxWidth * 1.25),
+                          child: _calendar(),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

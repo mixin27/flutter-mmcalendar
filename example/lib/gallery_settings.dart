@@ -22,6 +22,24 @@ class GallerySettings {
   final int firstDayOfWeek;
   final Color seed;
 
+  /// Settings from `--dart-define`s, for screenshots:
+  /// GALLERY_STYLE (material, cupertino, glass), GALLERY_THEME (light, dark)
+  /// and GALLERY_LANGUAGE (a language code such as my).
+  factory GallerySettings.fromEnvironment() {
+    const style = String.fromEnvironment('GALLERY_STYLE');
+    const theme = String.fromEnvironment('GALLERY_THEME');
+    const language = String.fromEnvironment('GALLERY_LANGUAGE');
+    return GallerySettings(
+      style:
+          MmVisualStyle.values.where((s) => s.name == style).firstOrNull ??
+          MmVisualStyle.automatic,
+      themeMode:
+          ThemeMode.values.where((m) => m.name == theme).firstOrNull ??
+          ThemeMode.system,
+      language: Language.tryFromCode(language) ?? Language.english,
+    );
+  }
+
   GallerySettings copyWith({
     MmVisualStyle? style,
     ThemeMode? themeMode,

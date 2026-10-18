@@ -136,10 +136,7 @@ class MyanmarDayCell extends StatelessWidget {
           RangePosition.end => BorderRadiusDirectional.horizontal(
             end: radius.topLeft,
           ).resolve(Directionality.of(context)),
-          _ =>
-            style == MmVisualStyle.material
-                ? BorderRadius.circular(999)
-                : radius,
+          _ => round ? BorderRadius.circular(999) : radius,
         },
         boxShadow: style == MmVisualStyle.glass
             ? [

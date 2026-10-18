@@ -54,7 +54,7 @@ class _ViewsPageState extends State<ViewsPage> {
           child: MmSegmented<_View>(
             segments: const {
               _View.year: 'Year',
-              _View.lunar: 'Myanmar month',
+              _View.lunar: 'Lunar',
               _View.agenda: 'Agenda',
             },
             selected: _view,

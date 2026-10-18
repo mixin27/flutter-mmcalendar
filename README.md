@@ -1,23 +1,25 @@
 # flutter_mmcalendar
 
-A Flutter-first UI toolkit for Myanmar calendar apps, powered by
+Myanmar calendar widgets for Flutter, built on
 [`myanmar_calendar_dart`](https://pub.dev/packages/myanmar_calendar_dart).
+Every widget renders as **Material 3**, **Cupertino** or **Liquid Glass**
+from one scope and one theme. Each widget shows both calendars, plus what the
+core computes for the day: holidays by type, Sabbath, moon phases,
+astrology, the Shan and Sasana years and the chronicles.
 
 [![Flutter CI/CD](https://github.com/mixin27/flutter-mmcalendar/actions/workflows/flutter.yaml/badge.svg)](https://github.com/mixin27/flutter-mmcalendar/actions/workflows/flutter.yaml)
 [![pub package](https://img.shields.io/pub/v/flutter_mmcalendar.svg)](https://pub.dev/packages/flutter_mmcalendar)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Highlights
+| Liquid Glass | Material 3, dark | Myanmar wheels | Lunar month, in Myanmar |
+| --- | --- | --- | --- |
+| ![Month calendar in Liquid Glass](screenshots/calendar_glass_light.jpg) | ![Month calendar in Material 3, dark](screenshots/calendar_material_dark.jpg) | ![Myanmar date wheel picker](screenshots/wheels_glass_light.jpg) | ![A Myanmar month by fortnight](screenshots/lunar_month_myanmar.jpg) |
 
-- Accurate Myanmar <-> Western date conversion via `myanmar_calendar_dart`
-- Calendar UI with `single`, `range`, and `multi` selection modes
-- Dialog and fullscreen date pickers with responsive action footer
-- Scrollable long-range year selector in picker year mode
-- Horoscope + summary widgets for rich date insights
-- Reusable moon phase widgets using `CustomPainter`
-- Theme and localization support (Myanmar, English, Mon, Shan, Karen, Zawgyi)
-- Accessibility helpers (semantics, keyboard, focus, text scaling)
-- Performance helpers and cache support from the core package
+| Day, dark glass | Tools, Cupertino |
+| --- | --- |
+| ![Today, moon countdown and holidays](screenshots/day_glass_dark.jpg) | ![Converter, date arithmetic and AI prompts](screenshots/tools_cupertino_light.jpg) |
+
+![Tablet layout](screenshots/ipad_calendar_cupertino_light.jpg)
 
 ## Installation
 
@@ -26,215 +28,261 @@ dependencies:
   flutter_mmcalendar: ^4.0.0
 ```
 
-```bash
-flutter pub get
-```
+This package re-exports `myanmar_calendar_dart`, so one import gives you
+both the widgets and the calendar API. It needs Flutter 3.41 or later.
 
-## Quick Start
+## Quick start
+
+Put a `MyanmarCalendarScope` near the top of the app. Every calendar widget
+below it shares its client (configuration, custom holidays and the day
+cache), language, style and theme.
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
 void main() {
-  // Optional runtime configuration.
-  MyanmarCalendar.configure(
-    language: Language.myanmar,
-    timezoneOffset: 6.5,
+  // Optional: load the glass shader before the first frame.
+  MmGlass.precache();
+  runApp(
+    MyanmarCalendarScope(
+      language: Language.myanmar, // leave out to follow the app's locale
+      style: MmVisualStyle.automatic, // or material, cupertino, glass
+      child: MaterialApp(
+        theme: ThemeData(colorSchemeSeed: Colors.indigo),
+        home: const HomePage(),
+      ),
+    ),
+  );
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final controller = MyanmarCalendarController(
+    selection: SingleSelection(DateTime.now()),
   );
 
-  final today = MyanmarCalendar.today();
-  print(today.formatMyanmar());
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
-  final complete = MyanmarCalendar.getCompleteDate(DateTime.now());
-  print(complete.allHolidays);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        padding: const EdgeInsets.all(12),
+        children: [
+          MyanmarMonthCalendar(
+            controller: controller,
+            onDayTapped: (day) => debugPrint(day.myanmar.toString()),
+          ),
+          const SizedBox(height: 12),
+          ListenableBuilder(
+            listenable: controller,
+            builder: (context, _) => MyanmarTodayCard(
+              date: controller.selection.days.firstOrNull,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 ```
 
-## Core API
+## Styles
 
-You get both data APIs and Flutter widgets from the same import:
+`MmVisualStyle.automatic` picks:
+
+- Cupertino on iOS and macOS;
+- Glass on iOS and macOS 26 and later;
+- Material everywhere else.
+
+Set `style` on the scope to choose one for the whole app, or pass `style:` to
+a single widget.
+
+| Style | What it looks like |
+| --- | --- |
+| `material` | Tonal surfaces from the app's `ColorScheme`, Material buttons, segmented buttons and dialogs. |
+| `cupertino` | Grouped lists, hairline edges, `CupertinoButton`, sliding segmented controls and sheets with a grabber. |
+| `glass` | Translucent panels that bend what is behind them at the rim, capsule controls and floating sheets. |
+
+Glass is drawn in Flutter, with no platform views or native code:
+
+- **On Impeller:** `MmGlass` runs the backdrop through a refraction shader
+  bundled with the package.
+- **On Skia, on web, and while a route is animating:** it falls back to a
+  blur with a tint and a bright edge.
+- **With high contrast turned on:** it draws an opaque surface instead.
+
+Glass needs something behind it to bend: a photo, a gradient, or content
+scrolling underneath.
+
+## Theme
+
+Colours come from `MmCalendarThemeData`, a `ThemeExtension`. Without one,
+widgets build it from the app's `ColorScheme`, so light and dark mode follow
+the app. Holiday, Sabbath and moon colours are fixed per brightness so they
+mean the same thing in every app.
 
 ```dart
-import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+ThemeData(
+  colorSchemeSeed: Colors.teal,
+  extensions: [
+    MmCalendarThemeData.fromSeed(Colors.teal).copyWith(cellRadius: 8),
+  ],
+)
 ```
 
-Common data operations:
-
-```dart
-final fromWestern = MyanmarCalendar.fromWestern(2026, 3, 2);
-final fromMyanmar = MyanmarCalendar.fromMyanmar(1387, 12, 15);
-
-final complete = MyanmarCalendar.getCompleteDate(DateTime.now());
-final valid = MyanmarCalendar.isValidMyanmar(1387, 12, 15);
-```
+The theme also sets the Myanmar font fallback (Noto Sans Myanmar, Myanmar
+Sangam MN, Padauk) and the taller line height Myanmar script needs.
 
 ## Widgets
 
-### `MyanmarCalendarWidget`
+### Calendars
+
+| Widget | What it shows |
+| --- | --- |
+| `MyanmarMonthCalendar` | A month that pages by swiping. The header shows the Western month and the Myanmar months it spans, and there are five cell styles (`dual`, `westernFirst`, `lunarFirst`, `minimal`, `moon`). Holidays are coloured by type, and Sabbath, events and full and new moons are marked. It supports single, range and multi selection, and arrow keys, Page Up/Down and Home/End. |
+| `MyanmarWeekStrip` | One week in a row, paging by swiping. |
+| `MyanmarMiniMonth` | A compact month for sidebars and the year view. |
+| `MyanmarYearCalendar` | Twelve mini months with holidays and full moons. |
+| `MyanmarLunarMonthCalendar` | A Myanmar month laid out as it is counted: waxing 1–15, then waning, with First and Second Waso in watat years. |
+| `MyanmarAgenda` / `MyanmarAgendaSliver` | The days that have holidays, anniversaries, Sabbath, moon days or your events, with a pinned header per month. |
 
 ```dart
-MyanmarCalendarWidget(
-  initialDate: DateTime.now(),
-  language: Language.myanmar,
-  selectionMode: CalendarSelectionMode.range,
-  showHolidays: true,
-  showAstrology: true,
-  onDateSelected: (date) {
-    // date is CompleteDate
-  },
-  onRangeSelected: (start, end) {},
+MyanmarMonthCalendar(
+  controller: MyanmarCalendarController(selection: RangeSelection()),
+  cellStyle: MyanmarDayCellStyle.lunarFirst,
+  firstDayOfWeek: DateTime.monday,
+  eventLoader: (day) => events[day] ?? const [],
+  onSelectionChanged: (selection) { /* ... */ },
+  dayBuilder: (context, day, cell) => cell, // wrap or replace a cell
 )
 ```
 
-### `MyanmarDatePickerWidget` (inline)
+### Pickers
 
 ```dart
-MyanmarDatePickerWidget(
-  initialDate: DateTime.now(),
-  language: Language.english,
-  showHolidays: true,
-  showAstrology: true,
-  onDateChanged: (date) {},
-)
-```
-
-### Dialog / fullscreen picker
-
-```dart
-final selected = await showMyanmarDatePicker(
+final CompleteDate? day = await showMyanmarDatePicker(
   context: context,
   initialDate: DateTime.now(),
-  firstDate: DateTime(1900),
-  lastDate: DateTime(2200),
-  language: Language.myanmar,
+  inputMode: MyanmarPickerInput.wheels, // or calendar
 );
 
-final fullscreenSelected = await showMyanmarDatePickerFullscreen(
+final MyanmarDateRange? range = await showMyanmarDateRangePicker(
   context: context,
-  language: Language.shan,
+);
+
+final List<CompleteDate>? days = await showMyanmarMultiDatePicker(
+  context: context,
 );
 ```
 
-### Form integration
+Material shows a dialog; Cupertino and Glass show a sheet with Cancel and
+Done. Each picker has a Western / Myanmar switch and a month-year grid
+behind the calendar title.
+
+| Widget | What it shows |
+| --- | --- |
+| `MyanmarDatePicker` | The picker's content, for use inline. |
+| `MyanmarDateWheelPicker` | Year, month and fortnight-day wheels that only offer days that exist. |
+| `MyanmarMonthYearPicker` | A month grid for jumping to a month. |
+| `MyanmarDateFormField` | A `FormField<CompleteDate>` with validation. |
+
+### Day information
+
+| Widget | What it shows |
+| --- | --- |
+| `MyanmarDateText` | A date formatted with the core's patterns. `.today()` turns over at midnight. |
+| `MyanmarTodayCard` | The day at a glance. `.compact` is a home-screen-sized square. |
+| `MyanmarDayDetails` | Dates, moon, holidays and astrology in sections, each date with a copy button. |
+| `HolidayBadge`, `HolidayList.upcoming` | Holidays coloured by type, and a countdown to the next ones. |
+| `AstroBadges`, `AstrologyCard`, `NagahleCompass` | Sabbath, Yatyaza, Pyathada, mahabote, nakhat, the year name and the dragon's direction. |
+| `MoonGlyph`, `MoonPhaseStrip`, `NextMoonCountdown` | A drawn moon for any day, a month's quarter days, and days until the next full moon, new moon and Sabbath. |
+
+### Tools
+
+| Widget | What it does |
+| --- | --- |
+| `MyanmarDateConverter` | Converts between Western and Myanmar dates, with a swap button. |
+| `DateDifferenceCard` | The days between two dates, and a date plus days or Myanmar months. |
+| `AIPromptAction` | Builds horoscope, fortune or divination prompts and hands them to your callback; it never copies or sends anything itself. |
+| `ChronicleCard` | The eras running on a date and the dated records near it. |
+
+### Building blocks
+
+`MmSurface`, `MmGlass`, `MmButton`, `MmIconButton`, `MmChip`,
+`MmSegmented`, `MmListGroup`/`MmListRow`, `showMmSheet` and
+`showMmPopover` follow the same style. Use them so the rest of your screen
+matches the calendar.
+
+## Languages
+
+English and Myanmar are complete. Shan, Mon, Karen and Zawgyi have the
+core's date names. A few widget labels (tooltips such as "Next month",
+"Today") fall back to English in those languages until you add
+translations:
 
 ```dart
-MyanmarDatePickerFormField(
-  language: Language.myanmar,
-  onChanged: (value) {
-    // value is MyanmarDateTime?
-  },
-)
+TranslationService.addTranslation('Next month', Language.shan, '...');
 ```
 
-## Moon Phase Widgets (CustomPainter)
+Digits follow the language, and screen readers hear each day in the
+calendar's language. Astrology descriptions are English in
+`myanmar_calendar_dart` 3.0.
 
-### Generic moon phase view
+## Example
 
-```dart
-MoonPhaseView(
-  phase: 0.25, // 0.0..1.0
-  size: 44,
-  animate: true,
-)
-```
-
-### Daily moon phase from Myanmar date data
-
-```dart
-final complete = MyanmarCalendar.getCompleteDate(DateTime.now());
-
-DailyMoonPhaseWidget.fromCompleteDate(
-  complete,
-  language: Language.myanmar,
-  size: 40,
-  showLabel: true,
-  showIllumination: true,
-)
-```
-
-### Math helpers
-
-```dart
-final phase = MoonPhaseMath.phaseFromDailyMyanmarData(
-  moonPhase: complete.myanmar.moonPhase,
-  fortnightDay: complete.myanmar.fortnightDay,
-  monthLength: complete.myanmar.monthLength,
-);
-
-final illumination = MoonPhaseMath.illumination(phase); // 0..1
-```
-
-## Theme Customization
-
-```dart
-final theme = MyanmarCalendarTheme.fromColor(
-  const Color(0xFF0F766E),
-).copyWith(
-  dateCellBorderRadius: 10,
-  holidayIndicatorColor: const Color(0xFFDC2626),
-);
-
-MyanmarCalendarWidget(theme: theme)
-```
-
-## New Picker UX
-
-The current picker includes:
-
-- Responsive action footer (prevents overflow in longer localized labels)
-- Scrollable long-range year selector via wheel picker
-- Month availability rules based on `firstDate` / `lastDate`
-
-## Accessibility & Performance
-
-The core widgets include built-in semantics, keyboard/focus helpers, and
-performance-oriented rendering defaults (`RepaintBoundary`, cache-backed date
-lookups, and constrained rebuild surfaces).
-
-## Example App
-
-Run the showcase app:
+The [example](example) is a gallery of every widget. Its settings sheet
+switches style, theme, language, platform, week start and colour. Phones
+get a bottom bar, and wider windows get a rail, a sidebar and an inspector.
 
 ```bash
 cd example
 flutter run
 ```
 
-Showcase includes:
+## Migrating from 3.x
 
-- Calendar screen (selection modes)
-- Picker screen (inline/dialog/fullscreen + form)
-- Insights screen (toolbar, summary, horoscope, moon timeline)
+4.0 replaces every widget. Wrap your app in a `MyanmarCalendarScope`, then
+switch each 3.x widget to its 4.0 replacement:
 
-## Migration Notes
+| 3.x | 4.0 |
+| --- | --- |
+| `MyanmarCalendarWidget` | `MyanmarMonthCalendar` with a `MyanmarCalendarController` |
+| `CalendarSelectionMode.single/range/multi` | `SingleSelection`, `RangeSelection`, `MultiSelection` on the controller |
+| `onDateSelected`, `onRangeSelected`, `onMultiSelected` | `onDayTapped` (a `CompleteDate`) and `onSelectionChanged` |
+| `cellBuilder` | `dayBuilder(context, MyanmarDayData day, Widget cell)` |
+| `MyanmarCalendarTheme`, `theme:` on each widget | `MmCalendarThemeData` in `ThemeData.extensions` or on the scope |
+| `language:` / `config:` on each widget | `MyanmarCalendarScope(language:, config:)` |
+| `MyanmarDatePickerWidget` | `MyanmarDatePicker` |
+| `showMyanmarDatePicker(...)` (returned `CompleteDate`) | `showMyanmarDatePicker(...)` (new parameters, still `CompleteDate`) |
+| `showMyanmarDatePickerFullscreen` | `showMyanmarDatePicker` (a sheet in Cupertino and Glass) |
+| `MyanmarDatePickerFormField`, `MyanmarDateField` | `MyanmarDateFormField` (`FormField<CompleteDate>`) |
+| `MyanmarCalendarToolbar` | `MyanmarCalendarHeader` |
+| `MyanmarDateSummaryCard` | `MyanmarTodayCard` |
+| `HoroscopeWidget` | `AstrologyCard` and `AIPromptAction` |
+| `MoonPhaseView`, `DailyMoonPhaseWidget`, `MoonPhasePainter` | `MoonGlyph`, `MoonPainter` |
+| `PackageConstants`, performance and accessibility helpers | Removed; widgets handle semantics and caching themselves |
+| `DateConverter`, `MyanmarCalendarService` (re-exported from `src/`) | `MyanmarCalendarClient` |
 
-### 3.x to 4.0
+The core library moved to 3.x as well; see its
+[changelog](https://pub.dev/packages/myanmar_calendar_dart/changelog). In
+short:
 
-4.0 builds on `myanmar_calendar_dart` 3.0, which this package re-exports, so
-the core's breaking changes reach your code too. See the
-[core changelog](https://pub.dev/packages/myanmar_calendar_dart/changelog)
-for the full list. The ones you're most likely to meet:
-
-- `MyanmarCalendar.generateAIPrompt(date, ...)` is now
-  `AIPromptService.generatePrompt(date, ...)`. It's still exported from
-  `flutter_mmcalendar`.
-- `getCacheStatistics()` returns a typed `CalendarCacheStatistics`. Read
-  `stats.hits` or `stats.totalMemoryEntries`, or call `stats.toMap()` for
-  the old map.
-- `DateConversionException`, `DateOutOfRangeException`, `CacheException`,
-  `AstrologicalCalculationException` and `HolidayCalculationException` are
-  gone. Catch `MyanmarCalendarException` or one of the four that remain.
-- `parseMyanmar` and `parseWestern` throw `DateParseException`; use
-  `tryParseMyanmar` / `tryParseWestern` for `null` instead.
-- Holidays now match the reference calendar: 1 January is a public holiday
-  only from 2018 to 2021. The Shan year turns over at Nadaw 1.
-
-### Older versions
-
-- Core dependency moved to `myanmar_calendar_dart 2.x` in 3.3.0
-- Picker and calendar internals are fully refactored
-- Moon widgets are now CustomPainter-based (`MoonPhaseView`, `DailyMoonPhaseWidget`)
-- Some legacy docs/examples from older versions were removed in favor of current APIs
+- `MyanmarCalendar.generateAIPrompt` is now `AIPromptService.generatePrompt`.
+- `getCacheStatistics()` is typed.
+- `parseMyanmar` throws `DateParseException`.
+- Holidays follow the reference calendar.
 
 ## Changelog
 
@@ -242,4 +290,4 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT; see [LICENSE](LICENSE).

@@ -114,6 +114,21 @@ void main() {
     });
   });
 
+  testWidgets('the wheels select the day they show', (tester) async {
+    CompleteDate? result;
+    await _pumpOpener(tester, style: MmVisualStyle.glass, (context) async {
+      result = await showMyanmarDatePicker(
+        context: context,
+        inputMode: MyanmarPickerInput.wheels,
+        clock: _clock,
+      );
+    });
+    expect(find.text('Sunday, 18 October 2026'), findsOneWidget);
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(result!.western.day, 18);
+  });
+
   group('MyanmarMonthYearPicker', () {
     testWidgets('picks a month and respects the bounds', (tester) async {
       DateTime? picked;
