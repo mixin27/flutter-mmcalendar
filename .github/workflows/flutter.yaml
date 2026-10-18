@@ -45,7 +45,8 @@ jobs:
         run: flutter analyze
 
       - name: 🏃 Run Tests
-        run: flutter test --coverage
+        # Goldens are generated on macOS; Linux renders text differently.
+        run: flutter test --coverage --exclude-tags golden
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

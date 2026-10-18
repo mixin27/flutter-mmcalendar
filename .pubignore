@@ -1,0 +1,27 @@
+# With a .pubignore, pub stops reading .gitignore, so its rules come first.
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+*.iml
+*.ipr
+*.iws
+.idea/
+/pubspec.lock
+**/doc/api/
+.dart_tool/
+.packages
+build/
+coverage/
+misc/
+local_tools/
+
+# Development-only files that don't belong in the published package.
+test/**/goldens/
+doc/

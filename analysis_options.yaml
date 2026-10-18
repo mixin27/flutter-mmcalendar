@@ -16,3 +16,4 @@ analyzer:
     unused_local_variable: ignore
   exclude:
     - local_tools/**
+    - build/**

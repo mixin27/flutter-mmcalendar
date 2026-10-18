@@ -1,26 +1,38 @@
-# flutter_mmcalendar_example
+# flutter_mmcalendar gallery
 
-Showcase app for `flutter_mmcalendar` after the full v2.0.0 refactor.
+Every flutter_mmcalendar 4.0 widget in one app.
 
-## What this demo includes
+The gallery has five sections:
 
-- Calendar screen with single/range/multi selection modes
-- Inline date picker + dialog/fullscreen picker flows
-- Form integration with `MyanmarDatePickerFormField`
-- Date summary card and horoscope/astrology detail view
-- Language toggles (English / Myanmar / Shan)
-- Holiday and astrology visibility toggles
+- **Calendar:** the month calendar with its five cell styles, today's card
+  and the week strip. Wide windows add a sidebar with a mini month and the
+  coming holidays, and an inspector with the day's details.
+- **Views:** the year, the Myanmar month by fortnight with its quarter
+  moons, and the agenda.
+- **Pickers:** the date, Myanmar wheel, range and multi-date pickers, the
+  inline picker and the form field.
+- **Day:** today's card, the moon countdown, holidays, astrology and the
+  Nagahle compass.
+- **Tools:** the converter, date arithmetic, AI prompts and chronicles.
 
-## Run locally
+The settings button (top right) switches style (Automatic, Material,
+Cupertino, Glass), theme, language, platform, week start and colour.
+
+## Run
 
 ```bash
-cd example
-flutter pub get
 flutter run
 ```
 
-Then use bottom navigation to explore:
+## Screenshots
 
-- `Calendar`
-- `Picker`
-- `Insights`
+The gallery can start on a given section and settings, which is how the
+package's screenshots are taken:
+
+```bash
+flutter run --dart-define=GALLERY_SECTION=1 --dart-define=GALLERY_STYLE=glass --dart-define=GALLERY_THEME=light --dart-define=GALLERY_LANGUAGE=my
+```
+
+`GALLERY_SECTION` counts from 0 (Calendar). `GALLERY_STYLE` is `material`,
+`cupertino` or `glass`. `GALLERY_THEME` is `light` or `dark`.
+`GALLERY_LANGUAGE` is a language code such as `my` or `shn`.

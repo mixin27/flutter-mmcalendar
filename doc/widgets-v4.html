@@ -1,0 +1,815 @@
+<meta charset="utf-8">
+<title>flutter_mmcalendar 4 Widgets</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600&display=swap">
+<style>
+/* Layout: a specimen board. Sticky control bar, a live hero frame, then one
+   section per widget family; each specimen is a label column + a stage that
+   renders in the chosen style (Material / Cupertino / Glass). */
+:root {
+  /* board chrome */
+  --bg: #ECEEF3; --panel: #FFFFFF; --ink: #161A24; --muted: #596175; --line: #D4D8E2;
+  --brand: #B8620F; --brand-soft: #F6E7D6; --code-bg: #F4F5F8;
+  /* widget tokens = MmCalendarThemeData.fromColorScheme(seed indigo) */
+  --w-accent: #3D4FD6; --w-on-accent: #FFFFFF; --w-accent-soft: #E3E6FB;
+  --w-surface: #FFFFFF; --w-surface2: #F3F4F8; --w-ink: #151821; --w-muted: #6A7184; --w-line: #E3E5EC;
+  --w-public: #D6343A; --w-religious: #BE720C; --w-cultural: #0F8A7A; --w-anniv: #7562B8; --w-other: #5B6B86;
+  --w-sabbath: #A86400; --w-moon: #E2A90A; --w-moon-dark: #D9DCE6; --w-outside: #B4B9C6;
+  --wall-a: #6F7FE0; --wall-b: #F0A257; --wall-c: #2C2F6B;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --mm: "Noto Sans Myanmar", "Myanmar Sangam MN", "Padauk", sans-serif;
+  --roboto: "Roboto Flex", Roboto, system-ui, sans-serif;
+  --sf: -apple-system, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0D0F15; --panel: #161922; --ink: #E8EBF2; --muted: #9AA2B5; --line: #2A2F3C;
+  --brand: #F0A04B; --brand-soft: #3A2A18; --code-bg: #12141B;
+  --w-accent: #8E9CFF; --w-on-accent: #10153F; --w-accent-soft: #272D57;
+  --w-surface: #1B1E28; --w-surface2: #232734; --w-ink: #ECEEF4; --w-muted: #9AA1B3; --w-line: #303545;
+  --w-public: #FF6B6B; --w-religious: #F2B256; --w-cultural: #4FD1BD; --w-anniv: #B3A6F0; --w-other: #9DAAC4;
+  --w-sabbath: #FFB84D; --w-moon: #FFD45C; --w-moon-dark: #3A3F50; --w-outside: #4F5566;
+  --wall-a: #2B3480; --wall-b: #9A4E1C; --wall-c: #0B0C22;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0D0F15; --panel: #161922; --ink: #E8EBF2; --muted: #9AA2B5; --line: #2A2F3C;
+  --brand: #F0A04B; --brand-soft: #3A2A18; --code-bg: #12141B;
+  --w-accent: #8E9CFF; --w-on-accent: #10153F; --w-accent-soft: #272D57;
+  --w-surface: #1B1E28; --w-surface2: #232734; --w-ink: #ECEEF4; --w-muted: #9AA1B3; --w-line: #303545;
+  --w-public: #FF6B6B; --w-religious: #F2B256; --w-cultural: #4FD1BD; --w-anniv: #B3A6F0; --w-other: #9DAAC4;
+  --w-sabbath: #FFB84D; --w-moon: #FFD45C; --w-moon-dark: #3A3F50; --w-outside: #4F5566;
+  --wall-a: #2B3480; --wall-b: #9A4E1C; --wall-c: #0B0C22;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.02; font-weight: 700; }
+h2 { font-size: clamp(1.45rem, 3vw, 2rem); font-weight: 700; }
+h3 { font-size: 1.05rem; font-weight: 500; font-family: var(--mono); letter-spacing: 0; }
+p { margin: 0; max-width: 66ch; }
+code { font-family: var(--mono); font-size: .88em; }
+.eyebrow { font: 500 .72rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brand); }
+.muted { color: var(--muted); }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* control bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding-block: 10px; }
+.bar .name { font: 700 1rem var(--display); margin-right: auto; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; padding: 2px; background: var(--panel); }
+.seg button { font: 500 .8rem var(--body); color: var(--muted); background: none; border: 0; padding: 5px 10px; border-radius: 7px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.ctl { display: flex; align-items: center; gap: 6px; font: 500 .7rem var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+
+/* sections */
+header.hero { padding-block: 44px 28px; display: grid; gap: 18px; }
+.hero-lede { font-size: 1.08rem; color: var(--muted); max-width: 62ch; }
+section.block { padding-block: 44px; border-top: 1px solid var(--line); display: grid; gap: 22px; }
+.block-head { display: grid; gap: 8px; }
+.spec { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 22px; align-items: start; }
+.spec + .spec { padding-top: 22px; border-top: 1px dashed var(--line); }
+.spec-meta { display: grid; gap: 8px; }
+.spec-meta h3 { color: var(--ink); }
+.spec-meta p { font-size: .92rem; color: var(--muted); }
+.spec-meta ul { margin: 0; padding-left: 18px; font-size: .88rem; color: var(--muted); display: grid; gap: 3px; }
+.api { font: .8rem/1.5 var(--mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; overflow-x: auto; white-space: pre; color: var(--ink); }
+@media (max-width: 820px) { .spec { grid-template-columns: minmax(0, 1fr); } }
+
+/* stage: where widgets render in the chosen style */
+.stage { position: relative; border-radius: 18px; padding: 22px; background: var(--w-surface2); border: 1px solid var(--line); overflow: hidden; display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start; justify-content: center; min-width: 0; }
+.stage > * { position: relative; z-index: 1; }
+.wall { position: absolute; inset: 0; z-index: 0; display: none; background:
+  radial-gradient(circle at 78% 22%, color-mix(in srgb, var(--w-moon) 85%, white) 0 46px, transparent 47px),
+  radial-gradient(120% 90% at 10% 100%, var(--wall-b), transparent 60%),
+  linear-gradient(160deg, var(--wall-a), var(--wall-c)); }
+.wall svg { position: absolute; bottom: 0; left: 8%; width: 46%; max-width: 360px; height: auto; fill: var(--wall-c); opacity: .85; }
+[data-style="glass"] .wall { display: block; }
+[data-style="glass"] .stage { border-color: transparent; }
+
+/* ---------- widget foundation (per style) ---------- */
+.w { --r: 16px; --font: var(--roboto); font-family: var(--font); color: var(--w-ink); font-size: 14px; line-height: 1.35; }
+.w .mmt, .w[lang="my"] { font-family: var(--mm), var(--font); }
+.w[lang="my"] { line-height: 1.6; }
+[data-style="material"] .w { --r: 18px; --font: var(--roboto); }
+[data-style="cupertino"] .w { --r: 12px; --font: var(--sf); }
+[data-style="glass"] .w { --r: 28px; --font: var(--sf); }
+.surf { background: var(--w-surface); border-radius: var(--r); }
+[data-style="material"] .surf { background: color-mix(in srgb, var(--w-accent) 5%, var(--w-surface)); box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 2px 8px rgb(0 0 0 / .05); }
+[data-style="cupertino"] .surf { box-shadow: 0 0 0 .5px var(--w-line); }
+[data-style="glass"] .surf, .glass { background: color-mix(in srgb, var(--w-surface) 34%, transparent); -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .55), inset 0 0 0 1px rgb(255 255 255 / .28), inset 0 -10px 24px rgb(255 255 255 / .06), 0 10px 30px rgb(0 0 0 / .18); }
+.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 12px; font-weight: 500; font-size: 13px; border: 0; cursor: pointer; font-family: inherit; }
+.btn-fill { background: var(--w-accent); color: var(--w-on-accent); }
+.btn-tonal { background: var(--w-accent-soft); color: var(--w-accent); }
+.btn-text { background: none; color: var(--w-accent); }
+[data-style="cupertino"] .btn-fill { border-radius: 10px; }
+[data-style="cupertino"] .btn-tonal { border-radius: 10px; background: var(--w-surface2); }
+[data-style="glass"] .btn-fill { background: color-mix(in srgb, var(--w-accent) 82%, transparent); box-shadow: inset 0 1px 0 rgb(255 255 255 / .45); }
+[data-style="glass"] .btn-tonal, [data-style="glass"] .btn-text { background: color-mix(in srgb, var(--w-surface) 40%, transparent); color: var(--w-ink); box-shadow: inset 0 1px 0 rgb(255 255 255 / .5), inset 0 0 0 1px rgb(255 255 255 / .25); }
+.icon-btn { width: 32px; height: 32px; border-radius: 999px; display: inline-grid; place-items: center; border: 0; background: none; color: var(--w-ink); cursor: pointer; }
+[data-style="glass"] .icon-btn { background: color-mix(in srgb, var(--w-surface) 40%, transparent); box-shadow: inset 0 1px 0 rgb(255 255 255 / .5), inset 0 0 0 1px rgb(255 255 255 / .25); }
+.icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.small { font-size: 12px; color: var(--w-muted); }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* month calendar */
+.cal { width: min(100%, 380px); padding: 14px 12px 12px; display: grid; gap: 8px; }
+.cal.wide { width: 100%; }
+.cal-head { display: flex; align-items: center; gap: 6px; padding: 0 4px; }
+.cal-title { flex: 1; min-width: 0; }
+.cal-title b { display: block; font-size: 19px; font-weight: 600; letter-spacing: -.01em; }
+[data-style="cupertino"] .cal-title b, [data-style="glass"] .cal-title b { font-size: 21px; font-weight: 700; }
+.cal-title span { display: block; font-size: 12.5px; color: var(--w-muted); }
+.wk { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; font-size: 11.5px; color: var(--w-muted); font-weight: 500; }
+.wk .we { color: var(--w-public); }
+.grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+.cell { position: relative; aspect-ratio: 1 / 1.08; border-radius: 12px; display: grid; padding: 4px 2px; cursor: pointer; border: 0; background: none; color: inherit; font-family: inherit; min-width: 0; }
+.cal.wide .cell { aspect-ratio: 1 / .78; }
+.cell:hover { background: color-mix(in srgb, var(--w-accent) 7%, transparent); }
+.cell .wd { font-size: 15px; font-weight: 500; line-height: 1.1; }
+.cell .md { font-size: 10px; color: var(--w-muted); line-height: 1.2; }
+.cell.out { opacity: .38; }
+.cell.hol .wd { color: var(--w-public); }
+.cell.rel .wd { color: var(--w-religious); }
+.cell .marks { display: flex; gap: 2px; justify-content: center; height: 5px; }
+.cell .marks i { width: 5px; height: 5px; border-radius: 9px; }
+.cell .moon { position: absolute; top: 3px; right: 3px; }
+.cell.today .wd { color: var(--w-accent); font-weight: 700; }
+.cell.sel { background: var(--w-accent); color: var(--w-on-accent); }
+.cell.sel .wd, .cell.sel .md { color: var(--w-on-accent); }
+[data-style="material"] .cell.sel { border-radius: 999px; }
+[data-style="glass"] .cell.sel { background: color-mix(in srgb, var(--w-accent) 80%, transparent); box-shadow: inset 0 1px 0 rgb(255 255 255 / .5), 0 4px 14px color-mix(in srgb, var(--w-accent) 40%, transparent); }
+.cell.today:not(.sel) { box-shadow: inset 0 0 0 1.5px var(--w-accent); }
+.cell.rng { background: var(--w-accent-soft); border-radius: 0; }
+.cell.rng.r0 { border-radius: 12px 0 0 12px; background: var(--w-accent); color: var(--w-on-accent); }
+.cell.rng.r1 { border-radius: 0 12px 12px 0; background: var(--w-accent); color: var(--w-on-accent); }
+.cell.rng.r0 .wd, .cell.rng.r1 .wd, .cell.rng.r0 .md, .cell.rng.r1 .md { color: var(--w-on-accent); }
+/* cell styles */
+.cs-dual .cell { align-content: space-between; justify-items: stretch; text-align: left; padding: 5px 6px; }
+.cs-dual .cell .md { text-align: right; font-size: 11px; }
+.cs-dual .cell .marks { justify-content: flex-start; }
+.cs-western .cell { align-content: center; justify-items: center; gap: 1px; }
+.cs-lunar .cell { align-content: center; justify-items: center; gap: 0; }
+.cs-lunar .cell .lun { font-size: 16px; font-weight: 600; line-height: 1.1; }
+.cs-lunar .cell .wd { font-size: 10px; font-weight: 500; color: var(--w-muted); }
+.cs-minimal .cell { align-content: center; justify-items: center; gap: 3px; aspect-ratio: 1 / .9; }
+.cs-moon .cell { align-content: center; justify-items: center; gap: 2px; }
+.cs-moon .cell .wd { font-size: 12px; }
+
+/* lists */
+.list { display: grid; }
+.row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-height: 44px; }
+.row + .row { border-top: 1px solid var(--w-line); }
+[data-style="material"] .row + .row { border-top: 0; }
+[data-style="glass"] .row + .row { border-top-color: rgb(255 255 255 / .22); }
+.row .grow { flex: 1; min-width: 0; }
+.row .k { font-size: 12px; color: var(--w-muted); }
+.row .v { font-weight: 500; }
+.row .copy { color: var(--w-muted); }
+.ghead { font-size: 12px; font-weight: 600; color: var(--w-muted); padding: 14px 16px 6px; letter-spacing: .02em; }
+[data-style="cupertino"] .ghead { text-transform: uppercase; font-weight: 500; font-size: 11.5px; }
+.badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+[data-style="cupertino"] .badge { border-radius: 6px; }
+.b-public { color: var(--w-public); background: color-mix(in srgb, var(--w-public) 13%, transparent); }
+.b-religious { color: var(--w-religious); background: color-mix(in srgb, var(--w-religious) 15%, transparent); }
+.b-cultural { color: var(--w-cultural); background: color-mix(in srgb, var(--w-cultural) 14%, transparent); }
+.b-anniv { color: var(--w-anniv); background: color-mix(in srgb, var(--w-anniv) 15%, transparent); }
+.b-other { color: var(--w-other); background: color-mix(in srgb, var(--w-other) 15%, transparent); }
+.b-sabbath { color: var(--w-sabbath); background: color-mix(in srgb, var(--w-sabbath) 15%, transparent); }
+.b-neutral { color: var(--w-muted); background: var(--w-surface2); }
+.b-custom { color: var(--w-accent); box-shadow: inset 0 0 0 1px var(--w-accent); }
+.b-public i, .b-religious i, .b-cultural i, .b-anniv i, .b-other i, .b-sabbath i { width: 6px; height: 6px; border-radius: 9px; background: currentColor; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* frames */
+.frame-row { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+.device { position: relative; overflow: hidden; border-radius: 34px; border: 8px solid #10131A; background: var(--w-surface2); width: min(100%, 392px); display: grid; align-content: start; gap: 12px; padding: 14px 12px 18px; }
+.device.tablet { width: min(100%, 860px); border-radius: 26px; }
+.device.desktop { width: 100%; border-radius: 14px; border-width: 1px; border-color: var(--line); padding: 0; }
+[data-style="glass"] .device { background: transparent; }
+.device > *:not(.wall) { position: relative; z-index: 1; }
+.status { display: flex; justify-content: space-between; font: 600 12px var(--sf); color: var(--w-ink); padding: 0 12px; }
+.tb-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; }
+.dt-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr) 300px; min-height: 560px; }
+.dt-side { padding: 16px 12px; display: grid; gap: 14px; align-content: start; border-right: 1px solid var(--w-line); }
+.dt-main { padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.dt-insp { padding: 16px 12px; border-left: 1px solid var(--w-line); display: grid; gap: 12px; align-content: start; }
+[data-style="glass"] .dt-side, [data-style="glass"] .dt-insp { border-color: rgb(255 255 255 / .2); }
+.titlebar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--w-line); }
+.titlebar i { width: 11px; height: 11px; border-radius: 9px; background: var(--w-outside); }
+@media (max-width: 980px) { .dt-layout { grid-template-columns: minmax(0, 1fr); } .dt-side, .dt-insp { border: 0; } .tb-layout { grid-template-columns: minmax(0, 1fr); } }
+.floatbar { justify-self: center; display: flex; gap: 4px; padding: 5px; border-radius: 999px; }
+[data-style="material"] .floatbar { display: none; }
+[data-style="cupertino"] .floatbar { background: color-mix(in srgb, var(--w-surface) 80%, transparent); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); box-shadow: 0 0 0 .5px var(--w-line); }
+.floatbar .pill { padding: 7px 14px; background: none; color: var(--w-ink); }
+.floatbar .pill.on { background: color-mix(in srgb, var(--w-accent) 18%, transparent); color: var(--w-accent); }
+.m3nav { display: none; justify-content: space-around; padding: 8px 4px 2px; border-radius: 18px; background: color-mix(in srgb, var(--w-accent) 7%, var(--w-surface)); }
+[data-style="material"] .m3nav { display: flex; }
+.m3nav span { display: grid; justify-items: center; gap: 2px; font-size: 11px; color: var(--w-muted); }
+.m3nav span b { width: 52px; height: 28px; border-radius: 99px; display: grid; place-items: center; }
+.m3nav span.on b { background: var(--w-accent-soft); color: var(--w-accent); }
+.m3nav svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* today card */
+.today { width: min(100%, 360px); padding: 16px; display: grid; gap: 10px; }
+.today .big { display: flex; align-items: center; gap: 14px; }
+.today .num { font-size: 44px; font-weight: 600; line-height: 1; letter-spacing: -.03em; }
+.today .mm { font-size: 16px; font-weight: 600; }
+.mini-widget { width: 164px; height: 164px; padding: 14px; display: grid; align-content: space-between; }
+.mini-widget .num { font-size: 40px; font-weight: 700; line-height: 1; }
+
+/* wheel picker */
+.wheel { width: min(100%, 360px); padding: 14px; display: grid; gap: 10px; }
+.wheels { position: relative; display: grid; grid-template-columns: .8fr 1.3fr 1.2fr; height: 180px; overflow: hidden; }
+.wheels::before { content: ""; position: absolute; left: 0; right: 0; top: 72px; height: 36px; border-radius: 10px; background: color-mix(in srgb, var(--w-ink) 7%, transparent); }
+[data-style="material"] .wheels::before { border-radius: 0; background: none; border-top: 1px solid var(--w-accent); border-bottom: 1px solid var(--w-accent); }
+.wcol { display: grid; align-content: center; text-align: center; position: relative; }
+.wcol span { height: 36px; display: grid; place-items: center; font-size: 15px; color: var(--w-muted); white-space: nowrap; overflow: hidden; }
+.wcol span.c { color: var(--w-ink); font-weight: 600; font-size: 16.5px; }
+.wcol span.f1 { opacity: .55; transform: scale(.94); }
+.wcol span.f2 { opacity: .25; transform: scale(.86); }
+
+/* compass, moon strip */
+.compass { width: 150px; height: 150px; }
+.mstrip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 14px; width: min(100%, 420px); }
+.mstrip div { display: grid; justify-items: center; gap: 4px; text-align: center; }
+.count { width: min(100%, 320px); padding: 14px 16px; display: grid; gap: 10px; }
+.count .rowc { display: flex; align-items: center; gap: 12px; }
+.count .n { font-size: 26px; font-weight: 700; line-height: 1; min-width: 2ch; text-align: right; }
+.bar-track { height: 6px; border-radius: 9px; background: var(--w-surface2); overflow: hidden; }
+.bar-track b { display: block; height: 100%; border-radius: 9px; background: var(--w-moon); }
+
+/* year */
+.year { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; padding: 16px; width: 100%; }
+@media (max-width: 720px) { .year { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.mini { display: grid; gap: 4px; min-width: 0; cursor: pointer; }
+.mini b { font-size: 13px; font-weight: 600; }
+.mini b small { font-weight: 400; color: var(--w-muted); font-size: 10.5px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini .g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 1px; font-size: 9.5px; text-align: center; }
+.mini .g span { aspect-ratio: 1; display: grid; place-items: center; border-radius: 99px; color: var(--w-muted); }
+.mini .g span.h { color: var(--w-public); font-weight: 600; }
+.mini .g span.f { background: color-mix(in srgb, var(--w-moon) 30%, transparent); color: var(--w-ink); }
+.mini .g span.t { background: var(--w-accent); color: var(--w-on-accent); }
+.mini.cur b { color: var(--w-accent); }
+
+/* lunar month */
+.lunar { width: min(100%, 560px); padding: 16px; display: grid; gap: 12px; }
+.fort { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; align-items: center; }
+.fort .lab { font-size: 12px; color: var(--w-muted); font-weight: 600; }
+.fdays { display: grid; grid-template-columns: repeat(15, minmax(0, 1fr)); gap: 3px; }
+.fdays span { display: grid; justify-items: center; gap: 1px; padding: 5px 0; border-radius: 8px; background: var(--w-surface2); font-size: 11px; font-weight: 600; }
+.fdays span small { font-size: 9px; color: var(--w-muted); font-weight: 400; }
+.fdays span.s { box-shadow: inset 0 -2px 0 var(--w-sabbath); }
+.fdays span.h { color: var(--w-public); }
+.fdays span.t { background: var(--w-accent); color: var(--w-on-accent); }
+.fdays span.t small { color: var(--w-on-accent); }
+.fdays span.empty { background: none; }
+@media (max-width: 560px) { .fort { grid-template-columns: minmax(0, 1fr); } .fdays { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+
+/* agenda */
+.agenda { width: min(100%, 420px); }
+.ag-m { padding: 10px 16px 4px; font-weight: 600; font-size: 13px; color: var(--w-accent); }
+.ag-d { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 10px; padding: 8px 16px; }
+.ag-d .dd { text-align: center; line-height: 1.05; }
+.ag-d .dd b { display: block; font-size: 20px; }
+.ag-d .dd span { font-size: 11px; color: var(--w-muted); }
+.ag-d .items { display: grid; gap: 4px; align-content: center; }
+.ev { font-size: 13px; padding: 5px 9px; border-radius: 8px; background: var(--w-accent-soft); color: var(--w-ink); border-left: 3px solid var(--w-accent); }
+
+/* week strip */
+.week { width: min(100%, 420px); padding: 10px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.week button { display: grid; justify-items: center; gap: 2px; padding: 7px 0 6px; border: 0; background: none; color: inherit; border-radius: 14px; font-family: inherit; cursor: pointer; }
+.week button small { font-size: 11px; color: var(--w-muted); }
+.week button b { font-size: 17px; }
+.week button em { font-style: normal; font-size: 10px; color: var(--w-muted); }
+.week button.sel { background: var(--w-accent); color: var(--w-on-accent); }
+.week button.sel small, .week button.sel em { color: var(--w-on-accent); }
+
+/* picker */
+.picker { width: min(100%, 360px); display: grid; overflow: hidden; }
+.pk-head { padding: 18px 20px 12px; display: grid; gap: 4px; }
+.pk-head .t { font-size: 12px; color: var(--w-muted); }
+.pk-head .d { font-size: 26px; font-weight: 500; }
+[data-style="material"] .pk-head { border-bottom: 1px solid var(--w-line); }
+.pk-actions { display: flex; justify-content: flex-end; gap: 6px; padding: 8px 14px 14px; align-items: center; }
+.pk-grab { width: 36px; height: 5px; border-radius: 9px; background: var(--w-outside); justify-self: center; margin-top: 8px; display: none; }
+[data-style="cupertino"] .pk-grab, [data-style="glass"] .pk-grab { display: block; }
+.segc { display: grid; grid-template-columns: 1fr 1fr; padding: 2px; border-radius: 9px; background: var(--w-surface2); font-size: 13px; text-align: center; }
+.segc span { padding: 5px; border-radius: 7px; }
+.segc span.on { background: var(--w-surface); box-shadow: 0 1px 3px rgb(0 0 0 / .12); font-weight: 600; }
+[data-style="material"] .segc { background: none; border: 1px solid var(--w-line); border-radius: 99px; }
+[data-style="material"] .segc span { border-radius: 99px; }
+[data-style="material"] .segc span.on { background: var(--w-accent-soft); color: var(--w-accent); box-shadow: none; }
+[data-style="glass"] .segc { background: color-mix(in srgb, var(--w-surface) 30%, transparent); }
+[data-style="glass"] .segc span.on { background: color-mix(in srgb, var(--w-surface) 70%, transparent); }
+
+/* form field */
+.field { width: min(100%, 360px); display: grid; gap: 4px; }
+.field .box { display: flex; align-items: center; gap: 10px; padding: 14px; border-radius: 10px; border: 1px solid var(--w-muted); background: var(--w-surface); }
+[data-style="material"] .field .box { border-radius: 6px 6px 0 0; border: 0; border-bottom: 2px solid var(--w-accent); background: var(--w-surface2); }
+[data-style="glass"] .field .box { border: 0; border-radius: 999px; }
+.field.err .box { border-color: var(--w-public); }
+.field.err .msg { color: var(--w-public); font-size: 12px; }
+.field label { font-size: 12px; color: var(--w-muted); padding-left: 4px; }
+.field .box svg { width: 18px; height: 18px; stroke: var(--w-muted); fill: none; stroke-width: 2; }
+
+/* tools */
+.tool { width: min(100%, 380px); padding: 16px; display: grid; gap: 12px; }
+.conv-row { display: grid; gap: 2px; padding: 10px 12px; border-radius: 12px; background: var(--w-surface2); }
+[data-style="glass"] .conv-row { background: color-mix(in srgb, var(--w-surface) 35%, transparent); }
+.conv-row b { font-size: 17px; }
+.swap { justify-self: center; margin-block: -18px; z-index: 2; background: var(--w-accent); color: var(--w-on-accent); width: 34px; height: 34px; border-radius: 99px; display: grid; place-items: center; border: 3px solid var(--w-surface); }
+.swap svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.prompt { font: 12px/1.5 var(--mono); background: var(--w-surface2); border-radius: 10px; padding: 10px; white-space: pre-wrap; color: var(--w-ink); max-height: 120px; overflow: auto; }
+
+/* tokens */
+.styles3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .styles3 { grid-template-columns: minmax(0, 1fr); } }
+.style-card { display: grid; gap: 10px; min-width: 0; }
+.style-card .stage { min-height: 250px; align-items: center; }
+.tok { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.tok div { display: flex; gap: 10px; align-items: center; font: 12px var(--mono); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px; min-width: 0; }
+.tok i { width: 26px; height: 26px; border-radius: 7px; flex: none; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .08); }
+.principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.principles div { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 6px; align-content: start; }
+.principles b { font-family: var(--display); font-size: 1.05rem; font-weight: 500; }
+.principles p { font-size: .92rem; color: var(--muted); }
+pre.code { margin: 0; font: .82rem/1.6 var(--mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; color: var(--ink); }
+pre.code .c { color: var(--muted); }
+pre.code .k { color: var(--brand); }
+.codes { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
+@media (max-width: 420px) { .codes { grid-template-columns: minmax(0, 1fr); } }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: .9rem; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 .72rem var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.n { font-family: var(--mono); color: var(--brand); width: 36px; }
+.layouts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 820px) { .layouts { grid-template-columns: minmax(0, 1fr); } }
+.lay { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.schem { display: grid; gap: 4px; height: 130px; }
+.schem b { background: var(--brand-soft); border-radius: 6px; display: grid; place-items: center; font: 500 10.5px var(--mono); color: var(--brand); text-align: center; padding: 2px; }
+footer { padding-block: 30px 50px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; }
+@media (prefers-reduced-motion: no-preference) { .cell, .week button, .pill { transition: background-color .18s, color .18s; } }
+</style>
+
+<div class="bar">
+  <div class="wrap">
+    <span class="name">flutter_mmcalendar 4</span>
+    <span class="ctl">Style <span class="seg" data-ctl="style"><button data-v="material">Material 3</button><button data-v="cupertino">Cupertino</button><button data-v="glass">Glass</button></span></span>
+    <span class="ctl">Theme <span class="seg" data-ctl="theme"><button data-v="light">Light</button><button data-v="dark">Dark</button></span></span>
+    <span class="ctl">Lang <span class="seg" data-ctl="lang"><button data-v="en">English</button><button data-v="my">မြန်မာ</button></span></span>
+  </div>
+</div>
+
+<main id="app" data-style="glass">
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">Design board · widgets v4 · for review</span>
+    <h1>One calendar package, three native looks.</h1>
+    <p class="hero-lede">A proposal for rewriting every widget in flutter_mmcalendar on top of myanmar_calendar_dart 3. Every widget renders as Material 3, Cupertino or Liquid Glass from one theme, and shows what the core already computes: holiday types, Sabbath, moon days, astrology, the Shan and Sasana years, and the chronicles. The dates below are real: October 2026, Thadingyut 1388, a big watat year. Tap a day in the calendar.</p>
+    <div class="ctl">Frame <span class="seg" data-ctl="frame"><button data-v="phone">Phone</button><button data-v="tablet">Tablet</button><button data-v="desktop">Desktop</button></span></div>
+    <div class="stage" id="hero-stage"></div>
+  </header>
+
+  <section class="block" id="principles">
+    <div class="block-head"><span class="eyebrow">01 · Principles</span><h2>What changes from 3.3.1</h2></div>
+    <div class="principles">
+      <div><b>One scope, no per-widget theme</b><p>Wrap the app (or one screen) in <code>MyanmarCalendarScope</code>. It owns the client, config, language, cache and style. Widgets stop taking their own <code>theme</code> and <code>config</code>, so every widget agrees on custom holidays and time zone.</p></div>
+      <div><b>Follows the app's theme</b><p><code>MmCalendarThemeData</code> is a ThemeExtension built from the app's ColorScheme. Light and dark follow automatically; nothing is hard-coded blue.</p></div>
+      <div><b>Adaptive by default</b><p><code>MmVisualStyle.automatic</code> picks Cupertino on iOS and macOS, Material elsewhere, and Glass on iOS/macOS 26 and later when you opt in. Any widget can override it.</p></div>
+      <div><b>Both calendars in every cell</b><p>A day always shows its Western and Myanmar dates. Holidays are coloured by type, and Sabbath and moon days have their own marks.</p></div>
+      <div><b>State lives in a controller</b><p><code>MyanmarCalendarController</code> holds the visible month and a typed selection (single, range, multi). Every callback hands back <code>CompleteDate</code>.</p></div>
+      <div><b>Accessible in every language</b><p>Semantics are read in the calendar's language, arrow keys move the focus, and cells grow with text size instead of clipping.</p></div>
+    </div>
+  </section>
+
+  <section class="block" id="styles">
+    <div class="block-head"><span class="eyebrow">02 · Tokens and styles</span><h2>The same widget in each style</h2><p class="muted">These three ignore the Style switch so you can compare them side by side. Glass is drawn in Flutter: a refraction shader on Impeller, with a blur, tint and highlight fallback on web and Skia.</p></div>
+    <div class="styles3" id="styles3"></div>
+    <div class="tok" id="tokens"></div>
+  </section>
+
+  <section class="block" id="calendars">
+    <div class="block-head"><span class="eyebrow">03 · Calendars</span><h2>Month, week, year, lunar month, agenda</h2></div>
+    <div id="calendars-body"></div>
+  </section>
+
+  <section class="block" id="pickers">
+    <div class="block-head"><span class="eyebrow">04 · Pickers</span><h2>Picking a date in either calendar</h2></div>
+    <div id="pickers-body"></div>
+  </section>
+
+  <section class="block" id="day">
+    <div class="block-head"><span class="eyebrow">05 · Day information</span><h2>Everything about one day</h2></div>
+    <div id="day-body"></div>
+  </section>
+
+  <section class="block" id="moon">
+    <div class="block-head"><span class="eyebrow">06 · Moon and astrology</span><h2>Moon days, Sabbath and the astrological day</h2></div>
+    <div id="moon-body"></div>
+  </section>
+
+  <section class="block" id="tools">
+    <div class="block-head"><span class="eyebrow">07 · Tools</span><h2>Converter, arithmetic, chronicles, AI prompts</h2></div>
+    <div id="tools-body"></div>
+  </section>
+
+  <section class="block" id="layouts">
+    <div class="block-head"><span class="eyebrow">08 · Layouts per breakpoint</span><h2>How the pieces compose</h2><p class="muted">The package ships the widgets, not the screens. The example app composes them like this, and the Frame switch in the hero shows each one live.</p></div>
+    <div class="layouts">
+      <div class="lay"><b>Phone · under 600 dp</b><div class="schem" style="grid-template-rows:1.6fr 1fr .3fr"><b>MyanmarMonthCalendar</b><b>MyanmarTodayCard</b><b>Glass month switcher</b></div><p class="muted">Month on top, the selected day below. Glass floats the month switcher over the content; Material uses a navigation bar.</p></div>
+      <div class="lay"><b>Tablet · 600 to 1024 dp</b><div class="schem" style="grid-template-columns:1.3fr 1fr"><b>MyanmarMonthCalendar</b><b>MyanmarDayDetails</b></div><p class="muted">Calendar and day details side by side.</p></div>
+      <div class="lay"><b>Desktop · over 1024 dp</b><div class="schem" style="grid-template-columns:.8fr 1.6fr 1fr"><b>MiniMonth + HolidayList</b><b>MonthCalendar (large cells)</b><b>DayDetails</b></div><p class="muted">Sidebar, a large calendar with room for events, and an inspector.</p></div>
+    </div>
+  </section>
+
+  <section class="block" id="api">
+    <div class="block-head"><span class="eyebrow">09 · API sketch</span><h2>What using it looks like</h2></div>
+    <div class="codes">
+<pre class="code"><span class="c">// Once, near the top of the app.</span>
+<span class="k">MyanmarCalendarScope</span>(
+  language: Language.myanmar,     <span class="c">// or fromLocale: true</span>
+  style: MmVisualStyle.automatic, <span class="c">// material | cupertino | glass</span>
+  config: CalendarConfig(
+    customHolidays: [familyDays],
+  ),
+  child: MaterialApp(
+    theme: ThemeData(
+      colorSchemeSeed: Colors.indigo,
+      extensions: [MmCalendarThemeData.fromSeed(Colors.indigo)],
+    ),
+    home: const HomePage(),
+  ),
+);</pre>
+<pre class="code"><span class="c">// A month with a controller and events.</span>
+final controller = <span class="k">MyanmarCalendarController</span>(
+  initialMonth: DateTime(2026, 10),
+  selection: const RangeSelection(),
+);
+
+<span class="k">MyanmarMonthCalendar</span>(
+  controller: controller,
+  cellStyle: MyanmarDayCellStyle.dual,
+  firstDayOfWeek: DateTime.sunday,
+  eventLoader: (day) =&gt; events[day.western.date] ?? [],
+  onSelectionChanged: (CalendarSelection s) { ... },
+  dayBuilder: (context, MyanmarDayData day, Widget child) =&gt; child,
+);</pre>
+<pre class="code"><span class="c">// Pickers return CompleteDate, never a raw DateTime.</span>
+final CompleteDate? day = await <span class="k">showMyanmarDatePicker</span>(
+  context: context,
+  initialDate: DateTime(2026, 10, 18),
+  inputMode: MyanmarPickerInput.myanmar, <span class="c">// wheels</span>
+);
+
+final range = await <span class="k">showMyanmarDateRangePicker</span>(
+  context: context,
+  firstDate: DateTime(2026),
+  lastDate: DateTime(2027),
+);</pre>
+<pre class="code"><span class="c">// Small pieces you can drop anywhere.</span>
+<span class="k">MyanmarDateText</span>.today(pattern: '&amp;y &amp;M &amp;P &amp;ff');
+<span class="k">MoonGlyph</span>.forDate(day, size: 28, tilt: MoonTilt.myanmar);
+<span class="k">HolidayList</span>.upcoming(days: 60);
+<span class="k">NextMoonCountdown</span>(kinds: {MoonPhase.fullMoon});
+<span class="k">AIPromptAction</span>(
+  date: day,
+  onPrompt: (type, text) =&gt; Clipboard.setData(...),
+);</pre>
+    </div>
+  </section>
+
+  <section class="block" id="decisions">
+    <div class="block-head"><span class="eyebrow">10 · Decisions to confirm</span><h2>Before I build</h2></div>
+    <div class="tbl"><table>
+      <thead><tr><th>#</th><th>Decision</th><th>Proposal</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>Default week start</td><td>Sunday, configurable to any day</td><td>3.3.1 counted from Saturday (Myanmar weekday 0). Sunday matches wall calendars sold in Myanmar.</td></tr>
+        <tr><td class="n">2</td><td>Default cell style</td><td><code>dual</code>: Western day top-left, Myanmar day bottom-right</td><td>Both calendars at a glance, which is the reason to use this package.</td></tr>
+        <tr><td class="n">3</td><td>When glass turns on</td><td>Opt in with <code>MmVisualStyle.glass</code>. <code>automatic</code> picks glass only on iOS/macOS 26 and later</td><td>Glass costs a backdrop pass per surface. Apps should choose it, not inherit it on old devices.</td></tr>
+        <tr><td class="n">4</td><td>Holiday colours</td><td>Public red, religious saffron, cultural teal, anniversaries violet, other slate; custom holidays get an accent outline</td><td>3.3.1 drew every holiday as the same red dot.</td></tr>
+        <tr><td class="n">5</td><td>Digits</td><td>Myanmar digits everywhere when the language is Myanmar, Shan or Mon</td><td>Uses the core's <code>TranslationService.digitsFor</code>.</td></tr>
+        <tr><td class="n">6</td><td>Astrology descriptions</td><td>Show them, but they are English only in the core today</td><td>Translating them belongs in myanmar_calendar_dart 3.1, not in this package.</td></tr>
+        <tr><td class="n">7</td><td>ChronicleCard</td><td>Build it after checking the core: <code>getChronicleFor(1 Jan 1850)</code> returns 263 entries, including the founding of Pagan</td><td>That looks like "everything before this date", not "what was happening then". I'd like to confirm the intent in the core first.</td></tr>
+        <tr><td class="n">8</td><td>Naming</td><td><code>Myanmar*</code> for calendar widgets, <code>Mm*</code> for the adaptive primitives</td><td>Keeps the calendar names readable and the primitives short.</td></tr>
+        <tr><td class="n">9</td><td>Removed APIs</td><td>Drop MyanmarCalendarTheme, OptimizedCalendarCell, PackageConstants, the performance and accessibility helpers, HoroscopeWidget and the upstream src/ re-exports</td><td>The package isn't published as 4.0 yet, so this is the moment. One 4.0.0 changelog entry covers all of it.</td></tr>
+        <tr><td class="n">10</td><td>Dependencies</td><td>Flutter only: no Cupertino or glass packages, one bundled shader</td><td>Keeps the package light and its look under our control.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <footer>Data computed with myanmar_calendar_dart 3.0.0 for 2026. Board text is in English; the Lang switch changes what the widgets show. Events in the agenda are samples.</footer>
+</div>
+</main>
+
+<script>
+const DATA = {"days":[[1387,10,14,14,0,2,1,0,[],[]],[1387,10,15,15,1,1,0,1,[],[["myanmarAnniversary","Mothers","အမေများ"]]],[1387,10,16,1,2,0,1,0,["Thamaphyu"],[]],[1387,10,17,2,2,0,0,0,["Thamanyo","Thamaphyu"],[["public","Independence","လွတ်လပ်ရေး"]]],[1387,10,18,3,2,0,0,0,["Thamanyo","Amyeittasote","Nagapor"],[]],[1387,10,19,4,2,0,0,0,["Mahayatkyan","Shanyat"],[]],[1387,10,20,5,2,0,0,1,["Thamaphyu"],[]],[1387,10,21,6,2,0,1,0,["Warameittugyi","Thamaphyu"],[]],[1387,10,22,7,2,2,0,1,["Warameittunge","Yatpote","Thamaphyu"],[]],[1387,10,23,8,2,1,1,0,["Yatpote"],[]],[1387,10,24,9,2,0,0,0,["Thamanyo"],[]],[1387,10,25,10,2,0,0,0,["Thamanyo"],[]],[1387,10,26,11,2,0,0,0,[],[]],[1387,10,27,12,2,0,0,1,["Yatyotema"],[]],[1387,10,28,13,2,0,1,0,[],[]],[1387,10,29,14,2,2,0,1,[],[]],[1387,10,30,15,3,1,1,0,[],[]],[1387,11,1,1,0,0,0,1,["Warameittugyi","Yatpote","Thamaphyu"],[]],[1387,11,2,2,0,0,0,1,["Nagapor"],[]],[1387,11,3,3,0,0,1,0,["Thamanyo"],[]],[1387,11,4,4,0,0,0,0,["Thamanyo","Yatyotema","Mahayatkyan"],[]],[1387,11,5,5,0,0,1,0,[],[]],[1387,11,6,6,0,0,0,0,[],[]],[1387,11,7,7,0,2,0,0,["Warameittugyi","Shanyat"],[]],[1387,11,8,8,0,1,0,1,["Amyeittasote"],[]],[1387,11,9,9,0,0,0,1,[],[]],[1387,11,10,10,0,0,1,0,["Thamanyo","Warameittunge","Nagapor"],[]],[1387,11,11,11,0,0,0,0,["Thamanyo"],[]],[1387,11,12,12,0,0,1,0,[],[]],[1387,11,13,13,0,0,0,0,[],[]],[1387,11,14,14,0,2,0,0,[],[]],[1387,11,15,15,1,1,0,1,[],[]],[1387,11,16,1,2,0,0,1,[],[["myanmarAnniversary","Mon National","မွန် အမျိုးသား"]]],[1387,11,17,2,2,0,1,0,["Thamanyo"],[]],[1387,11,18,3,2,0,0,0,["Thamanyo","Nagapor"],[]],[1387,11,19,4,2,0,1,0,["Amyeittasote","Thamaphyu","Yatyotema","Mahayatkyan"],[]],[1387,11,20,5,2,0,0,0,[],[]],[1387,11,21,6,2,0,0,0,["Warameittunge"],[]],[1387,11,22,7,2,2,0,1,["Shanyat"],[]],[1387,11,23,8,2,1,0,1,[],[]],[1387,11,24,9,2,0,1,0,["Thamanyo"],[]],[1387,11,25,10,2,0,0,0,["Thamanyo"],[]],[1387,11,26,11,2,0,1,0,[],[["public","Union","ပြည်ထောင်စု"]]],[1387,11,27,12,2,0,0,0,[],[["otherAnniversary","G. Aung San BD","ဗိုလ်ချုပ်မွေးနေ့"]]],[1387,11,28,13,2,2,0,0,[],[["otherAnniversary","Valentines","ချစ်သူများ"]]],[1387,11,29,14,3,1,0,1,[],[]],[1387,12,1,1,0,0,0,0,["Nagapor"],[]],[1387,12,2,2,0,0,0,1,["Yatyotema"],[["otherAnniversary","Chinese New Year's","တရုတ်နှစ်သစ်ကူး"]]],[1387,12,3,3,0,0,1,2,[],[]],[1387,12,4,4,0,0,0,0,["Thamanyo","Amyeittasote","Thamaphyu","Shanyat"],[]],[1387,12,5,5,0,0,0,0,["Thamanyo","Mahayatkyan"],[]],[1387,12,6,6,0,0,0,0,["Warameittunge"],[]],[1387,12,7,7,0,2,1,0,[],[]],[1387,12,8,8,0,1,0,0,[],[]],[1387,12,9,9,0,0,0,1,[],[]],[1387,12,10,10,0,0,1,2,[],[]],[1387,12,11,11,0,0,0,0,["Thamanyo"],[]],[1387,12,12,12,0,0,0,0,["Thamanyo"],[]],[1387,12,13,13,0,0,0,0,[],[]],[1387,12,14,14,0,2,1,0,[],[]],[1387,12,15,15,1,1,0,0,[],[["cultural","Tabaung Pwe","တပေါင်း ပွဲတော်"],["public","Peasants","တောင်သူလယ်သမား"],["myanmarAnniversary","Fathers","အဖေများ"]]],[1387,12,16,1,2,0,0,1,[],[]],[1387,12,17,2,2,0,1,2,["Amyeittasote","Yatyotema"],[]],[1387,12,18,3,2,0,0,0,["Thamanyo","Thamaphyu"],[]],[1387,12,19,4,2,0,0,0,["Thamanyo","Shanyat"],[]],[1387,12,20,5,2,0,0,0,["Amyeittasote","Mahayatkyan"],[]],[1387,12,21,6,2,0,1,0,["Nagapor"],[]],[1387,12,22,7,2,2,0,0,[],[]],[1387,12,23,8,2,1,0,1,["Warameittugyi"],[]],[1387,12,24,9,2,0,1,2,["Warameittugyi","Warameittunge","Yatpote"],[]],[1387,12,25,10,2,0,0,0,["Thamanyo"],[]],[1387,12,26,11,2,0,0,0,["Thamanyo"],[]],[1387,12,27,12,2,0,0,0,[],[]],[1387,12,28,13,2,0,1,0,[],[]],[1387,12,29,14,2,2,0,0,[],[]],[1387,12,30,15,3,1,0,1,[],[]],[1387,13,1,1,0,0,1,0,[],[]],[1387,13,2,2,0,0,0,1,["Nagapor"],[]],[1387,13,3,3,0,0,1,0,["Warameittugyi","Thamaphyu"],[["otherAnniversary","Eid al-Fitr","Eid al-Fitr"]]],[1387,13,4,4,0,0,0,1,["Thamanyo"],[["otherAnniversary","Eid al-Fitr","Eid al-Fitr"]]],[1387,13,5,5,0,0,0,0,["Thamanyo","Mahayatkyan"],[]],[1387,13,6,6,0,0,0,0,["Thamaphyu","Yatyotema"],[]],[1387,13,7,7,0,2,0,0,["Amyeittasote"],[]],[1387,13,8,8,0,1,1,0,["Shanyat"],[]],[1387,13,9,9,0,0,0,1,[],[]],[1387,13,10,10,0,0,1,0,[],[["public","Resistance","တော်လှန်ရေး"]]],[1387,13,11,11,0,0,0,1,["Thamanyo"],[]],[1387,13,12,12,0,0,0,0,["Thamanyo","Warameittunge"],[]],[1387,13,13,13,0,0,0,0,[],[]],[1387,13,14,14,0,2,0,0,[],[]],[1387,13,15,15,1,1,1,0,[],[["otherAnniversary","April Fools'","ဧပြီအရူး"]]],[1387,13,16,1,2,0,0,1,[],[]],[1387,13,17,2,2,0,1,0,[],[["religious","Good Friday","သောကြာနေ့ကြီး"]]],[1387,13,18,3,2,0,0,1,["Thamanyo"],[]],[1387,13,19,4,2,0,0,0,["Thamanyo","Nagapor"],[["religious","Easter","ထမြောက်ရာနေ့"]]],[1387,13,20,5,2,0,0,0,["Mahayatkyan"],[]],[1387,13,21,6,2,0,0,0,["Yatpote","Thamaphyu","Yatyotema"],[]],[1387,13,22,7,2,2,1,0,[],[]],[1387,13,23,8,2,1,0,1,["Warameittunge","Yatpote","Shanyat"],[]],[1387,13,24,9,2,0,1,0,[],[]],[1387,13,25,10,2,0,0,1,["Thamanyo"],[]],[1387,13,26,11,2,0,0,0,["Thamanyo"],[]],[1387,13,27,12,2,0,0,0,[],[["cultural","Thingyan Akyo","သင်္ကြန် အကြို"]]],[1387,13,28,13,2,2,0,0,[],[["cultural","Thingyan Akya","သင်္ကြန် အကျ"]]],[1387,13,29,14,3,1,1,0,[],[["cultural","Thingyan Akyat","သင်္ကြန် အကြတ်"]]],[1387,14,1,1,0,0,1,0,[],[["cultural","Thingyan Atat","သင်္ကြန် အတက်"]]],[1388,2,2,2,0,0,0,1,[],[["public","Myanmar New Year's Day","နှစ်ဆန်းတစ်ရက်"]]],[1388,2,3,3,0,0,1,0,[],[["public","Holiday","ရုံးပိတ်ရက်"]]],[1388,2,4,4,0,0,0,0,["Yatyotema"],[["public","Holiday","ရုံးပိတ်ရက်"]]],[1388,2,5,5,0,0,0,0,["Thamanyo"],[["public","Holiday","ရုံးပိတ်ရက်"]]],[1388,2,6,6,0,0,0,0,["Thamanyo","Yatpote","Thamaphyu","Mahayatkyan"],[["public","Holiday","ရုံးပိတ်ရက်"]]],[1388,2,7,7,0,2,0,1,[],[["otherAnniversary","Earth","ကမ္ဘာမြေ"]]],[1388,2,8,8,0,1,1,0,["Warameittunge","Yatpote","Shanyat"],[]],[1388,2,9,9,0,0,0,1,[],[]],[1388,2,10,10,0,0,1,0,[],[]],[1388,2,11,11,0,0,0,0,[],[]],[1388,2,12,12,0,0,0,0,["Thamanyo","Nagapor"],[]],[1388,2,13,13,0,0,0,0,["Thamanyo"],[]],[1388,2,14,14,0,2,0,1,[],[]],[1388,2,15,15,1,1,1,0,[],[["religious","Buddha","ဗုဒ္ဓ"]]],[1388,2,16,1,2,0,0,1,["Amyeittasote"],[["public","Labour","အလုပ်သမား"]]],[1388,2,17,2,2,0,1,0,["Nagapor"],[]],[1388,2,18,3,2,0,0,0,[],[]],[1388,2,19,4,2,0,0,0,["Thamanyo","Warameittugyi","Yatpote","Yatyotema"],[]],[1388,2,20,5,2,0,0,0,["Thamanyo"],[]],[1388,2,21,6,2,0,0,1,["Mahayatkyan"],[]],[1388,2,22,7,2,2,1,0,[],[]],[1388,2,23,8,2,1,0,1,["Shanyat"],[["otherAnniversary","Red Cross","ကြက်ခြေနီ"]]],[1388,2,24,9,2,0,1,0,[],[]],[1388,2,25,10,2,0,0,0,[],[]],[1388,2,26,11,2,0,0,0,["Thamanyo","Warameittunge"],[]],[1388,2,27,12,2,0,0,0,["Thamanyo"],[]],[1388,2,28,13,2,0,0,1,[],[]],[1388,2,29,14,2,2,1,0,[],[]],[1388,2,30,15,3,1,0,1,[],[]],[1388,3,1,1,0,0,0,0,["Thamaphyu"],[]],[1388,3,2,2,0,0,0,1,["Thamaphyu","Nagapor","Shanyat"],[]],[1388,3,3,3,0,0,0,1,["Amyeittasote"],[]],[1388,3,4,4,0,0,1,0,[],[]],[1388,3,5,5,0,0,0,0,["Thamanyo","Thamaphyu"],[]],[1388,3,6,6,0,0,1,0,["Thamanyo","Warameittugyi","Thamaphyu","Mahayatkyan"],[]],[1388,3,7,7,0,2,0,0,["Warameittunge","Yatpote","Thamaphyu"],[]],[1388,3,8,8,0,1,0,0,["Yatpote","Yatyotema"],[]],[1388,3,9,9,0,0,0,1,[],[]],[1388,3,10,10,0,0,0,1,[],[]],[1388,3,11,11,0,0,1,0,[],[]],[1388,3,12,12,0,0,0,0,["Thamanyo"],[["otherAnniversary","Eid al-Adha","Eid al-Adha"]]],[1388,3,13,13,0,0,1,0,["Thamanyo"],[["otherAnniversary","Eid al-Adha","Eid al-Adha"]]],[1388,3,14,14,0,2,0,0,[],[]],[1388,3,15,15,1,1,0,0,[],[["myanmarAnniversary","Mahathamaya","မဟာသမယ"]]],[1388,3,16,1,2,0,0,1,["Warameittugyi","Yatpote","Thamaphyu"],[]],[1388,3,17,2,2,0,0,1,["Shanyat"],[]],[1388,3,18,3,2,0,1,0,[],[]],[1388,3,19,4,2,0,0,0,["Thamanyo"],[]],[1388,3,20,5,2,0,1,0,["Thamanyo"],[]],[1388,3,21,6,2,0,0,0,["Nagapor","Mahayatkyan"],[]],[1388,3,22,7,2,2,0,0,["Warameittugyi"],[]],[1388,3,23,8,2,1,0,1,["Amyeittasote","Yatyotema"],[]],[1388,3,24,9,2,0,0,1,[],[]],[1388,3,25,10,2,0,1,0,["Warameittunge"],[]],[1388,3,26,11,2,0,0,0,["Thamanyo"],[]],[1388,3,27,12,2,0,1,0,["Thamanyo"],[]],[1388,3,28,13,2,0,0,0,[],[]],[1388,3,29,14,2,2,0,0,[],[]],[1388,3,30,15,3,1,0,1,[],[]],[1388,0,1,1,0,0,0,0,["Nagapor","Mahayatkyan"],[]],[1388,0,2,2,0,0,0,1,["Shanyat"],[]],[1388,0,3,3,0,0,1,2,[],[]],[1388,0,4,4,0,0,0,0,["Amyeittasote","Thamaphyu"],[]],[1388,0,5,5,0,0,0,0,["Thamanyo"],[]],[1388,0,6,6,0,0,0,0,["Thamanyo","Warameittunge","Yatyotema"],[]],[1388,0,7,7,0,2,1,0,[],[]],[1388,0,8,8,0,1,0,0,[],[]],[1388,0,9,9,0,0,0,1,[],[]],[1388,0,10,10,0,0,1,2,[],[]],[1388,0,11,11,0,0,0,0,[],[]],[1388,0,12,12,0,0,0,0,["Thamanyo"],[]],[1388,0,13,13,0,0,0,0,["Thamanyo"],[]],[1388,0,14,14,0,2,1,0,[],[]],[1388,0,15,15,1,1,0,0,[],[]],[1388,0,16,1,2,0,0,1,["Mahayatkyan"],[]],[1388,0,17,2,2,0,1,2,["Amyeittasote","Shanyat"],[]],[1388,0,18,3,2,0,0,0,["Thamaphyu"],[]],[1388,0,19,4,2,0,0,0,["Thamanyo"],[]],[1388,0,20,5,2,0,0,0,["Thamanyo","Amyeittasote"],[]],[1388,0,21,6,2,0,1,0,["Nagapor","Yatyotema"],[]],[1388,0,22,7,2,2,0,0,[],[]],[1388,0,23,8,2,1,0,1,["Warameittugyi"],[]],[1388,0,24,9,2,0,1,2,["Warameittugyi","Warameittunge","Yatpote"],[]],[1388,0,25,10,2,0,0,0,[],[]],[1388,0,26,11,2,0,0,0,["Thamanyo"],[]],[1388,0,27,12,2,0,0,0,["Thamanyo"],[]],[1388,0,28,13,2,0,1,0,[],[]],[1388,0,29,14,2,2,0,0,[],[]],[1388,0,30,15,3,1,0,1,[],[]],[1388,4,1,1,0,0,1,2,["Mahayatkyan"],[]],[1388,4,2,2,0,0,0,0,["Nagapor","Shanyat"],[]],[1388,4,3,3,0,0,0,0,["Thamanyo","Warameittugyi","Thamaphyu"],[]],[1388,4,4,4,0,0,0,0,["Thamanyo"],[]],[1388,4,5,5,0,0,1,0,[],[["public","Martyrs'","အာဇာနည်"]]],[1388,4,6,6,0,0,0,0,["Thamaphyu","Yatyotema"],[]],[1388,4,7,7,0,2,0,1,["Amyeittasote"],[]],[1388,4,8,8,0,1,1,2,[],[]],[1388,4,9,9,0,0,0,0,[],[]],[1388,4,10,10,0,0,0,0,["Thamanyo"],[]],[1388,4,11,11,0,0,0,0,["Thamanyo"],[]],[1388,4,12,12,0,0,1,0,["Warameittunge"],[]],[1388,4,13,13,0,0,0,0,[],[]],[1388,4,14,14,0,2,0,1,[],[]],[1388,4,15,15,1,1,1,2,[],[["religious","Start of Buddhist Lent","ဓမ္မစကြာနေ့"]]],[1388,4,16,1,2,0,0,0,["Mahayatkyan"],[]],[1388,4,17,2,2,0,0,0,["Thamanyo","Shanyat"],[]],[1388,4,18,3,2,0,0,0,["Thamanyo"],[]],[1388,4,19,4,2,0,1,0,["Nagapor"],[]],[1388,4,20,5,2,0,0,0,[],[]],[1388,4,21,6,2,0,0,1,["Yatpote","Thamaphyu","Yatyotema"],[]],[1388,4,22,7,2,2,1,2,[],[]],[1388,4,23,8,2,1,0,0,["Warameittunge","Yatpote"],[]],[1388,4,24,9,2,0,0,0,["Thamanyo"],[]],[1388,4,25,10,2,0,0,0,["Thamanyo"],[]],[1388,4,26,11,2,0,1,0,[],[]],[1388,4,27,12,2,0,0,0,[],[]],[1388,4,28,13,2,0,0,1,[],[]],[1388,4,29,14,2,2,1,2,[],[]],[1388,4,30,15,3,1,0,0,[],[]],[1388,5,1,1,0,0,1,0,["Amyeittasote","Mahayatkyan"],[]],[1388,5,2,2,0,0,0,1,[],[]],[1388,5,3,3,0,0,0,0,["Thamanyo"],[]],[1388,5,4,4,0,0,0,0,["Thamanyo","Warameittugyi","Yatpote","Nagapor"],[]],[1388,5,5,5,0,0,0,0,[],[]],[1388,5,6,6,0,0,1,0,[],[]],[1388,5,7,7,0,2,0,1,[],[]],[1388,5,8,8,0,1,1,0,[],[]],[1388,5,9,9,0,0,0,1,["Shanyat"],[]],[1388,5,10,10,0,0,0,0,["Thamanyo","Yatyotema"],[["myanmarAnniversary","Taungpyone Pwe","တောင်ပြုန်း ပွဲတော်"]]],[1388,5,11,11,0,0,0,0,["Thamanyo","Warameittunge"],[]],[1388,5,12,12,0,0,0,0,[],[]],[1388,5,13,13,0,0,1,0,[],[]],[1388,5,14,14,0,2,0,1,[],[]],[1388,5,15,15,1,1,1,0,[],[["myanmarAnniversary","Metta","မေတ္တာ"]]],[1388,5,16,1,2,0,0,1,["Thamaphyu","Mahayatkyan"],[]],[1388,5,17,2,2,0,0,0,["Thamanyo","Thamaphyu"],[]],[1388,5,18,3,2,0,0,0,["Thamanyo","Amyeittasote","Nagapor"],[]],[1388,5,19,4,2,0,0,0,[],[]],[1388,5,20,5,2,0,1,0,["Thamaphyu"],[]],[1388,5,21,6,2,0,0,1,["Warameittugyi","Thamaphyu"],[]],[1388,5,22,7,2,2,1,0,["Warameittunge","Yatpote","Thamaphyu"],[]],[1388,5,23,8,2,1,0,1,["Yatpote"],[["myanmarAnniversary","Yadanagu Pwe","ရတနာ့ဂူ ပွဲတော်"]]],[1388,5,24,9,2,0,0,0,["Thamanyo","Shanyat"],[]],[1388,5,25,10,2,0,0,0,["Thamanyo","Yatyotema"],[]],[1388,5,26,11,2,0,0,0,[],[]],[1388,5,27,12,2,0,1,0,[],[]],[1388,5,28,13,2,2,0,1,[],[]],[1388,5,29,14,3,1,1,0,[],[]],[1388,6,1,1,0,0,1,0,["Thamaphyu"],[]],[1388,6,2,2,0,0,0,0,["Thamaphyu","Nagapor","Mahayatkyan"],[]],[1388,6,3,3,0,0,0,0,["Amyeittasote","Shanyat"],[]],[1388,6,4,4,0,0,0,0,["Thamanyo"],[]],[1388,6,5,5,0,0,0,1,["Thamanyo","Thamaphyu"],[]],[1388,6,6,6,0,0,1,0,["Warameittugyi","Thamaphyu"],[]],[1388,6,7,7,0,2,0,1,["Warameittunge","Yatpote","Thamaphyu"],[]],[1388,6,8,8,0,1,1,0,["Yatpote","Yatyotema"],[]],[1388,6,9,9,0,0,0,0,[],[]],[1388,6,10,10,0,0,0,0,[],[]],[1388,6,11,11,0,0,0,0,["Thamanyo"],[]],[1388,6,12,12,0,0,0,1,["Thamanyo"],[]],[1388,6,13,13,0,0,1,0,[],[]],[1388,6,14,14,0,2,0,1,[],[]],[1388,6,15,15,1,1,1,0,[],[["myanmarAnniversary","Garudhamma","ဂရုဓမ္မ"]]],[1388,6,16,1,2,0,0,0,["Warameittugyi","Yatpote","Thamaphyu"],[]],[1388,6,17,2,2,0,0,0,["Mahayatkyan"],[]],[1388,6,18,3,2,0,0,0,["Thamanyo","Shanyat"],[]],[1388,6,19,4,2,0,0,1,["Thamanyo"],[]],[1388,6,20,5,2,0,1,0,[],[]],[1388,6,21,6,2,0,0,1,["Nagapor"],[]],[1388,6,22,7,2,2,1,0,["Warameittugyi"],[]],[1388,6,23,8,2,1,0,0,["Amyeittasote","Yatyotema"],[]],[1388,6,24,9,2,0,0,0,[],[["otherAnniversary","World Teachers'","World Teachers'"]]],[1388,6,25,10,2,0,0,0,["Thamanyo","Warameittunge"],[]],[1388,6,26,11,2,0,0,1,["Thamanyo"],[]],[1388,6,27,12,2,0,1,0,[],[]],[1388,6,28,13,2,0,0,1,[],[]],[1388,6,29,14,2,2,1,0,[],[]],[1388,6,30,15,3,1,0,0,[],[]],[1388,7,1,1,0,0,0,1,["Nagapor"],[]],[1388,7,2,2,0,0,1,0,["Mahayatkyan"],[]],[1388,7,3,3,0,0,0,0,["Shanyat"],[]],[1388,7,4,4,0,0,1,0,["Thamanyo","Amyeittasote","Thamaphyu"],[]],[1388,7,5,5,0,0,0,0,["Thamanyo"],[]],[1388,7,6,6,0,0,0,0,["Warameittunge"],[]],[1388,7,7,7,0,2,0,1,[],[]],[1388,7,8,8,0,1,0,1,[],[]],[1388,7,9,9,0,0,1,0,[],[]],[1388,7,10,10,0,0,0,0,[],[]],[1388,7,11,11,0,0,1,0,["Thamanyo"],[]],[1388,7,12,12,0,0,0,0,["Thamanyo","Yatyotema"],[]],[1388,7,13,13,0,0,0,0,[],[["otherAnniversary","United Nations","ကုလသမ္မဂ္ဂ"]]],[1388,7,14,14,0,2,0,1,[],[["public","Holiday","ရုံးပိတ်ရက်"]]],[1388,7,15,15,1,1,0,1,[],[["religious","End of Buddhist Lent","မီးထွန်းပွဲ"]]],[1388,7,16,1,2,0,1,0,[],[["public","Holiday","ရုံးပိတ်ရက်"]]],[1388,7,17,2,2,0,0,0,["Amyeittasote","Mahayatkyan"],[]],[1388,7,18,3,2,0,1,0,["Thamanyo","Thamaphyu","Shanyat"],[]],[1388,7,19,4,2,0,0,0,["Thamanyo"],[]],[1388,7,20,5,2,0,0,0,["Amyeittasote"],[["otherAnniversary","Halloween","သရဲနေ့"]]],[1388,7,21,6,2,0,0,1,["Nagapor"],[]],[1388,7,22,7,2,2,0,1,[],[]],[1388,7,23,8,2,1,1,0,["Warameittugyi"],[]],[1388,7,24,9,2,0,0,0,["Warameittugyi","Warameittunge","Yatpote"],[]],[1388,7,25,10,2,0,1,0,["Thamanyo"],[]],[1388,7,26,11,2,0,0,0,["Thamanyo"],[]],[1388,7,27,12,2,0,0,0,["Yatyotema"],[]],[1388,7,28,13,2,2,0,1,[],[["other","Diwali","ဒီဝါလီ"]]],[1388,7,29,14,3,1,0,1,[],[]],[1388,8,1,1,0,0,0,1,[],[]],[1388,8,2,2,0,0,1,2,["Amyeittasote"],[]],[1388,8,3,3,0,0,0,0,["Thamaphyu","Mahayatkyan"],[]],[1388,8,4,4,0,0,0,0,[],[]],[1388,8,5,5,0,0,0,0,["Thamanyo","Amyeittasote","Shanyat"],[]],[1388,8,6,6,0,0,1,0,["Thamanyo"],[]],[1388,8,7,7,0,2,0,0,[],[]],[1388,8,8,8,0,1,0,1,["Warameittugyi"],[]],[1388,8,9,9,0,0,1,2,["Warameittugyi","Warameittunge","Yatpote","Nagapor"],[]],[1388,8,10,10,0,0,0,0,["Yatyotema"],[]],[1388,8,11,11,0,0,0,0,[],[]],[1388,8,12,12,0,0,0,0,["Thamanyo"],[]],[1388,8,13,13,0,0,1,0,["Thamanyo"],[]],[1388,8,14,14,0,2,0,0,[],[["public","Holiday","ရုံးပိတ်ရက်"]]],[1388,8,15,15,1,1,0,1,[],[["religious","Tazaungdaing","တန်ဆောင်တိုင်"]]],[1388,8,16,1,2,0,1,2,[],[]],[1388,8,17,2,2,0,0,0,[],[]],[1388,8,18,3,2,0,0,0,["Warameittugyi","Thamaphyu","Mahayatkyan"],[]],[1388,8,19,4,2,0,0,0,["Thamanyo"],[]],[1388,8,20,5,2,0,1,0,["Thamanyo","Shanyat"],[]],[1388,8,21,6,2,0,0,0,["Thamaphyu"],[]],[1388,8,22,7,2,2,0,1,["Amyeittasote"],[]],[1388,8,23,8,2,1,1,2,[],[]],[1388,8,24,9,2,0,0,0,[],[]],[1388,8,25,10,2,0,0,0,["Yatyotema"],[["public","National Day","အမျိုးသားနေ့"]]],[1388,8,26,11,2,0,0,0,["Thamanyo","Nagapor"],[]],[1388,8,27,12,2,0,1,0,["Thamanyo","Warameittunge"],[]],[1388,8,28,13,2,0,0,0,[],[]],[1388,8,29,14,2,2,0,1,[],[]],[1388,8,30,15,3,1,1,2,[],[]],[1388,9,1,1,0,0,0,1,["Shanyat"],[["myanmarAnniversary","Shan New Year's","ရှမ်း နှစ်သစ်ကူး"],["myanmarAnniversary","Authors","စာဆိုတော်"]]],[1388,9,2,2,0,0,1,0,["Yatyotema"],[]],[1388,9,3,3,0,0,0,1,["Thamanyo","Mahayatkyan"],[]],[1388,9,4,4,0,0,0,0,["Thamanyo"],[]],[1388,9,5,5,0,0,0,0,[],[]],[1388,9,6,6,0,0,0,0,["Yatpote","Thamaphyu"],[]],[1388,9,7,7,0,2,1,0,[],[]],[1388,9,8,8,0,1,0,1,["Warameittunge","Yatpote"],[]],[1388,9,9,9,0,0,1,0,[],[]],[1388,9,10,10,0,0,0,1,["Thamanyo"],[]],[1388,9,11,11,0,0,0,0,["Thamanyo"],[]],[1388,9,12,12,0,0,0,0,["Nagapor"],[]],[1388,9,13,13,0,0,0,0,[],[]],[1388,9,14,14,0,2,1,0,[],[]],[1388,9,15,15,1,1,0,1,[],[]],[1388,9,16,1,2,0,1,0,["Amyeittasote","Shanyat"],[["religious","Christmas","ခရစ္စမတ်"]]],[1388,9,17,2,2,0,0,1,["Thamanyo","Nagapor","Yatyotema"],[]],[1388,9,18,3,2,0,0,0,["Thamanyo","Mahayatkyan"],[]],[1388,9,19,4,2,0,0,0,["Warameittugyi","Yatpote"],[]],[1388,9,20,5,2,0,0,0,[],[]],[1388,9,21,6,2,0,1,0,[],[]],[1388,9,22,7,2,2,0,1,[],[]]],"months":{"1387-10":["Pyatho","ပြာသို"],"1387-11":["Tabodwe","တပို့တွဲ"],"1387-12":["Tabaung","တပေါင်း"],"1387-13":["Late Tagu","နှောင်း တန်ခူး"],"1387-14":["Late Kason","နှောင်းကဆုန်"],"1388-2":["Kason","ကဆုန်"],"1388-3":["Nayon","နယုန်"],"1388-0":["First Waso","ပ ဝါဆို"],"1388-4":["Second Waso","ဒု ဝါဆို"],"1388-5":["Wagaung","ဝါခေါင်"],"1388-6":["Tawthalin","တော်သလင်း"],"1388-7":["Thadingyut","သီတင်းကျွတ်"],"1388-8":["Tazaungmon","တန်ဆောင်မုန်း"],"1388-9":["Nadaw","နတ်တော်"]},"tr":{"Sabbath Eve":"အဖိတ်","Sabbath":"ဥပုသ်","Thamaphyu":"သမားဖြူ","Thamanyo":"သမားညို","Amyeittasote":"အမြိတ္တစုတ်","Nagapor":"နဂါးပေါ်","Mahayatkyan":"မဟာရက်ကြမ်း","Shanyat":"ရှမ်းရက်","Warameittugyi":"ဝါရမိတ္တုကြီး","Warameittunge":"ဝါရမိတ္တုငယ်","Yatpote":"ရက်ပုပ်","Yatyotema":"ရက်ယုတ်မာ","Yatyaza":"ရက်ရာဇာ","Pyathada":"ပြဿဒါး","Afternoon Pyathada":"မွန်းလွဲ ပြဿဒါး","Human":"လူ","Atun":"အထွန်း","East":"အရှေ့","Bhadrapaha":"ဘဒြ","Big Watat":"ဝါတပ်ကြီး","Waxing":"လဆန်း","Waning":"လဆုတ်","Full Moon":"လပြည့်","New Moon":"လကွယ်"}};
+const S = { style: 'glass', theme: null, lang: 'en', frame: 'phone', sel: [2026, 10, 18], cellStyle: 'dual' };
+const TODAY = [2026, 10, 18];
+const WM = { en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  my: ['ဇန်နဝါရီ','ဖေဖော်ဝါရီ','မတ်','ဧပြီ','မေ','ဇွန်','ဇူလိုင်','ဩဂုတ်','စက်တင်ဘာ','အောက်တိုဘာ','နိုဝင်ဘာ','ဒီဇင်ဘာ'] };
+const WD = { en: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], my: ['နွေ','လာ','ဂါ','ဟူး','တေး','ကြာ','နေ'] };
+const WDF = { en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], my: ['တနင်္ဂနွေ','တနင်္လာ','အင်္ဂါ','ဗုဒ္ဓဟူး','ကြာသပတေး','သောကြာ','စနေ'] };
+const T = {
+  en: { today: 'Today', cancel: 'Cancel', ok: 'OK', done: 'Done', select: 'Select date', western: 'Western', myanmar: 'Myanmar', holidays: 'Holidays', upcoming: 'Upcoming holidays',
+    me: 'Myanmar year', sasana: 'Sasana year', shan: 'Shan year', astro: 'Astrology', mahabote: 'Mahabote', nakhat: 'Nakhat', nagahle: 'Nagahle', yname: 'Year name', fullIn: 'Full moon', newIn: 'New moon', sabIn: 'Sabbath', days: 'days', tomorrow: 'tomorrow', inD: 'in', convert: 'Converter', between: 'Days between', add: 'Add 1 Myanmar month', dynasty: 'Konbaung era', chron: 'Chronicle', prompt: 'Copy AI prompt', dob: 'Ordination date', bigWatat: 'Big watat year', dates: 'Dates', moon: 'Moon', none: 'No holiday', yatyaza: 'Yatyaza', pyathada: 'Pyathada', sabbath: 'Sabbath', sabbathEve: 'Sabbath Eve', range: 'Thadingyut holidays', month: 'Month', year: 'Year', week: 'Week', agenda: 'Agenda', err: 'Pick a day on or after 1 Nov 2026' },
+  my: { today: 'ယနေ့', cancel: 'မလုပ်တော့', ok: 'ရွေးမည်', done: 'ပြီးပြီ', select: 'ရက်စွဲ ရွေးပါ', western: 'ခရစ်နှစ်', myanmar: 'မြန်မာ', holidays: 'ရုံးပိတ်ရက်များ', upcoming: 'လာမည့် ရုံးပိတ်ရက်များ',
+    me: 'မြန်မာနှစ်', sasana: 'သာသနာနှစ်', shan: 'ရှမ်းနှစ်', astro: 'ဗေဒင်', mahabote: 'မဟာဘုတ်', nakhat: 'နက္ခတ်', nagahle: 'နဂါးခေါင်းလှည့်', yname: 'နှစ်အမည်', fullIn: 'လပြည့်', newIn: 'လကွယ်', sabIn: 'ဥပုသ်', days: 'ရက်', tomorrow: 'မနက်ဖြန်', inD: '', convert: 'ရက်စွဲ ပြောင်းရန်', between: 'ရက်ကွာခြားချက်', add: 'မြန်မာလ ၁ လ ပေါင်းရန်', dynasty: 'ကုန်းဘောင်ခေတ်', chron: 'ရာဇဝင်', prompt: 'AI prompt ကူးယူရန်', dob: 'ရှင်ပြုသည့်နေ့', bigWatat: 'ဝါတပ်ကြီးနှစ်', dates: 'ရက်စွဲများ', moon: 'လ', none: 'ရုံးပိတ်ရက် မရှိ', yatyaza: 'ရက်ရာဇာ', pyathada: 'ပြဿဒါး', sabbath: 'ဥပုသ်', sabbathEve: 'အဖိတ်', range: 'သီတင်းကျွတ် ရုံးပိတ်ရက်များ', month: 'လ', year: 'နှစ်', week: 'ပတ်', agenda: 'စာရင်း', err: '၂၀၂၆ နိုဝင်ဘာ ၁ ရက်နှင့် နောက်ပိုင်း ရက်ကို ရွေးပါ' }
+};
+const PH = { en: ['Waxing','Full Moon','Waning','New Moon'], my: ['လဆန်း','လပြည့်','လဆုတ်','လကွယ်'] };
+const TYPE = { public: 'public', religious: 'religious', cultural: 'cultural', myanmarAnniversary: 'anniv', otherAnniversary: 'anniv', other: 'other' };
+const t = k => T[S.lang][k];
+const MMD = '၀၁၂၃၄၅၆၇၈၉';
+const n = (v) => S.lang === 'my' ? String(v).replace(/[0-9]/g, c => MMD[c]) : String(v);
+const tr = (k) => S.lang === 'my' ? (DATA.tr[k] || k) : k;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function dayOf(y, m, d) {
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  const i = Math.round((dt - Date.UTC(2026, 0, 1)) / 864e5);
+  const r = DATA.days[i];
+  if (!r) return null;
+  return { y: dt.getUTCFullYear(), m: dt.getUTCMonth() + 1, d: dt.getUTCDate(), wd: dt.getUTCDay(), i,
+    my: r[0], mm: r[1], md: r[2], fd: r[3], mp: r[4], sab: r[5], yat: r[6], pya: r[7], astro: r[8],
+    hol: r[9].map(h => ({ type: h[0], cls: TYPE[h[0]] || 'other', name: S.lang === 'my' ? h[2] : h[1] })) };
+}
+const byIndex = i => { const dt = new Date(Date.UTC(2026, 0, 1 + i)); return dayOf(dt.getUTCFullYear(), dt.getUTCMonth() + 1, dt.getUTCDate()); };
+const same = (a, b) => a && b && a[0] === b.y && a[1] === b.m && a[2] === b.d;
+const mmMonth = (y, m) => (DATA.months[`${y}-${m}`] || ['?', '?'])[S.lang === 'my' ? 1 : 0];
+const mmShort = x => x.mp === 1 || x.mp === 3 ? PH[S.lang][x.mp] : `${PH[S.lang][x.mp]} ${n(x.fd)}`;
+const mmDate = x => `${mmMonth(x.my, x.mm)} ${mmShort(x)}`;
+const mmFull = x => S.lang === 'my' ? `${n(x.my)} ${mmDate(x)}` : `${mmDate(x)}, ${x.my} ME`;
+const wDate = x => S.lang === 'my' ? `${n(x.y)} ${WM.my[x.m - 1]} ${n(x.d)}` : `${x.d} ${WM.en[x.m - 1]} ${x.y}`;
+const wShort = x => S.lang === 'my' ? `${WM.my[x.m - 1]} ${n(x.d)}` : `${WM.en[x.m - 1].slice(0, 3)} ${x.d}`;
+const sel = () => dayOf(...S.sel);
+
+/* ---- moon glyph: lit fraction from the Myanmar day; terminator is an ellipse ---- */
+function moon(x, size = 18, tilt = 0) {
+  const r = size / 2 - 1, c = size / 2;
+  let f = x.mp === 1 ? 1 : x.mp === 3 ? 0 : x.mp === 0 ? x.fd / 15 : 1 - x.fd / 15;
+  const lit = 'var(--w-moon)', dark = 'var(--w-moon-dark)';
+  let shape;
+  if (f >= .985) shape = `<circle r="${r}" fill="${lit}"/>`;
+  else if (f <= .015) shape = `<circle r="${r - .6}" fill="none" stroke="${lit}" stroke-width="1.2"/>`;
+  else {
+    const rx = Math.abs(1 - 2 * f) * r, sweep = f > .5 ? 1 : 0;
+    const flip = x.mp === 2 ? ' transform="scale(-1,1)"' : '';
+    shape = `<circle r="${r}" fill="${dark}"/><path${flip} fill="${lit}" d="M0 ${-r}A${r} ${r} 0 0 1 0 ${r}A${rx.toFixed(2)} ${r} 0 0 ${sweep} 0 ${-r}Z"/>`;
+  }
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><g transform="translate(${c} ${c}) rotate(${tilt})">${shape}</g></svg>`;
+}
+const ICON = {
+  l: '<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>', r: '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>',
+  cal: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  swap: '<svg viewBox="0 0 24 24"><path d="M7 4v16M7 20l-4-4M7 20l4-4M17 20V4M17 4l-4 4M17 4l4 4"/></svg>',
+  list: '<svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
+  moon: '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+  tool: '<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h7"/></svg>'
+};
+const WALL = '<div class="wall"><svg viewBox="0 0 200 120" aria-hidden="true"><path d="M100 4l3 14h-6zM96 18h8l2 10h-12zM92 28h16l4 14H88zM84 42h32l6 18H78zM70 60h60l10 22H60zM40 82h120l20 38H20z"/><rect x="0" y="112" width="200" height="8"/></svg></div>';
+
+/* ---- month calendar ---- */
+function monthGrid(y, m, opts = {}) {
+  const cs = opts.cellStyle || S.cellStyle, ws = opts.weekStart ?? 0;
+  const first = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+  const off = (first - ws + 7) % 7, len = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  const rows = Math.ceil((off + len) / 7);
+  const wk = Array.from({ length: 7 }, (_, i) => { const w = (ws + i) % 7; return `<span class="${w === 0 || w === 6 ? 'we' : ''}">${WD[S.lang][w]}</span>`; }).join('');
+  let cells = '';
+  for (let k = 0; k < rows * 7; k++) {
+    const x = dayOf(y, m, 1 - off + k);
+    if (!x) { cells += '<span></span>'; continue; }
+    const out = x.m !== m;
+    const pub = x.hol.some(h => h.type === 'public'), rel = x.hol.some(h => h.type === 'religious');
+    let cls = 'cell' + (out ? ' out' : '') + (pub ? ' hol' : rel ? ' rel' : '') + (same(TODAY, x) ? ' today' : '');
+    if (opts.range) { const [a, b] = opts.range; if (x.i >= a && x.i <= b && !out) cls += ' rng' + (x.i === a ? ' r0' : x.i === b ? ' r1' : ''); }
+    else if (same(opts.sel || S.sel, x) && !out) cls += ' sel';
+    const marks = [...new Set(x.hol.map(h => h.cls))].map(c => `<i style="background:var(--w-${c === 'anniv' ? 'anniv' : c})"></i>`).join('') + (x.sab === 1 ? '<i style="background:var(--w-sabbath)"></i>' : '');
+    const mo = (x.mp === 1 || x.mp === 3) ? moon(x, cs === 'dual' ? 11 : 10) : '';
+    const fdText = x.mp === 1 || x.mp === 3 ? '' : n(x.fd);
+    let inner;
+    if (cs === 'dual') inner = `<span class="wd">${n(x.d)}</span><span class="marks">${marks}</span><span class="md">${x.md === 1 && !out ? esc(mmMonth(x.my, x.mm)).slice(0, S.lang === 'my' ? 99 : 4) + ' ' : ''}${fdText}</span>${mo ? `<span class="moon">${mo}</span>` : ''}`;
+    else if (cs === 'western') inner = `<span class="wd">${n(x.d)}</span><span class="md">${x.mp === 1 || x.mp === 3 ? mo : fdText}</span><span class="marks">${marks}</span>`;
+    else if (cs === 'lunar') inner = `<span class="lun">${x.mp === 1 || x.mp === 3 ? mo.replace(/width="10" height="10"/, 'width="16" height="16"') : n(x.fd)}</span><span class="wd">${n(x.d)}</span><span class="marks">${marks}</span>`;
+    else if (cs === 'minimal') inner = `<span class="wd">${n(x.d)}</span><span class="marks">${marks}</span>`;
+    else inner = `${moon(x, 15)}<span class="wd">${n(x.d)}</span>`;
+    cells += `<button class="${cls}" data-day="${x.y}-${x.m}-${x.d}" aria-label="${esc(wDate(x) + ', ' + mmDate(x) + (x.hol.length ? ', ' + x.hol.map(h => h.name).join(', ') : ''))}">${inner}</button>`;
+  }
+  return `<div class="wk">${wk}</div><div class="grid">${cells}</div>`;
+}
+function monthTitle(y, m) {
+  const a = dayOf(y, m, 1), b = dayOf(y, m, new Date(Date.UTC(y, m, 0)).getUTCDate());
+  const sub = a.mm === b.mm ? mmMonth(a.my, a.mm) : `${mmMonth(a.my, a.mm)} – ${mmMonth(b.my, b.mm)}`;
+  return `<div class="cal-title"><b>${S.lang === 'my' ? `${n(y)} ${WM.my[m - 1]}` : `${WM.en[m - 1]} ${y}`}</b><span>${esc(sub)} ${n(b.my)}</span></div>`;
+}
+function monthCal(opts = {}) {
+  const [y, m] = opts.month || [2026, 10];
+  return `<div class="w surf cal cs-${opts.cellStyle || S.cellStyle} ${opts.wide ? 'wide' : ''}" lang="${S.lang}">
+    <div class="cal-head">${monthTitle(y, m)}<button class="icon-btn" aria-label="Previous month">${ICON.l}</button><button class="icon-btn" aria-label="Next month">${ICON.r}</button></div>
+    ${monthGrid(y, m, opts)}</div>`;
+}
+function badges(x, max = 9) {
+  const b = x.hol.map(h => `<span class="badge b-${h.cls}"><i></i>${esc(h.name)}</span>`);
+  if (x.sab) b.push(`<span class="badge b-sabbath"><i></i>${t(x.sab === 1 ? 'sabbath' : 'sabbathEve')}</span>`);
+  if (x.yat) b.push(`<span class="badge b-neutral">${t('yatyaza')}</span>`);
+  if (x.pya) b.push(`<span class="badge b-neutral">${esc(tr(x.pya === 2 ? 'Afternoon Pyathada' : 'Pyathada'))}</span>`);
+  return b.slice(0, max).join('');
+}
+function todayCard(x = sel()) {
+  return `<div class="w surf today" lang="${S.lang}">
+    <div class="big"><span class="num tnum">${n(x.d)}</span><div><div class="small">${WDF[S.lang][x.wd]} · ${esc(wShort(x))}</div><div class="mm">${esc(mmDate(x))}</div><div class="small">${t('me')} ${n(x.my)} · ${t('sasana')} ${n(x.my + 1182)}</div></div><span style="margin-left:auto">${moon(x, 40, -40)}</span></div>
+    <div class="chips">${badges(x) || `<span class="badge b-neutral">${t('none')}</span>`}</div></div>`;
+}
+function dayDetails(x = sel()) {
+  const row = (k, v) => `<div class="row"><div class="grow"><div class="k">${k}</div><div class="v">${v}</div></div><span class="copy">${ICON.copy}</span></div>`;
+  const hol = x.hol.length ? x.hol.map(h => `<div class="row"><span class="badge b-${h.cls}"><i></i>${esc(h.name)}</span></div>`).join('') : `<div class="row small">${t('none')}</div>`;
+  return `<div class="w" lang="${S.lang}" style="width:100%;display:grid;gap:4px">
+    <div class="ghead">${t('dates')}</div><div class="surf list">${row(t('western'), esc(wDate(x)) + ' · ' + WDF[S.lang][x.wd])}${row(t('myanmar'), esc(mmFull(x)))}${row(t('sasana'), n(x.my + 1182))}${row(t('shan'), n(x.my + (x.mm >= 9 ? 733 : 732)))}</div>
+    <div class="ghead">${t('holidays')}</div><div class="surf list">${hol}</div>
+    <div class="ghead">${t('astro')}</div><div class="surf list"><div class="row"><div class="chips">${x.sab ? `<span class="badge b-sabbath"><i></i>${t(x.sab === 1 ? 'sabbath' : 'sabbathEve')}</span>` : ''}${x.yat ? `<span class="badge b-neutral">${t('yatyaza')}</span>` : ''}${x.pya ? `<span class="badge b-neutral">${esc(tr(x.pya === 2 ? 'Afternoon Pyathada' : 'Pyathada'))}</span>` : ''}${x.astro.map(a => `<span class="badge b-neutral">${esc(tr(a))}</span>`).join('')}</div></div></div></div>`;
+}
+function miniMonth(y, m, opt = {}) {
+  const first = new Date(Date.UTC(y, m - 1, 1)).getUTCDay(), len = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  let g = WD[S.lang].map(w => `<span style="font-weight:600">${S.lang === 'my' ? w : w[0]}</span>`).join('');
+  for (let k = 0; k < first; k++) g += '<span></span>';
+  for (let d = 1; d <= len; d++) { const x = dayOf(y, m, d); g += `<span class="${same(TODAY, x) ? 't' : x.mp === 1 ? 'f' : x.hol.some(h => h.type === 'public') ? 'h' : ''}">${n(d)}</span>`; }
+  const a = dayOf(y, m, 1), b = dayOf(y, m, len);
+  const sub = a.mm === b.mm ? mmMonth(a.my, a.mm) : `${mmMonth(a.my, a.mm)} – ${mmMonth(b.my, b.mm)}`;
+  return `<div class="mini ${opt.cur ? 'cur' : ''}"><b>${WM[S.lang][m - 1]}<small>${esc(sub)}</small></b><div class="g">${g}</div></div>`;
+}
+function upcoming(from = sel(), count = 5) {
+  const out = [];
+  for (let i = from.i; i < DATA.days.length && out.length < count; i++) {
+    const x = byIndex(i);
+    for (const h of x.hol) if (['public', 'religious'].includes(h.type) && out.length < count) out.push([x, h]);
+  }
+  return `<div class="w surf list" lang="${S.lang}" style="width:100%">${out.map(([x, h]) => `<div class="row"><div style="text-align:center;min-width:38px;line-height:1.1"><b class="tnum" style="font-size:18px">${n(x.d)}</b><div class="small">${WM[S.lang][x.m - 1].slice(0, S.lang === 'my' ? 99 : 3)}</div></div><div class="grow"><div class="v">${esc(h.name)}</div><div class="small">${esc(mmDate(x))}</div></div><span class="badge b-${h.cls}"><i></i>${n(x.i - from.i)} ${t('days')}</span></div>`).join('')}</div>`;
+}
+function nextAfter(x, test) { for (let i = x.i + 1; i < DATA.days.length; i++) { const y = byIndex(i); if (test(y)) return y; } return null; }
+function countdown(x = sel()) {
+  const rows = [[t('fullIn'), nextAfter(x, y => y.mp === 1)], [t('newIn'), nextAfter(x, y => y.mp === 3)], [t('sabIn'), nextAfter(x, y => y.sab === 1)]];
+  return `<div class="w surf count" lang="${S.lang}">${rows.map(([k, y]) => { const d = y.i - x.i; return `<div class="rowc">${moon(y, 26)}<div style="flex:1;min-width:0"><div style="font-weight:600">${k}</div><div class="small">${esc(wShort(y))} · ${esc(mmDate(y))}</div></div><span class="n tnum">${n(d)}</span><span class="small">${t('days')}</span></div>`; }).join('')}
+    <div class="bar-track"><b style="width:${Math.round((1 - (nextAfter(x, y => y.mp === 1).i - x.i) / 15) * 100)}%"></b></div></div>`;
+}
+
+/* ---- hero composition per frame ---- */
+function hero() {
+  const x = sel();
+  const status = `<div class="status"><span>9:41</span><span>●●● ◔</span></div>`;
+  const nav = `<div class="floatbar glass"><span class="pill on">${t('month')}</span><span class="pill">${t('week')}</span><span class="pill">${t('year')}</span><span class="pill">${t('agenda')}</span></div>
+    <div class="m3nav w"><span class="on"><b>${ICON.cal}</b>${t('month')}</span><span><b>${ICON.list}</b>${t('agenda')}</span><span><b>${ICON.moon}</b>${t('moon')}</span><span><b>${ICON.tool}</b>${t('convert')}</span></div>`;
+  if (S.frame === 'phone') return `<div class="device">${WALL}${status}${monthCal()}${todayCard(x)}${nav}</div>`;
+  if (S.frame === 'tablet') return `<div class="device tablet">${WALL}${status}<div class="tb-layout">${monthCal({ wide: true })}<div>${todayCard(x).replace('today"', 'today" style="width:100%"')}${dayDetails(x)}</div></div>${nav}</div>`;
+  return `<div class="device desktop">${WALL}<div class="titlebar w"><i></i><i></i><i></i><span class="small" style="margin-left:8px">Example app · flutter_mmcalendar</span></div>
+    <div class="dt-layout"><div class="dt-side w surf" style="border-radius:0">${miniMonth(2026, 10, { cur: true })}<div class="ghead" style="padding:4px 2px">${t('upcoming')}</div>${upcoming(x, 4)}</div>
+    <div class="dt-main">${monthCal({ wide: true })}</div><div class="dt-insp w surf" style="border-radius:0">${todayCard(x).replace('today"', 'today" style="width:100%;padding:4px"')}${dayDetails(x)}</div></div></div>`;
+}
+
+/* ---- specimens ---- */
+const spec = (name, desc, bullets, api, stage) => `<div class="spec"><div class="spec-meta"><h3>${name}</h3><p>${desc}</p>${bullets ? `<ul>${bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}${api ? `<div class="api">${esc(api)}</div>` : ''}</div><div class="stage">${WALL}${stage}</div></div>`;
+function calendars() {
+  const cs = ['dual', 'western', 'lunar', 'minimal', 'moon'];
+  const csSeg = `<div style="width:100%;display:flex;justify-content:center"><span class="seg" data-ctl="cell">${cs.map(c => `<button data-v="${c}" aria-pressed="${S.cellStyle === c}">${c}</button>`).join('')}</span></div>`;
+  const week = (() => { let b = ''; for (let d = 18; d <= 24; d++) { const x = dayOf(2026, 10, d); b += `<button class="${same(S.sel, x) ? 'sel' : ''}" data-day="2026-10-${d}"><small>${WD[S.lang][x.wd]}</small><b>${n(d)}</b><em>${x.mp === 1 || x.mp === 3 ? moon(x, 10) : n(x.fd)}</em></button>`; } return `<div class="w surf week" lang="${S.lang}">${b}</div>`; })();
+  const year = `<div class="w surf year" lang="${S.lang}">${Array.from({ length: 12 }, (_, i) => miniMonth(2026, i + 1, { cur: i === 9 })).join('')}</div>`;
+  const lunar = (() => {
+    const start = DATA.days.findIndex(r => r[0] === 1388 && r[1] === 7 && r[2] === 1);
+    let wax = '', wan = '';
+    for (let i = start; DATA.days[i] && DATA.days[i][1] === 7; i++) {
+      const x = byIndex(i), c = (same(TODAY, x) ? 't ' : '') + (x.sab === 1 ? 's ' : '') + (x.hol.some(h => h.type === 'public' || h.type === 'religious') ? 'h' : '');
+      const cell = `<span class="${c}" title="${esc(wDate(x))}">${x.mp === 1 || x.mp === 3 ? moon(x, 14) : n(x.fd)}<small>${n(x.d)}</small></span>`;
+      if (x.mp <= 1) wax += cell; else wan += cell;
+    }
+    wan += '<span class="empty"></span>';
+    return `<div class="w surf lunar" lang="${S.lang}"><div class="cal-head" style="padding:0">${`<div class="cal-title"><b>${esc(mmMonth(1388, 7))} ${n(1388)}</b><span>${esc(wShort(byIndex(start)))} – ${esc(wShort(byIndex(start + 28)))} · ${t('bigWatat')}</span></div>`}<button class="icon-btn" aria-label="Previous month">${ICON.l}</button><button class="icon-btn" aria-label="Next month">${ICON.r}</button></div>
+      <div class="fort"><span class="lab">${PH[S.lang][0]}</span><div class="fdays">${wax}</div></div><div class="fort"><span class="lab">${PH[S.lang][2]}</span><div class="fdays">${wan}</div></div></div>`;
+  })();
+  const agenda = (() => {
+    const ev = { 20: S.lang === 'my' ? 'အဖွားနှင့် ဘုရားဖူး' : 'Pagoda visit with Grandma', 26: S.lang === 'my' ? 'ရွှေတိဂုံ မီးထွန်းပွဲ' : 'Lights at Shwedagon' };
+    let h = `<div class="ag-m">${S.lang === 'my' ? `${WM.my[9]} ${n(2026)}` : 'October 2026'} · ${esc(mmMonth(1388, 7))}</div>`;
+    for (let d = 18; d <= 27; d++) {
+      const x = dayOf(2026, 10, d); const items = [];
+      x.hol.forEach(hh => items.push(`<span class="badge b-${hh.cls}"><i></i>${esc(hh.name)}</span>`));
+      if (x.sab === 1) items.push(`<span class="badge b-sabbath"><i></i>${t('sabbath')}</span>`);
+      if (ev[d]) items.push(`<div class="ev">${esc(ev[d])}</div>`);
+      if (!items.length) continue;
+      h += `<div class="ag-d"><div class="dd"><b class="tnum">${n(d)}</b><span>${WD[S.lang][x.wd]}</span></div><div class="items"><div class="small">${esc(mmDate(x))}</div><div class="chips">${items.join('')}</div></div></div>`;
+    }
+    return `<div class="w surf agenda" lang="${S.lang}" style="padding-bottom:8px">${h}</div>`;
+  })();
+  return spec('MyanmarMonthCalendar', 'Swipe-paged months whose rows fill the height they get. The header names the Western month and the Myanmar months it spans. Try the five cell styles.',
+    ['Selection: single, range, multi (controller)', 'Holiday colour by type, Sabbath dot, moon on full and new moon days', 'eventLoader adds event dots', 'Arrow keys move focus; semantics in the calendar language'],
+    'MyanmarMonthCalendar(\n  controller: c,\n  cellStyle: MyanmarDayCellStyle.dual,\n)', csSeg + monthCal())
+    + spec('MyanmarWeekStrip', 'One swipeable week for app headers and agenda pages. Each day shows its Myanmar day or moon.', null, 'MyanmarWeekStrip(controller: c)', week)
+    + spec('MyanmarLunarMonthCalendar', 'A Myanmar month laid out as it is counted: waxing 1 to 15, then waning to 14 or 15. Second Waso appears in watat years. Nothing in 3.3.1 could show this.', ['Header shows the Western span and the year type', 'Sabbath underlined, holidays in red'], 'MyanmarLunarMonthCalendar(\n  year: 1388, month: 7,\n)', lunar)
+    + spec('MyanmarYearCalendar', 'Twelve mini months with public holidays and full moons marked. Tapping a month opens it.', null, 'MyanmarYearCalendar(year: 2026)', year)
+    + spec('MyanmarAgenda', 'A sliver list of the days that have something on them: holidays, Sabbath, moon days and your events.', ['Sticky month headers', 'Events here are samples'], 'MyanmarAgenda(\n  from: today, eventLoader: load,\n)', agenda);
+}
+function pickers() {
+  const x = sel(), isG = S.style !== 'material';
+  const range = [dayOf(2026, 10, 25).i, dayOf(2026, 10, 27).i];
+  const picker = `<div class="w surf picker" lang="${S.lang}"><span class="pk-grab"></span>
+    <div class="pk-head">${isG ? `<div class="segc"><span class="on">${t('western')}</span><span>${t('myanmar')}</span></div>` : `<span class="t">${t('select')}</span>`}<span class="d" ${isG ? 'style="font-size:17px;font-weight:600;padding-top:6px"' : ''}>${esc(wDate(x))}</span><span class="small">${esc(mmFull(x))}</span></div>
+    <div style="padding:0 6px">${monthCal({ cellStyle: 'western' }).replace(/class="w surf cal/, 'class="w cal').replace('<div class="cal-head">', '<div class="cal-head" style="display:none">')}</div>
+    <div class="pk-actions">${isG ? `<button class="pill btn-text">${t('today')}</button><span style="flex:1"></span><button class="pill btn-fill">${t('done')}</button>` : `<button class="pill btn-text">${t('cancel')}</button><button class="pill btn-text">${t('ok')}</button>`}</div></div>`;
+  const rangePicker = `<div class="w surf picker" lang="${S.lang}"><div class="pk-head"><span class="t">${t('range')}</span><span class="d" style="font-size:20px">${esc(wShort(dayOf(2026, 10, 25)))} – ${esc(wShort(dayOf(2026, 10, 27)))}</span></div><div style="padding:0 6px 10px">${monthCal({ cellStyle: 'western', range }).replace(/class="w surf cal/, 'class="w cal').replace('<div class="cal-head">', '<div class="cal-head" style="display:none">')}</div></div>`;
+  const col = (vals, ci) => `<div class="wcol">${vals.map((v, i) => `<span class="${i === ci ? 'c' : Math.abs(i - ci) === 1 ? 'f1' : 'f2'}">${esc(v)}</span>`).join('')}</div>`;
+  const wheel = `<div class="w surf wheel" lang="${S.lang}"><div class="segc"><span>${t('western')}</span><span class="on">${t('myanmar')}</span></div><div class="wheels">
+    ${col([1386, 1387, 1388, 1389, 1390].map(n), 2)}${col([4, 5, 6, 7, 8, 9].map(m => mmMonth(1388, m)).slice(0, 5), 3)}${col([5, 6, 7, 8, 9].map(d => `${PH[S.lang][0]} ${n(d)}`), 2)}</div>
+    <div class="small" style="text-align:center">${esc(wDate(dayOf(2026, 10, 18)))}</div></div>`;
+  const my = (() => { let g = ''; for (let m = 1; m <= 12; m++) g += `<span class="pill ${m === 10 ? 'btn-fill' : 'btn-tonal'}" style="justify-content:center">${WM[S.lang][m - 1].slice(0, S.lang === 'my' ? 99 : 3)}</span>`; return `<div class="w surf tool" lang="${S.lang}"><div class="cal-head" style="padding:0"><div class="cal-title"><b>${n(2026)}</b><span>${n(1387)} – ${n(1388)}</span></div><button class="icon-btn">${ICON.l}</button><button class="icon-btn">${ICON.r}</button></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:13px">${g}</div></div>`; })();
+  const field = `<div class="w" lang="${S.lang}" style="display:grid;gap:14px;width:min(100%,360px)"><div class="field"><label>${t('dob')}</label><div class="box">${ICON.cal}<div><div style="font-weight:500">${esc(mmFull(x))}</div><div class="small">${esc(wDate(x))}</div></div></div></div>
+    <div class="field err"><label>${t('dob')}</label><div class="box">${ICON.cal}<div style="font-weight:500">${esc(wDate(x))}</div></div><span class="msg">${t('err')}</span></div></div>`;
+  return spec('showMyanmarDatePicker', 'A Material dialog, a Cupertino sheet or a glass sheet, chosen by the style. Cupertino and Glass add a Western / Myanmar switch; Myanmar input uses the wheels below.', ['Single, range or multi', 'min, max and selectableDayPredicate', 'Returns CompleteDate'], 'final day = await showMyanmarDatePicker(\n  context: context,\n  initialDate: today,\n);', picker)
+    + spec('showMyanmarDateRangePicker', 'The same surface with range selection. Shown with the Thadingyut holidays, 25 to 27 October.', null, 'showMyanmarDateRangePicker(...)', rangePicker)
+    + spec('MyanmarDateWheelPicker', 'Pick a date the way it is said: year, month, then waxing or waning day. It only offers days that exist, so Second Waso appears only in watat years and a 29-day month stops at waning 14.', null, 'MyanmarDateWheelPicker(\n  initial: day, onChanged: (d) {},\n)', wheel)
+    + spec('MyanmarMonthYearPicker', 'Jump to a month. The header shows the Myanmar years the Western year spans.', null, 'MyanmarMonthYearPicker(...)', my)
+    + spec('MyanmarDateFormField', 'An adaptive FormField<CompleteDate> with validation. It shows both calendars once a date is chosen.', null, 'MyanmarDateFormField(\n  validator: (d) => ...,\n)', field);
+}
+function dayInfo() {
+  const x = sel();
+  const pats = [['&y &M &P &ff', `${n(x.my)} ${mmMonth(x.my, x.mm)} ${PH[S.lang][x.mp]} ${n(x.fd)}`], ['&M &P &ff', mmDate(x)], ['%Www %d %MMM %yyyy', `${WDF[S.lang][x.wd]}, ${wDate(x)}`]];
+  const text = `<div class="w surf list" lang="${S.lang}" style="width:min(100%,420px)">${pats.map(([p, v]) => `<div class="row"><code class="small" style="min-width:130px">${esc(p)}</code><span class="v">${esc(v)}</span></div>`).join('')}</div>`;
+  const widget = `<div class="w surf mini-widget" lang="${S.lang}"><div class="small">${WDF[S.lang][x.wd]}</div><div class="num tnum">${n(x.d)}</div><div><div style="font-weight:600;font-size:13px">${esc(mmDate(x))}</div><div style="margin-top:4px">${moon(x, 18, -40)}</div></div></div>`;
+  const badgeSet = `<div class="w" lang="${S.lang}" style="display:grid;gap:12px;width:min(100%,420px)"><div class="chips">${['public', 'religious', 'cultural', 'anniv', 'other'].map(c => `<span class="badge b-${c}"><i></i>${{ public: S.lang === 'my' ? 'ရုံးပိတ်ရက်' : 'Public', religious: S.lang === 'my' ? 'ဘာသာရေး' : 'Religious', cultural: S.lang === 'my' ? 'ယဉ်ကျေးမှု' : 'Cultural', anniv: S.lang === 'my' ? 'နှစ်ပတ်လည်' : 'Anniversary', other: S.lang === 'my' ? 'အခြား' : 'Other' }[c]}</span>`).join('')}<span class="badge b-custom">${S.lang === 'my' ? 'အမေ့မွေးနေ့' : "Mum's birthday"}</span></div>${upcoming(x, 5)}</div>`;
+  return spec('MyanmarDateText', 'Formatted text from the core\'s patterns, in the scope\'s language. <code>.today()</code> updates itself at midnight.', null, "MyanmarDateText(day, pattern: '&y &M &P &ff')", text)
+    + spec('MyanmarTodayCard', 'The selected day in full, with its moon, holidays and Sabbath or Yatyaza badges. The compact variant fits a home-screen-sized slot.', ['Follows the calendar selection', 'Moon tilted the way it looks from Myanmar'], 'MyanmarTodayCard(date: day)\nMyanmarTodayCard.compact(date: day)', todayCard(x) + widget)
+    + spec('MyanmarDayDetails', 'Grouped sections you can reorder or hide: dates (Western, Myanmar, Sasana, Shan), holidays and astrology. Every row copies its value.', null, 'MyanmarDayDetails(\n  date: day,\n  sections: DaySection.values,\n)', `<div style="width:min(100%,420px)">${dayDetails(x)}</div>`)
+    + spec('HolidayBadge · HolidayList', 'Badges are coloured by HolidayType; custom holidays get an outline. HolidayList shows the next public and religious holidays with a countdown.', null, 'HolidayBadge(holiday)\nHolidayList.upcoming(days: 60)', badgeSet);
+}
+function moonInfo() {
+  const x = sel(), today = dayOf(2026, 10, 18);
+  const glyphs = `<div class="w surf" lang="${S.lang}" style="padding:16px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;width:min(100%,460px)">${[[7, 3], [7, 7], [7, 11], [7, 15], [7, 19], [7, 23], [7, 27], [7, 30]].map(([mm, d]) => { const y = dayOf(2026, 10, d) ; return `<div style="display:grid;justify-items:center;gap:4px">${moon(y, 38, -40)}<span class="small">${esc(mmShort(y))}</span></div>`; }).join('')}</div>`;
+  const strip = (() => { const a = DATA.days.findIndex(r => r[0] === 1388 && r[1] === 7 && r[2] === 1); const keys = [byIndex(a + 7), byIndex(a + 14), byIndex(a + 22), byIndex(a + 28)]; return `<div class="w surf mstrip" lang="${S.lang}">${keys.map(y => `<div>${moon(y, 32)}<b style="font-size:13px">${esc(mmShort(y))}</b><span class="small">${esc(wShort(y))}</span></div>`).join('')}</div>`; })();
+  const compass = `<div class="w surf" lang="${S.lang}" style="padding:16px;display:flex;gap:16px;align-items:center;width:min(100%,420px)"><svg class="compass" viewBox="-80 -80 160 160" aria-label="Nagahle East"><circle r="70" fill="none" stroke="var(--w-line)" stroke-width="2"/><circle r="52" fill="none" stroke="var(--w-line)" stroke-dasharray="3 5"/>
+    ${['N', 'E', 'S', 'W'].map((d, i) => `<text x="${[0, 62, 0, -62][i]}" y="${[-58, 4, 66, 4][i]}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--w-muted)">${d}</text>`).join('')}
+    <path d="M-30 6 C-10 -14 10 14 30 -6" fill="none" stroke="var(--w-accent)" stroke-width="5" stroke-linecap="round"/><path d="M30 -6 L50 0 L30 8 Z" fill="var(--w-accent)"/><circle cx="40" cy="0" r="2" fill="var(--w-surface)"/></svg>
+    <div style="display:grid;gap:4px"><span class="small">${t('nagahle')}</span><b style="font-size:20px">${esc(tr('East'))}</b><span class="small">${S.lang === 'my' ? 'နဂါးခေါင်း အရှေ့သို့ လှည့်သည်' : 'The dragon\'s head faces east this month.'}</span></div></div>`;
+  const card = `<div class="w surf list" lang="${S.lang}" style="width:min(100%,420px)">${[[t('mahabote'), tr('Atun'), 'Atun represents brilliance, pride, and leadership qualities.'], [t('nakhat'), tr('Human'), 'Associated with earthiness, social connections, and practical matters.'], [t('yname'), tr('Bhadrapaha'), ''], [t('nagahle'), tr('East'), '']].map(([k, v, d]) => `<div class="row"><div class="grow"><div class="k">${k}</div><div class="v">${esc(v)}</div>${d ? `<div class="small" style="margin-top:2px" lang="en">${esc(d)}</div>` : ''}</div></div>`).join('')}<div class="row"><div class="chips">${badges(today)}${today.astro.map(a => `<span class="badge b-neutral">${esc(tr(a))}</span>`).join('')}</div></div></div>`;
+  return spec('MoonGlyph', 'Lit fraction from the Myanmar day, terminator drawn as an ellipse, optional Myanmar tilt and earthshine. Animates between days. Drawn, never an emoji.', null, 'MoonGlyph.forDate(day, size: 38,\n  tilt: MoonTilt.myanmar)', glyphs)
+    + spec('MoonPhaseStrip', 'The month\'s quarter days with their dates, here for Thadingyut 1388.', null, 'MoonPhaseStrip(year: 1388, month: 7)', strip)
+    + spec('NextMoonCountdown', 'Days until the next full moon, new moon and Sabbath, from the selected day. Uses findNextMoonPhase and findSabbathDays.', null, 'NextMoonCountdown(\n  from: day,\n  kinds: {...},\n)', countdown(x))
+    + spec('AstrologyCard · AstroBadges', 'Mahabote, nakhat, year name and nagahle for the day, with the core\'s descriptions (English only for now). Shown for 18 October 2026.', null, 'AstrologyCard(date: day)\nAstroBadges(date: day)', card)
+    + spec('NagahleCompass', 'Which way the dragon\'s head turns this month, as a compass.', null, 'NagahleCompass(date: day)', compass);
+}
+function tools() {
+  const x = dayOf(2026, 10, 18), to = dayOf(2026, 10, 26), plus = dayOf(2026, 11, 16);
+  const conv = `<div class="w surf tool" lang="${S.lang}"><b>${t('convert')}</b><div class="conv-row"><span class="small">${t('western')}</span><b>${esc(wDate(x))}</b></div><span class="swap">${ICON.swap}</span><div class="conv-row"><span class="small">${t('myanmar')}</span><b>${esc(mmFull(x))}</b></div></div>`;
+  const diff = `<div class="w surf tool" lang="${S.lang}"><b>${t('between')}</b><div class="conv-row"><span class="small">${esc(wDate(x))} → ${esc(wDate(to))}</span><b>${n(8)} ${t('days')}</b></div><div class="conv-row"><span class="small">${t('add')}</span><b>${esc(mmDate(plus))}</b><span class="small">${esc(wDate(plus))}</span></div></div>`;
+  const chron = `<div class="w surf tool" lang="${S.lang}"><span class="small">${t('chron')} · ${S.lang === 'my' ? '၁၈၅၀ ဇန်နဝါရီ ၁' : '1 January 1850'}</span><b style="font-size:20px">${t('dynasty')}</b><span class="small">${S.lang === 'my' ? 'မင်းဆက်၊ ဘုရင်နှင့် ထိုခေတ်က မှတ်တမ်းများ' : 'Dynasty, ruler and the records of the time, from the core chronicles.'}</span><span class="badge b-other" style="justify-self:start">${S.lang === 'my' ? 'ဆုံးဖြတ်ချက် ၇ ကို ကြည့်ပါ' : 'Pending decision 7'}</span></div>`;
+  const ai = `<div class="w surf tool" lang="${S.lang}"><div class="segc" style="grid-template-columns:repeat(3,1fr)"><span class="on">${S.lang === 'my' ? 'ဇာတာ' : 'Horoscope'}</span><span>${S.lang === 'my' ? 'ဗေဒင်' : 'Fortune'}</span><span>${S.lang === 'my' ? 'နိမိတ်' : 'Divination'}</span></div>
+    <div class="prompt">Act as an expert in Myanmar astrology and provide a detailed horoscope reading for the following date…
+Date: Sunday, 18 October 2026
+Myanmar date: 1388 Thadingyut Waxing 7</div><button class="pill btn-fill" style="justify-self:start">${ICON.copy} ${t('prompt')}</button></div>`;
+  return spec('MyanmarDateConverter', 'Western and Myanmar dates, both editable, with an animated swap. Myanmar input uses the wheel picker.', null, 'MyanmarDateConverter(initial: today)', conv)
+    + spec('DateDifferenceCard', 'Days between two dates, and adding days or Myanmar months. Adding a month keeps the day, or uses the month\'s last day when it is shorter.', null, 'DateDifferenceCard(from: a, to: b)', diff)
+    + spec('ChronicleCard', 'The dynasty and ruler for a date, from the core chronicles. Waiting on decision 7.', null, 'ChronicleCard(date: DateTime(1850))', chron)
+    + spec('AIPromptAction', 'Builds the horoscope, fortune or divination prompt from AIPromptService and passes it to your callback. The package never touches the clipboard or a network itself.', null, 'AIPromptAction(\n  date: day,\n  onPrompt: (type, text) {},\n)', ai);
+}
+function stylesCompare() {
+  const x = sel();
+  return ['material', 'cupertino', 'glass'].map(s => `<div class="style-card" data-style="${s}"><b style="font-family:var(--display)">${{ material: 'Material 3', cupertino: 'Cupertino', glass: 'Liquid Glass' }[s]}</b><div class="stage">${WALL}${todayCard(x)}<div style="display:flex;gap:8px"><button class="pill btn-fill">${t('today')}</button><button class="pill btn-tonal">${t('month')}</button></div></div><span class="muted" style="font-size:.88rem">${{ material: 'Tonal surfaces from the ColorScheme, pill selection, Roboto, ink ripples.', cupertino: 'Grouped lists, hairlines, SF text, rounded-rect selection, sheets with a grabber.', glass: 'Translucent capsules that refract what is behind them, concentric corners, a floating month switcher.' }[s]}</span></div>`).join('');
+}
+function tokens() {
+  return [['accent', 'w-accent'], ['surface', 'w-surface'], ['ink', 'w-ink'], ['muted', 'w-muted'], ['public', 'w-public'], ['religious', 'w-religious'], ['cultural', 'w-cultural'], ['anniversary', 'w-anniv'], ['other', 'w-other'], ['sabbath', 'w-sabbath'], ['moon', 'w-moon'], ['outside', 'w-outside']]
+    .map(([k, v]) => `<div><i style="background:var(--${v})"></i>${k}</div>`).join('');
+}
+
+function render() {
+  document.getElementById('hero-stage').innerHTML = WALL + hero();
+  document.getElementById('styles3').innerHTML = stylesCompare();
+  document.getElementById('tokens').innerHTML = tokens();
+  document.getElementById('calendars-body').innerHTML = calendars();
+  document.getElementById('pickers-body').innerHTML = pickers();
+  document.getElementById('day-body').innerHTML = dayInfo();
+  document.getElementById('moon-body').innerHTML = moonInfo();
+  document.getElementById('tools-body').innerHTML = tools();
+  document.getElementById('app').dataset.style = S.style;
+  document.querySelectorAll('[data-ctl]').forEach(seg => {
+    const cur = { style: S.style, theme: S.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), lang: S.lang, frame: S.frame, cell: S.cellStyle }[seg.dataset.ctl];
+    seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === cur)));
+  });
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-ctl] button');
+  if (b) {
+    const k = b.closest('[data-ctl]').dataset.ctl, v = b.dataset.v;
+    if (k === 'theme') { S.theme = v; document.documentElement.dataset.theme = v; }
+    else if (k === 'cell') S.cellStyle = v; else S[k] = v;
+    try { localStorage.setItem('mmw4', JSON.stringify({ style: S.style, lang: S.lang, frame: S.frame, cellStyle: S.cellStyle })); } catch (_) {}
+    render(); return;
+  }
+  const d = e.target.closest('[data-day]');
+  if (d) { const [y, m, dd] = d.dataset.day.split('-').map(Number); if (y === 2026) { S.sel = [y, m, dd]; render(); } }
+});
+try { Object.assign(S, JSON.parse(localStorage.getItem('mmw4') || '{}')); } catch (_) {}
+render();
+</script>
