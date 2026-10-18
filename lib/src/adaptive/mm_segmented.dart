@@ -18,6 +18,7 @@ class MmSegmented<T extends Object> extends StatelessWidget {
     required this.onChanged,
     super.key,
     this.style,
+    this.glassThickness = MmGlassThickness.clear,
   }) : assert(segments.length >= 2, 'A segmented control needs two options');
 
   /// Each option's label, in display order.
@@ -31,6 +32,10 @@ class MmSegmented<T extends Object> extends StatelessWidget {
 
   /// Overrides the scope's visual style.
   final MmVisualStyle? style;
+
+  /// How much the glass style blurs. Use [MmGlassThickness.frosted] for a
+  /// tab bar floating over busy content.
+  final MmGlassThickness glassThickness;
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +86,7 @@ class MmSegmented<T extends Object> extends StatelessWidget {
           segments: segments,
           selected: selected,
           onChanged: onChanged,
+          thickness: glassThickness,
         );
     }
   }
@@ -91,11 +97,13 @@ class _GlassSegmented<T extends Object> extends StatelessWidget {
     required this.segments,
     required this.selected,
     required this.onChanged,
+    required this.thickness,
   });
 
   final Map<T, String> segments;
   final T selected;
   final ValueChanged<T>? onChanged;
+  final MmGlassThickness thickness;
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +113,8 @@ class _GlassSegmented<T extends Object> extends StatelessWidget {
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
     return MmGlass(
       borderRadius: BorderRadius.circular(999),
-      thickness: MmGlassThickness.clear,
-      shadow: false,
+      thickness: thickness,
+      shadow: thickness != MmGlassThickness.clear,
       padding: const EdgeInsets.all(3),
       child: IntrinsicWidth(
         child: Stack(

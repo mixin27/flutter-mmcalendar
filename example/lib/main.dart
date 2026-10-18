@@ -1,595 +1,292 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 
+import 'gallery_settings.dart';
+import 'pages/calendar_page.dart';
+import 'pages/day_page.dart';
+import 'pages/pickers_page.dart';
+import 'pages/tools_page.dart';
+import 'pages/views_page.dart';
+
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  // Load the glass shader before the first frame, so glass doesn't start on
+  // the fallback.
+  MmGlass.precache();
+  runApp(const GalleryApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// The flutter_mmcalendar gallery: every widget, in every style.
+class GalleryApp extends StatefulWidget {
+  /// Creates the gallery.
+  const GalleryApp({super.key, this.initialSettings = const GallerySettings()});
+
+  /// The settings to start with; tests pass their own.
+  final GallerySettings initialSettings;
+
+  @override
+  State<GalleryApp> createState() => _GalleryAppState();
+}
+
+class _GalleryAppState extends State<GalleryApp> {
+  late GallerySettings _settings = widget.initialSettings;
 
   @override
   Widget build(BuildContext context) {
-    const seed = Color(0xFF0F766E);
-
-    return MaterialApp(
-      title: 'Myanmar Calendar Showcase',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: seed,
-          brightness: Brightness.light,
+    ThemeData theme(Brightness b) => ThemeData(
+      colorSchemeSeed: _settings.seed,
+      brightness: b,
+      platform: _settings.platform,
+    );
+    return MyanmarCalendarScope(
+      style: _settings.style,
+      language: _settings.language,
+      firstDayOfWeek: _settings.firstDayOfWeek,
+      child: MaterialApp(
+        title: 'flutter_mmcalendar',
+        debugShowCheckedModeBanner: false,
+        theme: theme(Brightness.light),
+        darkTheme: theme(Brightness.dark),
+        themeMode: _settings.themeMode,
+        home: GalleryHome(
+          settings: _settings,
+          onSettingsChanged: (s) => setState(() => _settings = s),
         ),
-        scaffoldBackgroundColor: const Color(0xFFF1F5F9),
       ),
-      home: const ShowcaseHomePage(),
     );
   }
 }
 
-enum DemoSection { calendar, picker, insights }
+/// A gallery section.
+class GallerySection {
+  const GallerySection(this.label, this.icon, this.builder);
 
-class ShowcaseHomePage extends StatefulWidget {
-  const ShowcaseHomePage({super.key});
-
-  @override
-  State<ShowcaseHomePage> createState() => _ShowcaseHomePageState();
+  final String label;
+  final IconData icon;
+  final WidgetBuilder builder;
 }
 
-class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
-  DemoSection _section = DemoSection.calendar;
-  Language _language = Language.english;
-  CalendarSelectionMode _selectionMode = CalendarSelectionMode.single;
-  bool _showHolidays = true;
-  bool _showAstrology = true;
+final List<GallerySection> gallerySections = [
+  GallerySection('Calendar', Icons.calendar_month, (_) => const CalendarPage()),
+  GallerySection('Views', Icons.view_agenda_outlined, (_) => const ViewsPage()),
+  GallerySection('Pickers', Icons.event_available, (_) => const PickersPage()),
+  GallerySection('Day', Icons.wb_twilight, (_) => const DayPage()),
+  GallerySection('Tools', Icons.handyman_outlined, (_) => const ToolsPage()),
+];
 
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
-  List<DateTime> _multiSelectedDates = <DateTime>[];
-  // The 4.0 pickers below; the rest of this screen still shows 3.x widgets
-  // until the example is rewritten.
-  final GlobalKey<FormFieldState<CompleteDate>> _formFieldKey = GlobalKey();
-  late final MyanmarCalendarController _inlinePicker =
-      MyanmarCalendarController(
-        selection: SingleSelection(_selectedCompleteDate.western.toDateTime()),
-      );
+/// The gallery's shell: a bottom bar on phones, a rail on tablets and
+/// desktops.
+class GalleryHome extends StatefulWidget {
+  const GalleryHome({
+    required this.settings,
+    required this.onSettingsChanged,
+    super.key,
+  });
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  late CompleteDate _selectedCompleteDate;
-  late MyanmarCalendarTheme _calendarTheme;
+  final GallerySettings settings;
+  final ValueChanged<GallerySettings> onSettingsChanged;
 
   @override
-  void dispose() {
-    _inlinePicker.dispose();
-    super.dispose();
-  }
+  State<GalleryHome> createState() => _GalleryHomeState();
+}
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedCompleteDate = MyanmarCalendar.getCompleteDate(DateTime.now());
-    _calendarTheme = MyanmarCalendarTheme.fromColor(const Color(0xFF0F766E))
-        .copyWith(
-          backgroundColor: const Color(0xFFF8FAFC),
-          borderColor: const Color(0xFFCBD5E1),
-          weekdayHeaderBackgroundColor: const Color(0xFFE2E8F0),
-          dateCellBackgroundColor: Colors.white,
-          dateCellTextColor: const Color(0xFF0F172A),
-          rangeBackgroundColor: const Color(0xFFCCFBF1),
-          rangeTextColor: const Color(0xFF134E4A),
-          holidayIndicatorColor: const Color(0xFFDC2626),
-          astroIndicatorColor: const Color(0xFFF97316),
-        );
-  }
-
-  void _updateSelectedDate(CompleteDate date) {
-    setState(() {
-      _selectedCompleteDate = date;
-    });
-  }
-
-  Future<void> _openModalPicker() async {
-    final result = await showMyanmarDatePicker(
-      context: context,
-      initialDate: _selectedCompleteDate.western.toDateTime(),
-    );
-    if (result != null) _updateSelectedDate(result);
-  }
-
-  Future<void> _openFullscreenPicker() async {
-    final range = await showMyanmarDateRangePicker(context: context);
-    if (range != null) _updateSelectedDate(range.start);
-  }
+class _GalleryHomeState extends State<GalleryHome> {
+  int _index = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF0F766E),
-        foregroundColor: Colors.white,
-        title: const Text('Myanmar Calendar Showcase'),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            _buildControlPanel(),
-            Expanded(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1100),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: _buildCurrentSection(),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: DemoSection.values.indexOf(_section),
-        onDestinationSelected: (int index) {
-          setState(() {
-            _section = DemoSection.values[index];
-          });
-        },
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
-            selectedIcon: Icon(Icons.calendar_month),
-            label: 'Calendar',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.edit_calendar_outlined),
-            selectedIcon: Icon(Icons.edit_calendar),
-            label: 'Picker',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.auto_awesome_outlined),
-            selectedIcon: Icon(Icons.auto_awesome),
-            label: 'Insights',
-          ),
-        ],
-      ),
-    );
-  }
+    final style = MyanmarCalendarScope.styleOf(context);
+    final theme = MyanmarCalendarScope.themeOf(context);
+    final wide = MediaQuery.sizeOf(context).width >= 700;
+    final section = gallerySections[_index];
 
-  Widget _buildControlPanel() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: <Widget>[
-            const Text(
-              'Language:',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(width: 8),
-            SegmentedButton<Language>(
-              segments: const <ButtonSegment<Language>>[
-                ButtonSegment<Language>(
-                  value: Language.english,
-                  label: Text('EN'),
-                ),
-                ButtonSegment<Language>(
-                  value: Language.myanmar,
-                  label: Text('MM'),
-                ),
-                ButtonSegment<Language>(
-                  value: Language.shan,
-                  label: Text('Shan'),
-                ),
-              ],
-              selected: <Language>{_language},
-              showSelectedIcon: false,
-              onSelectionChanged: (Set<Language> values) {
-                setState(() {
-                  _language = values.first;
-                });
-              },
-            ),
-            const SizedBox(width: 12),
-            const VerticalDivider(width: 1),
-            const SizedBox(width: 12),
-            if (_section == DemoSection.calendar) ...<Widget>[
-              const Text(
-                'Selection:',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(width: 8),
-              SegmentedButton<CalendarSelectionMode>(
-                segments: const <ButtonSegment<CalendarSelectionMode>>[
-                  ButtonSegment<CalendarSelectionMode>(
-                    value: CalendarSelectionMode.single,
-                    label: Text('Single'),
-                  ),
-                  ButtonSegment<CalendarSelectionMode>(
-                    value: CalendarSelectionMode.range,
-                    label: Text('Range'),
-                  ),
-                  ButtonSegment<CalendarSelectionMode>(
-                    value: CalendarSelectionMode.multi,
-                    label: Text('Multi'),
-                  ),
-                ],
-                selected: <CalendarSelectionMode>{_selectionMode},
-                showSelectedIcon: false,
-                onSelectionChanged: (Set<CalendarSelectionMode> values) {
-                  setState(() {
-                    _selectionMode = values.first;
-                    _rangeStart = null;
-                    _rangeEnd = null;
-                    _multiSelectedDates = <DateTime>[];
-                  });
-                },
-              ),
-              const SizedBox(width: 12),
-            ],
-            FilterChip(
-              label: const Text('Holidays'),
-              selected: _showHolidays,
-              onSelected: (bool value) {
-                setState(() {
-                  _showHolidays = value;
-                });
-              },
-            ),
-            const SizedBox(width: 8),
-            FilterChip(
-              label: const Text('Astrology'),
-              selected: _showAstrology,
-              onSelected: (bool value) {
-                setState(() {
-                  _showAstrology = value;
-                });
-              },
-            ),
-          ],
+    final settingsButton = MmIconButton(
+      icon: Icons.tune,
+      tooltip: 'Gallery settings',
+      onPressed: () => showMmSheet<void>(
+        context: context,
+        builder: (_) => GallerySettingsPanel(
+          settings: widget.settings,
+          onChanged: widget.onSettingsChanged,
         ),
       ),
     );
-  }
 
-  Widget _buildCurrentSection() {
-    switch (_section) {
-      case DemoSection.calendar:
-        return _buildCalendarSection();
-      case DemoSection.picker:
-        return _buildPickerSection();
-      case DemoSection.insights:
-        return _buildInsightsSection();
-    }
-  }
-
-  Widget _buildCalendarSection() {
-    return LayoutBuilder(
-      key: const ValueKey<String>('calendar'),
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final double calendarHeight = constraints.maxHeight > 700 ? 560 : 460;
-
-        return ListView(
-          padding: const EdgeInsets.all(12),
-          children: <Widget>[
-            Text(
-              'Interactive calendar with selection modes',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+    final body = Stack(
+      fit: StackFit.expand,
+      children: [
+        // Glass needs something behind it.
+        if (style == MmVisualStyle.glass)
+          const GalleryWallpaper()
+        else
+          ColoredBox(
+            color: Color.alphaBlend(
+              theme.accent.withValues(alpha: 0.04),
+              Theme.of(context).colorScheme.surface,
             ),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: SizedBox(
-                height: calendarHeight,
-                child: MyanmarCalendarWidget(
-                  initialDate: _selectedCompleteDate.western.toDateTime(),
-                  language: _language,
-                  theme: _calendarTheme,
-                  selectionMode: _selectionMode,
-                  showHolidays: _showHolidays,
-                  showAstrology: _showAstrology,
-                  showWesternDates: true,
-                  showMyanmarDates: true,
-                  onDateSelected: _updateSelectedDate,
-                  onRangeSelected: (DateTime? start, DateTime? end) {
-                    setState(() {
-                      _rangeStart = start;
-                      _rangeEnd = end;
-                    });
-                  },
-                  onMultiSelected: (List<DateTime> dates) {
-                    setState(() {
-                      _multiSelectedDates = dates;
-                    });
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildSelectionMeta(),
-            const SizedBox(height: 12),
-            MyanmarDateSummaryCard(
-              date: _selectedCompleteDate,
-              language: _language,
-              theme: _calendarTheme,
-              showHolidays: _showHolidays,
-              showAstrology: _showAstrology,
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildSelectionMeta() {
-    String message;
-    switch (_selectionMode) {
-      case CalendarSelectionMode.single:
-        message =
-            'Selected: ${_selectedCompleteDate.western.year}-${_selectedCompleteDate.western.month.toString().padLeft(2, '0')}-${_selectedCompleteDate.western.day.toString().padLeft(2, '0')}';
-        break;
-      case CalendarSelectionMode.range:
-        if (_rangeStart == null) {
-          message = 'Tap a start day, then tap an end day.';
-        } else if (_rangeEnd == null) {
-          message =
-              'Range start: ${_rangeStart!.year}-${_rangeStart!.month.toString().padLeft(2, '0')}-${_rangeStart!.day.toString().padLeft(2, '0')}';
-        } else {
-          message =
-              'Range: ${_rangeStart!.year}-${_rangeStart!.month.toString().padLeft(2, '0')}-${_rangeStart!.day.toString().padLeft(2, '0')}  ->  ${_rangeEnd!.year}-${_rangeEnd!.month.toString().padLeft(2, '0')}-${_rangeEnd!.day.toString().padLeft(2, '0')}';
-        }
-        break;
-      case CalendarSelectionMode.multi:
-        message = 'Selected ${_multiSelectedDates.length} date(s).';
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFECFEFF),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFA5F3FC)),
-      ),
-      child: Text(
-        message,
-        style: const TextStyle(
-          color: Color(0xFF0F766E),
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPickerSection() {
-    return LayoutBuilder(
-      key: const ValueKey<String>('picker'),
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final double pickerHeight = constraints.maxHeight > 760 ? 620 : 500;
-
-        return ListView(
-          padding: const EdgeInsets.all(12),
-          children: <Widget>[
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: <Widget>[
-                FilledButton.icon(
-                  onPressed: _openModalPicker,
-                  icon: const Icon(Icons.open_in_new),
-                  label: const Text('Open Dialog Picker'),
-                ),
-                OutlinedButton.icon(
-                  onPressed: _openFullscreenPicker,
-                  icon: const Icon(Icons.fullscreen),
-                  label: const Text('Open Range Picker'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: SizedBox(
-                height: pickerHeight,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: MyanmarDatePicker(controller: _inlinePicker),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildFormFieldDemo(context),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildFormFieldDemo(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Form field integration',
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 8),
-            MyanmarDateFormField(
-              key: _formFieldKey,
-              label: 'Reminder Date',
-              validator: (value) => value == null ? 'Please pick a date' : null,
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: <Widget>[
-                FilledButton(
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      _formKey.currentState?.save();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Form date is valid and saved.'),
+          ),
+        SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 12, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Semantics(
+                        header: true,
+                        child: Text(
+                          section.label,
+                          style: TextStyle(
+                            color: theme.ink,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      );
-                    }
-                  },
-                  child: const Text('Validate Form'),
+                      ),
+                    ),
+                    settingsButton,
+                  ],
                 ),
-                const SizedBox(width: 8),
-                TextButton(
-                  onPressed: () {
-                    _formFieldKey.currentState?.didChange(null);
-                  },
-                  child: const Text('Clear'),
+              ),
+              Expanded(
+                child: KeyedSubtree(
+                  key: ValueKey(_index),
+                  child: section.builder(context),
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInsightsSection() {
-    return ListView(
-      key: const ValueKey<String>('insights'),
-      padding: const EdgeInsets.all(12),
-      children: <Widget>[
-        MyanmarCalendarToolbar(
-          month: _selectedCompleteDate.western.toDateTime(),
-          language: _language,
-          theme: _calendarTheme,
-          title:
-              '${TranslationService.getWesternMonthName(_selectedCompleteDate.western.month, _language)} ${_selectedCompleteDate.western.year}',
-          subtitle: MyanmarCalendar.formatMyanmar(
-            _selectedCompleteDate.myanmar,
-            pattern: '&M &y',
-            language: _language,
+              ),
+            ],
           ),
-          showNavigation: false,
-        ),
-        const SizedBox(height: 12),
-        _buildMoonPhaseShowcase(context),
-        const SizedBox(height: 12),
-        MyanmarDateSummaryCard(
-          date: _selectedCompleteDate,
-          language: _language,
-          theme: _calendarTheme,
-          showHolidays: _showHolidays,
-          showAstrology: _showAstrology,
-        ),
-        const SizedBox(height: 12),
-        HoroscopeWidget(
-          date: _selectedCompleteDate,
-          language: _language,
-          primaryColor: _calendarTheme.headerBackgroundColor,
-          backgroundColor: Colors.white,
         ),
       ],
     );
-  }
 
-  Widget _buildMoonPhaseShowcase(BuildContext context) {
-    final selectedDate = _selectedCompleteDate.western.toDateTime();
-    final around = List<DateTime>.generate(
-      7,
-      (int index) => selectedDate.add(Duration(days: index - 3)),
-    );
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Daily Moon Phase (CustomPainter)',
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 118,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: around.length,
-              separatorBuilder: (BuildContext context, int index) =>
-                  const SizedBox(width: 10),
-              itemBuilder: (BuildContext context, int index) {
-                final date = around[index];
-                final complete = MyanmarCalendar.getCompleteDate(date);
-                return Container(
-                  width: 86,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 8,
+    if (wide) {
+      return Scaffold(
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _index,
+              labelType: NavigationRailLabelType.all,
+              onDestinationSelected: (i) => setState(() => _index = i),
+              destinations: [
+                for (final s in gallerySections)
+                  NavigationRailDestination(
+                    icon: Icon(s.icon),
+                    label: Text(s.label),
                   ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAFC),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      DailyMoonPhaseWidget.fromCompleteDate(
-                        complete,
-                        language: _language,
-                        size: 38,
-                        showIllumination: true,
-                        showLabel: false,
-                        labelStyle: Theme.of(context).textTheme.labelSmall
-                            ?.copyWith(fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        '${date.month}/${date.day}',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+              ],
             ),
+            Expanded(child: body),
+          ],
+        ),
+      );
+    }
+
+    if (style == MmVisualStyle.material) {
+      return Scaffold(
+        body: body,
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: _index,
+          onDestinationSelected: (i) => setState(() => _index = i),
+          destinations: [
+            for (final s in gallerySections)
+              NavigationDestination(icon: Icon(s.icon), label: s.label),
+          ],
+        ),
+      );
+    }
+
+    // Cupertino and Glass: a floating tab bar over the content.
+    return Scaffold(
+      extendBody: true,
+      body: body,
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: MmSegmented<int>(
+            segments: {
+              for (var i = 0; i < gallerySections.length; i++)
+                i: gallerySections[i].label,
+            },
+            selected: _index,
+            glassThickness: MmGlassThickness.frosted,
+            onChanged: (i) => setState(() => _index = i),
           ),
-        ],
+        ),
       ),
     );
   }
+}
+
+/// A gradient with a moon and a pagoda, so glass has something to bend.
+class GalleryWallpaper extends StatelessWidget {
+  const GalleryWallpaper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return CustomPaint(painter: _WallpaperPainter(dark: dark));
+  }
+}
+
+class _WallpaperPainter extends CustomPainter {
+  _WallpaperPainter({required this.dark});
+
+  final bool dark;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: dark
+              ? const [Color(0xFF2B3480), Color(0xFF0B0C22), Color(0xFF9A4E1C)]
+              : const [Color(0xFF6F7FE0), Color(0xFFB59BE8), Color(0xFFF0A257)],
+        ).createShader(rect),
+    );
+    canvas.drawCircle(
+      Offset(size.width * 0.78, size.height * 0.14),
+      size.shortestSide * 0.13,
+      Paint()..color = const Color(0xFFFFD45C),
+    );
+    // A stepped pagoda silhouette.
+    final base = size.height;
+    final cx = size.width * 0.28;
+    final unit = size.shortestSide * 0.05;
+    final pagoda = Path()..moveTo(cx - unit * 6, base);
+    for (var i = 0; i < 5; i++) {
+      final w = unit * (6 - i);
+      final y = base - unit * (1.6 * i + 1.6);
+      pagoda
+        ..lineTo(cx - w, y)
+        ..lineTo(cx - w * 0.75, y);
+    }
+    pagoda.lineTo(cx, base - unit * 12);
+    for (var i = 4; i >= 0; i--) {
+      final w = unit * (6 - i);
+      final y = base - unit * (1.6 * i + 1.6);
+      pagoda
+        ..lineTo(cx + w * 0.75, y)
+        ..lineTo(cx + w, y);
+    }
+    pagoda
+      ..lineTo(cx + unit * 6, base)
+      ..close();
+    canvas.drawPath(
+      pagoda,
+      Paint()
+        ..color = (dark ? const Color(0xFF05061A) : const Color(0xFF2C2F6B))
+            .withValues(alpha: 0.8),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_WallpaperPainter old) => old.dark != dark;
 }
