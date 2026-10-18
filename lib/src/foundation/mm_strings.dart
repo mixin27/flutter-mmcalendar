@@ -63,6 +63,18 @@ class MmStrings {
     'Other': 'အခြား',
     'Custom': 'ကိုယ်ပိုင်',
     'lit': 'လင်း',
+    'Days between': 'ရက်ကွာခြားချက်',
+    'From': 'မှ',
+    'To': 'အထိ',
+    'Add': 'ပေါင်းရန်',
+    'Myanmar months': 'မြန်မာလ',
+    'Swap': 'ပြောင်းရန်',
+    'Horoscope': 'ဇာတာ',
+    'Fortune': 'ဗေဒင်',
+    'Divination': 'နိမိတ်',
+    'Copy prompt': 'Prompt ကူးယူရန်',
+    'History': 'ရာဇဝင်',
+    'No records for this date': 'ဤရက်အတွက် မှတ်တမ်းမရှိပါ',
   };
 
   String _t(String key) {
@@ -215,6 +227,42 @@ class MmStrings {
   String percentLit(int percent) => language == Language.english
       ? '$percent% lit'
       : '${language.digits(percent)}% ${_t('lit')}';
+
+  /// "Days between".
+  String get daysBetween => _t('Days between');
+
+  /// The start of a span.
+  String get from => _t('From');
+
+  /// The end of a span.
+  String get to => _t('To');
+
+  /// "Add".
+  String get add => _t('Add');
+
+  /// The unit of Myanmar months.
+  String get myanmarMonths => _t('Myanmar months');
+
+  /// The swap button's label.
+  String get swap => _t('Swap');
+
+  /// The AI prompt kinds.
+  String get horoscope => _t('Horoscope');
+
+  /// See [horoscope].
+  String get fortune => _t('Fortune');
+
+  /// See [horoscope].
+  String get divination => _t('Divination');
+
+  /// "Copy prompt".
+  String get copyPrompt => _t('Copy prompt');
+
+  /// The chronicle card's title.
+  String get history => _t('History');
+
+  /// The chronicle card's empty state.
+  String get noRecords => _t('No records for this date');
 
   /// A core term (Sabbath, Yatyaza, Human, East...) in this language.
   String term(String key) => TranslationService.translateTo(key, language);
