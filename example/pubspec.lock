@@ -142,10 +142,10 @@ packages:
     dependency: transitive
     description:
       name: myanmar_calendar_dart
-      sha256: c9c3a6395fbcf592a3bf123ee683cd432276c9d324d9d9805d42a97f261f618f
+      sha256: "274b11d1af088d7492cc8720ba0df6637a26bda8824ac97d1f2a47ef1e80d685"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   path:
     dependency: transitive
     description:

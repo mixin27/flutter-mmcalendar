@@ -169,9 +169,13 @@ void main() {
           greaterThanOrEqualTo((near[i - 1].entry.startJdn - jdn).abs()),
         );
       }
-      // The core's own lookup returns every earlier entry for a date, since
-      // none of them has an end date.
-      expect(client.getChronicleForJdn(jdn).length, greaterThan(near.length));
+      // Each record is a one-day event: the core finds it on its own day.
+      final first = near.first.entry;
+      expect(client.getChronicleForJdn(first.startJdn), contains(first));
+      expect(
+        client.getChronicleForJdn(first.startJdn + 1),
+        isNot(contains(first)),
+      );
     });
 
     testWidgets('shows the era and nearby records', (tester) async {

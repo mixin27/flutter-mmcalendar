@@ -25,8 +25,8 @@ class ChronicleRecord {
 /// dated records nearest to it.
 ///
 /// Kingdoms that ran side by side (Ava and Hanthawaddy, Taungoo and
-/// Mrauk-U) are all listed. Records are dated events, so they are matched
-/// by their date; [windowYears] sets how far either side to look.
+/// Mrauk-U) are all listed. [windowYears] sets how far either side of the
+/// date to look for records.
 class ChronicleCard extends StatelessWidget {
   /// Creates a card for [date] (default: today).
   const ChronicleCard({
@@ -57,16 +57,9 @@ class ChronicleCard extends StatelessWidget {
   static List<DynastyData> erasAt(
     MyanmarCalendarClient client,
     double julianDay,
-  ) => [
-    for (final d in client.listDynasties())
-      if (julianDay >= d.startJdn && julianDay <= d.endJdn) d,
-  ];
+  ) => client.getDynastiesForJdn(julianDay);
 
   /// The records dated within [windowYears] of [julianDay], nearest first.
-  ///
-  /// Every entry in the core's chronicles is a single dated event, so this
-  /// matches on the entry's date rather than treating a missing end as
-  /// "still ongoing".
   static List<ChronicleRecord> recordsNear(
     MyanmarCalendarClient client,
     double julianDay, {
@@ -75,10 +68,7 @@ class ChronicleCard extends StatelessWidget {
   }) {
     final window = windowYears * 365.25;
     final near =
-        client
-            .getChroniclesBetweenJdn(julianDay - window, julianDay + window)
-            .where((e) => (e.startJdn - julianDay).abs() <= window)
-            .toList()
+        client.getChroniclesBetweenJdn(julianDay - window, julianDay + window)
           ..sort(
             (a, b) => (a.startJdn - julianDay).abs().compareTo(
               (b.startJdn - julianDay).abs(),
