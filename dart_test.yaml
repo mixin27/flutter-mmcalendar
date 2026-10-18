@@ -1,0 +1,4 @@
+tags:
+  # Pixel comparisons, generated on macOS. Text rendering differs on other
+  # platforms, so CI on Linux skips them.
+  golden:
