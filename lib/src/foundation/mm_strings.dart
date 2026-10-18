@@ -32,6 +32,19 @@ class MmStrings {
     'Unavailable': 'ရွေး၍မရ',
     'events': 'ပွဲ',
     'Nothing on these days': 'ဤရက်များတွင် ဘာမှမရှိပါ',
+    'Select date': 'ရက်စွဲ ရွေးပါ',
+    'Select dates': 'ရက်များ ရွေးပါ',
+    'Select range': 'ရက်အပိုင်းအခြား ရွေးပါ',
+    'Choose month': 'လ ရွေးပါ',
+    'Cancel': 'မလုပ်တော့',
+    'OK': 'ရွေးမည်',
+    'Done': 'ပြီးပြီ',
+    'Clear': 'ရှင်းမည်',
+    'Western': 'ခရစ်နှစ်',
+    'Myanmar': 'မြန်မာ',
+    'Month': 'လ',
+    'Day': 'ရက်',
+    'days': 'ရက်',
   };
 
   String _t(String key) {
@@ -80,6 +93,51 @@ class MmStrings {
 
   /// The agenda's empty state.
   String get nothingOnTheseDays => _t('Nothing on these days');
+
+  /// A date picker's title.
+  String get selectDate => _t('Select date');
+
+  /// A multi-date picker's title.
+  String get selectDates => _t('Select dates');
+
+  /// A range picker's title.
+  String get selectRange => _t('Select range');
+
+  /// The month-year picker's tooltip.
+  String get chooseMonth => _t('Choose month');
+
+  /// "Cancel".
+  String get cancel => _t('Cancel');
+
+  /// "OK".
+  String get ok => _t('OK');
+
+  /// "Done".
+  String get done => _t('Done');
+
+  /// "Clear".
+  String get clear => _t('Clear');
+
+  /// The Western (Gregorian) calendar's name.
+  String get western => _t('Western');
+
+  /// The Myanmar calendar's name.
+  String get myanmar => _t('Myanmar');
+
+  /// "Month".
+  String get month => _t('Month');
+
+  /// "Day".
+  String get day => _t('Day');
+
+  /// "3 days", in this language's digits.
+  String dayCount(int count) {
+    if (language == Language.english &&
+        !TranslationService.hasTranslation('days', language)) {
+      return count == 1 ? '1 day' : '$count days';
+    }
+    return '${language.digits(count)} ${_t('days')}';
+  }
 
   /// "3 events", in this language's digits.
   String eventCount(int count) {
@@ -132,6 +190,11 @@ class MmStrings {
   /// "Thadingyut Waxing 7".
   String myanmarDate(MyanmarDate date) =>
       '${myanmarMonth(date.month, date.yearType)} ${fortnightDay(date)}';
+
+  /// "18 Oct".
+  String westernShort(DateTime day) =>
+      '${language.digits(day.day)} '
+      '${TranslationService.getShortWesternMonthName(day.month, language)}';
 
   /// "18 October 2026".
   String westernDate(DateTime day) =>

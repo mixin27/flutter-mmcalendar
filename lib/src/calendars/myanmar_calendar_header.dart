@@ -18,6 +18,8 @@ class MyanmarCalendarHeader extends StatelessWidget {
     this.previousTooltip = 'Previous',
     this.nextTooltip = 'Next',
     this.trailing,
+    this.onTitleTap,
+    this.titleTapTooltip,
     this.style,
   });
 
@@ -45,6 +47,13 @@ class MyanmarCalendarHeader extends StatelessWidget {
   /// A widget after the buttons, such as a "Today" button.
   final Widget? trailing;
 
+  /// Makes the title a button, e.g. to open a month-year picker; a small
+  /// chevron after the title shows it can be tapped.
+  final VoidCallback? onTitleTap;
+
+  /// The title button's accessible hint.
+  final String? titleTapTooltip;
+
   /// Overrides the scope's visual style.
   final MmVisualStyle? style;
 
@@ -62,35 +71,56 @@ class MyanmarCalendarHeader extends StatelessWidget {
             child: Semantics(
               header: true,
               liveRegion: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textStyle(
-                      TextStyle(
-                        color: theme.ink,
-                        fontSize: bold ? 21 : 19,
-                        fontWeight: bold ? FontWeight.w700 : FontWeight.w600,
-                        letterSpacing: -0.2,
-                      ),
-                      language,
+              button: onTitleTap != null,
+              hint: titleTapTooltip,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: onTitleTap,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textStyle(
+                              TextStyle(
+                                color: theme.ink,
+                                fontSize: bold ? 21 : 19,
+                                fontWeight: bold
+                                    ? FontWeight.w700
+                                    : FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
+                              language,
+                            ),
+                          ),
+                        ),
+                        if (onTitleTap != null)
+                          Icon(
+                            Icons.expand_more,
+                            size: 22,
+                            color: theme.accent,
+                          ),
+                      ],
                     ),
-                  ),
-                  if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textStyle(
-                        TextStyle(color: theme.muted, fontSize: 13),
-                        language,
+                    if (subtitle != null)
+                      Text(
+                        subtitle!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textStyle(
+                          TextStyle(color: theme.muted, fontSize: 13),
+                          language,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

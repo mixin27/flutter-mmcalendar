@@ -20,17 +20,10 @@ Future<T?> showMmSheet<T>({
 }) {
   final resolved = MyanmarCalendarScope.styleOf(context, style);
   final theme = MyanmarCalendarScope.themeOf(context);
-  final scope = MyanmarCalendarScope.of(context);
 
   // Routes are built above the scope, so carry it over.
-  Widget scoped(BuildContext ctx) => MyanmarCalendarScope(
-    client: scope.client,
-    language: scope.language,
-    style: scope.style,
-    theme: scope.theme,
-    firstDayOfWeek: scope.firstDayOfWeek,
-    child: Builder(builder: builder),
-  );
+  Widget scoped(BuildContext ctx) =>
+      MyanmarCalendarScope.wrap(context, Builder(builder: builder));
 
   const grabber = Padding(
     padding: EdgeInsets.only(top: 8, bottom: 4),
@@ -115,7 +108,6 @@ Future<T?> showMmPopover<T>({
 }) {
   final resolved = MyanmarCalendarScope.styleOf(context, style);
   final theme = MyanmarCalendarScope.themeOf(context);
-  final scope = MyanmarCalendarScope.of(context);
   final box = context.findRenderObject()! as RenderBox;
   final rect = anchor ?? box.localToGlobal(Offset.zero) & box.size;
   final label = MaterialLocalizations.of(context).modalBarrierDismissLabel;
@@ -127,13 +119,9 @@ Future<T?> showMmPopover<T>({
     barrierColor: Colors.transparent,
     transitionDuration: const Duration(milliseconds: 180),
     pageBuilder: (ctx, _, _) {
-      final content = MyanmarCalendarScope(
-        client: scope.client,
-        language: scope.language,
-        style: scope.style,
-        theme: scope.theme,
-        firstDayOfWeek: scope.firstDayOfWeek,
-        child: Builder(builder: builder),
+      final content = MyanmarCalendarScope.wrap(
+        context,
+        Builder(builder: builder),
       );
       final Widget panel = switch (resolved) {
         MmVisualStyle.glass => MmGlass(

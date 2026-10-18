@@ -52,6 +52,8 @@ class MyanmarMonthCalendar extends StatefulWidget {
     this.onSelectionChanged,
     this.onMonthChanged,
     this.headerTrailing,
+    this.onHeaderTitleTap,
+    this.headerTitleTapHint,
     this.surface = true,
     this.padding = const EdgeInsets.fromLTRB(12, 12, 12, 10),
     this.style,
@@ -99,6 +101,12 @@ class MyanmarMonthCalendar extends StatefulWidget {
 
   /// A widget at the end of the header, such as a "Today" button.
   final Widget? headerTrailing;
+
+  /// Makes the header title a button, e.g. to pick a month.
+  final VoidCallback? onHeaderTitleTap;
+
+  /// What tapping the title does, for screen readers.
+  final String? headerTitleTapHint;
 
   /// Whether to draw the calendar on an [MmSurface].
   final bool surface;
@@ -391,6 +399,8 @@ class _MyanmarMonthCalendarState extends State<MyanmarMonthCalendar> {
                     previousTooltip: strings.previousMonth,
                     nextTooltip: strings.nextMonth,
                     trailing: widget.headerTrailing,
+                    onTitleTap: widget.onHeaderTitleTap,
+                    titleTapTooltip: widget.headerTitleTapHint,
                     style: widget.style,
                   ),
                 if (widget.showWeekdays) ...[

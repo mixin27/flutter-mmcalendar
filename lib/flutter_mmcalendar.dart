@@ -5,7 +5,7 @@
 /// widgets such as:
 ///
 /// - [MyanmarCalendarWidget] for month views
-/// - [MyanmarDatePickerWidget] and modal pickers
+/// - [MyanmarDatePicker], [showMyanmarDatePicker] and the range picker
 /// - [HoroscopeWidget] and summary cards
 /// - CustomPainter-based moon phase widgets
 ///
@@ -50,6 +50,11 @@ export 'src/foundation/myanmar_day_data.dart';
 export 'src/foundation/today_builder.dart';
 // 3.x widgets and their theme (above), replaced step by step by 4.0 widgets.
 export 'src/moon/moon_glyph.dart';
+// 4.0 pickers.
+export 'src/pickers/myanmar_date_form_field.dart';
+export 'src/pickers/myanmar_date_picker.dart';
+export 'src/pickers/myanmar_date_wheel_picker.dart';
+export 'src/pickers/myanmar_month_year_picker.dart';
 export 'src/widgets/calendar_selection_mode.dart';
 export 'src/widgets/horoscope_widget.dart';
 export 'src/widgets/moon/daily_moon_phase_widget.dart';
@@ -57,6 +62,4 @@ export 'src/widgets/moon/moon_phase_painter.dart';
 export 'src/widgets/moon/moon_phase_view.dart';
 export 'src/widgets/myanmar_calendar_toolbar.dart';
 export 'src/widgets/myanmar_calendar_widget.dart';
-export 'src/widgets/myanmar_date_picker_form_field.dart';
-export 'src/widgets/myanmar_date_picker_widget.dart';
 export 'src/widgets/myanmar_date_summary_card.dart';

@@ -161,6 +161,23 @@ class MyanmarCalendarScope extends StatefulWidget {
     );
   }
 
+  /// Wraps [child] in a scope with the same client, language, style, theme
+  /// and week start as the one at [context].
+  ///
+  /// Routes (dialogs, sheets, pages) are built above the scope that opened
+  /// them; wrap their content with this to keep the settings.
+  static Widget wrap(BuildContext context, Widget child) {
+    final scope = of(context);
+    return MyanmarCalendarScope(
+      client: scope.client,
+      language: scope.language,
+      style: scope.style,
+      theme: scope.theme,
+      firstDayOfWeek: scope.firstDayOfWeek,
+      child: child,
+    );
+  }
+
   /// The concrete style to draw with: [override] if given, else the scope's
   /// style, resolved for the theme's platform (so `ThemeData.platform`
   /// overrides work in tests and previews).

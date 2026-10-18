@@ -47,12 +47,24 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
   List<DateTime> _multiSelectedDates = <DateTime>[];
-  MyanmarDateTime? _formDate;
+  // The 4.0 pickers below; the rest of this screen still shows 3.x widgets
+  // until the example is rewritten.
+  final GlobalKey<FormFieldState<CompleteDate>> _formFieldKey = GlobalKey();
+  late final MyanmarCalendarController _inlinePicker =
+      MyanmarCalendarController(
+        selection: SingleSelection(_selectedCompleteDate.western.toDateTime()),
+      );
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late CompleteDate _selectedCompleteDate;
   late MyanmarCalendarTheme _calendarTheme;
+
+  @override
+  void dispose() {
+    _inlinePicker.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -82,36 +94,13 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
     final result = await showMyanmarDatePicker(
       context: context,
       initialDate: _selectedCompleteDate.western.toDateTime(),
-      language: _language,
-      theme: _calendarTheme,
-      showHolidays: _showHolidays,
-      showAstrology: _showAstrology,
-      showWesternDates: true,
-      showMyanmarDates: true,
-      firstDayOfWeek: 1,
     );
-
-    if (result != null) {
-      _updateSelectedDate(result);
-    }
+    if (result != null) _updateSelectedDate(result);
   }
 
   Future<void> _openFullscreenPicker() async {
-    final result = await showMyanmarDatePickerFullscreen(
-      context: context,
-      initialDate: _selectedCompleteDate.western.toDateTime(),
-      language: _language,
-      theme: _calendarTheme,
-      showHolidays: _showHolidays,
-      showAstrology: _showAstrology,
-      showWesternDates: true,
-      showMyanmarDates: true,
-      firstDayOfWeek: 1,
-    );
-
-    if (result != null) {
-      _updateSelectedDate(result);
-    }
+    final range = await showMyanmarDateRangePicker(context: context);
+    if (range != null) _updateSelectedDate(range.start);
   }
 
   @override
@@ -407,7 +396,7 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
                 OutlinedButton.icon(
                   onPressed: _openFullscreenPicker,
                   icon: const Icon(Icons.fullscreen),
-                  label: const Text('Open Fullscreen Picker'),
+                  label: const Text('Open Range Picker'),
                 ),
               ],
             ),
@@ -420,15 +409,9 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
               clipBehavior: Clip.antiAlias,
               child: SizedBox(
                 height: pickerHeight,
-                child: MyanmarDatePickerWidget(
-                  initialDate: _selectedCompleteDate.western.toDateTime(),
-                  language: _language,
-                  theme: _calendarTheme,
-                  showHolidays: _showHolidays,
-                  showAstrology: _showAstrology,
-                  showWesternDates: true,
-                  showMyanmarDates: true,
-                  onDateChanged: _updateSelectedDate,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: MyanmarDatePicker(controller: _inlinePicker),
                 ),
               ),
             ),
@@ -460,24 +443,10 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
               ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
-            MyanmarDatePickerFormField(
-              value: _formDate,
-              language: _language,
-              theme: _calendarTheme,
-              labelText: 'Reminder Date',
-              showWesternDates: true,
-              showHolidays: _showHolidays,
-              onChanged: (MyanmarDateTime? value) {
-                setState(() {
-                  _formDate = value;
-                });
-              },
-              validator: (MyanmarDateTime? value) {
-                if (value == null) {
-                  return 'Please pick a date';
-                }
-                return null;
-              },
+            MyanmarDateFormField(
+              key: _formFieldKey,
+              label: 'Reminder Date',
+              validator: (value) => value == null ? 'Please pick a date' : null,
             ),
             const SizedBox(height: 10),
             Row(
@@ -498,9 +467,7 @@ class _ShowcaseHomePageState extends State<ShowcaseHomePage> {
                 const SizedBox(width: 8),
                 TextButton(
                   onPressed: () {
-                    setState(() {
-                      _formDate = null;
-                    });
+                    _formFieldKey.currentState?.didChange(null);
                   },
                   child: const Text('Clear'),
                 ),
