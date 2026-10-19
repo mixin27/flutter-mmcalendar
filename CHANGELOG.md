@@ -1,3 +1,10 @@
+## 4.0.1
+
+- Stacked labels make room for Myanmar script: the agenda's day number and
+  weekday, the week strip's day labels and the holiday list's dates no longer
+  overlap their vowel and tone marks. `MmCalendarThemeData.lineHeight` gives
+  the line height a stacked label needs in a language.
+
 ## 4.0.0
 
 A rewrite of every widget. The calendar UI now renders as Material 3,
