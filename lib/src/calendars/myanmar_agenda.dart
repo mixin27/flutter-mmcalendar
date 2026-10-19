@@ -354,11 +354,14 @@ class _AgendaDay extends StatelessWidget {
                     20,
                     data.isToday ? theme.accent : theme.ink,
                     FontWeight.w700,
-                  ).copyWith(height: 1.1),
+                  ).copyWith(height: theme.lineHeight(language, 1.1)),
                 ),
                 Text(
                   strings.weekdayShort(data.day.weekday),
-                  style: ts(11, theme.muted).copyWith(height: 1.2),
+                  style: ts(
+                    11,
+                    theme.muted,
+                  ).copyWith(height: theme.lineHeight(language, 1.2)),
                 ),
               ],
             ),

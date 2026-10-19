@@ -430,6 +430,17 @@ void main() {
       expect(find.text('End of Buddhist Lent'), findsOneWidget);
     });
 
+    testWidgets('Myanmar day numbers get room for their marks', (tester) async {
+      await tester.pumpWidget(
+        _host(
+          MyanmarAgenda(from: DateTime(2026, 10, 18), days: 10, clock: _clock),
+          language: Language.myanmar,
+        ),
+      );
+      final number = tester.widget<Text>(find.text('၁၉'));
+      expect(number.style!.height, greaterThanOrEqualTo(1.35));
+    });
+
     testWidgets('says so when nothing is on', (tester) async {
       await tester.pumpWidget(
         _host(

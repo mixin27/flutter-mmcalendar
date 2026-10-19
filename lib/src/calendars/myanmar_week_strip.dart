@@ -196,7 +196,7 @@ class _MyanmarWeekStripState extends State<MyanmarWeekStrip> {
     final language = scope.language;
     TextStyle ts(double size, Color c, [FontWeight? w]) => t
         .textStyle(TextStyle(fontSize: size, color: c, fontWeight: w), language)
-        .copyWith(height: 1.15);
+        .copyWith(height: t.lineHeight(language, 1.15));
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
