@@ -1,3 +1,8 @@
+## 4.0.2
+
+- Requires `myanmar_calendar_dart` 3.0.2: New Year's Day (1 January) shows
+  as a public holiday again from 2022 onwards.
+
 ## 4.0.1
 
 - Stacked labels make room for Myanmar script: the agenda's day number and
