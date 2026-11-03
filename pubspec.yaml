@@ -1,6 +1,6 @@
 name: flutter_mmcalendar
 description: "Myanmar calendar widgets for Flutter in Material 3, Cupertino and Liquid Glass: month, lunar month and year views, pickers, holidays, moon phases and astrology."
-version: 4.0.1
+version: 4.0.2
 homepage: https://github.com/mixin27/flutter-mmcalendar
 repository: https://github.com/mixin27/flutter-mmcalendar
 issue_tracker: https://github.com/mixin27/flutter-mmcalendar/issues
@@ -14,7 +14,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  myanmar_calendar_dart: ^3.0.1
+  myanmar_calendar_dart: ^3.0.2
 
 dev_dependencies:
   flutter_test:
