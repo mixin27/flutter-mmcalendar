@@ -8,6 +8,9 @@
   dates itself; `MyanmarDateParser` is a plain function, so an app can read
   any form it likes, such as "Tabaung full moon 1388".
 - New `MmStrings.typeDate` and `MmStrings.notADate`, in English and Myanmar.
+- Requires `myanmar_calendar_dart` 3.0.3: New Year's Day (1 January) is a
+  public holiday in 2018–2021 and again from 2025, and Chinese New Year is a
+  public holiday from 2025.
 
 ## 4.0.2
 
