@@ -261,6 +261,99 @@ void main() {
     expect(result!.start.western.day, 25);
   });
 
+  group('typed dates', () {
+    DateTime? parse(String text) => switch (text.trim().toLowerCase()) {
+      'tabaung full moon' => DateTime(2027, 3, 22),
+      'long ago' => DateTime(1990),
+      _ => null,
+    };
+
+    testWidgets('a typed day is shown and selected', (tester) async {
+      CompleteDate? result;
+      await _pumpOpener(tester, (context) async {
+        result = await showMyanmarDatePicker(
+          context: context,
+          initialDate: DateTime(2026, 10, 18),
+          firstDate: DateTime(2020),
+          clock: _clock,
+          dateParser: parse,
+        );
+      });
+      await tester.enterText(
+        find.byKey(const ValueKey('mm-typed-date')),
+        'Tabaung full moon',
+      );
+      await tester.testTextInput.receiveAction(TextInputAction.go);
+      await tester.pumpAndSettle();
+      expect(find.text('Monday, 22 March 2027'), findsOneWidget);
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      expect(
+        DateTime(
+          result!.western.year,
+          result!.western.month,
+          result!.western.day,
+        ),
+        DateTime(2027, 3, 22),
+      );
+    });
+
+    testWidgets('says when it is not a date or out of bounds', (tester) async {
+      await _pumpOpener(tester, (context) async {
+        await showMyanmarDatePicker(
+          context: context,
+          initialDate: DateTime(2026, 10, 18),
+          firstDate: DateTime(2020),
+          clock: _clock,
+          dateParser: parse,
+        );
+      });
+      final field = find.byKey(const ValueKey('mm-typed-date'));
+      await tester.enterText(field, 'hello');
+      await tester.testTextInput.receiveAction(TextInputAction.go);
+      await tester.pump();
+      expect(find.text('Not a date'), findsOneWidget);
+      await tester.enterText(field, 'long ago');
+      await tester.testTextInput.receiveAction(TextInputAction.go);
+      await tester.pump();
+      expect(find.text('Unavailable'), findsOneWidget);
+      // The selection didn't move.
+      expect(find.text('Sunday, 18 October 2026'), findsOneWidget);
+    });
+
+    testWidgets('no parser, no field', (tester) async {
+      await _pumpOpener(tester, (context) async {
+        await showMyanmarDatePicker(
+          context: context,
+          initialDate: DateTime(2026, 10, 18),
+          clock: _clock,
+        );
+      });
+      expect(find.byKey(const ValueKey('mm-typed-date')), findsNothing);
+    });
+
+    testWidgets('the multi picker adds a typed day', (tester) async {
+      List<CompleteDate>? result;
+      await _pumpOpener(tester, (context) async {
+        result = await showMyanmarMultiDatePicker(
+          context: context,
+          initialDates: [DateTime(2026, 10, 26)],
+          clock: _clock,
+          dateParser: parse,
+        );
+      });
+      await tester.enterText(
+        find.byKey(const ValueKey('mm-typed-date')),
+        'tabaung full moon',
+      );
+      await tester.testTextInput.receiveAction(TextInputAction.go);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      expect(result!.map((d) => d.western.month), [10, 3]);
+    });
+  });
+
   testWidgets('multi picker returns the days in order', (tester) async {
     List<CompleteDate>? result;
     await _pumpOpener(tester, (context) async {

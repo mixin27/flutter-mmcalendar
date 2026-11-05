@@ -1,3 +1,14 @@
+## 4.1.0
+
+- Date pickers can take a typed date: pass `dateParser` to
+  `MyanmarDatePicker`, `showMyanmarDatePicker` or
+  `showMyanmarMultiDatePicker` and a "Type a date" field shows above the
+  calendar. Submitting shows and selects the day it reads, or says "Not a
+  date" (or "Unavailable" outside the bounds). The package doesn't parse
+  dates itself; `MyanmarDateParser` is a plain function, so an app can read
+  any form it likes, such as "Tabaung full moon 1388".
+- New `MmStrings.typeDate` and `MmStrings.notADate`, in English and Myanmar.
+
 ## 4.0.2
 
 - Requires `myanmar_calendar_dart` 3.0.2: New Year's Day (1 January) shows

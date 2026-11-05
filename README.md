@@ -191,6 +191,17 @@ Material shows a dialog; Cupertino and Glass show a sheet with Cancel and
 Done. Each picker has a Western / Myanmar switch and a month-year grid
 behind the calendar title.
 
+Pass a `dateParser` to let people type a date: a "Type a date" field shows
+above the calendar, and the day it reads is shown and selected. The
+package doesn't parse dates itself, so you choose what to accept:
+
+```dart
+final day = await showMyanmarDatePicker(
+  context: context,
+  dateParser: (text) => DateTime.tryParse(text), // or your own parser
+);
+```
+
 | Widget | What it shows |
 | --- | --- |
 | `MyanmarDatePicker` | The picker's content, for use inline. |
