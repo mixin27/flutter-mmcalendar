@@ -59,6 +59,10 @@ class MyanmarDateRange {
   int get hashCode => Object.hash(start.western, end.western);
 }
 
+/// Reads a typed date, e.g. "13 Apr 2027" or "Tabaung full moon 1388";
+/// null when [text] isn't one.
+typedef MyanmarDateParser = DateTime? Function(String text);
+
 /// A date picker's content, for use inline or inside your own dialog: a
 /// summary of the selection, then a month calendar, the Myanmar wheels, or
 /// a month-year grid.
@@ -77,6 +81,7 @@ class MyanmarDatePicker extends StatefulWidget {
     this.showSummary = true,
     this.style,
     this.clock,
+    this.dateParser,
   });
 
   /// The visible month, bounds and selection.
@@ -102,6 +107,10 @@ class MyanmarDatePicker extends StatefulWidget {
 
   /// The current time, for tests.
   final DateTime Function()? clock;
+
+  /// When given, a field to type a date into: the picker shows and selects
+  /// the day it reads. The package doesn't parse dates itself.
+  final MyanmarDateParser? dateParser;
 
   @override
   State<MyanmarDatePicker> createState() => _MyanmarDatePickerState();
@@ -231,6 +240,24 @@ class _MyanmarDatePickerState extends State<MyanmarDatePicker> {
         if (widget.showSummary) ...[
           _Summary(selection: controller.selection),
           const SizedBox(height: 8),
+        ],
+        if (widget.dateParser case final parse?) ...[
+          _TypedDate(
+            parse: parse,
+            onDate: (day) {
+              final selected = controller.selection.days.any(
+                (d) => DateUtils.isSameDay(d, day),
+              );
+              // A multi-date picker toggles: typing a chosen day keeps it.
+              if (!selected && !controller.select(day)) return false;
+              controller.jumpTo(day);
+              setState(() => _mode = _Mode.calendar);
+              return true;
+            },
+          ),
+          const SizedBox(height: 8),
+        ],
+        if (widget.showSummary || widget.dateParser != null) ...[
           Divider(height: 1, color: theme.outline),
           const SizedBox(height: 8),
         ],
@@ -241,6 +268,81 @@ class _MyanmarDatePickerState extends State<MyanmarDatePicker> {
           child: body,
         ),
       ],
+    );
+  }
+}
+
+/// The typed-date field: submitting shows and selects the day [parse]
+/// reads, or says it isn't a date (or can't be chosen).
+class _TypedDate extends StatefulWidget {
+  const _TypedDate({required this.parse, required this.onDate});
+
+  final MyanmarDateParser parse;
+
+  /// Selects the day; false when it can't be selected.
+  final bool Function(DateTime day) onDate;
+
+  @override
+  State<_TypedDate> createState() => _TypedDateState();
+}
+
+class _TypedDateState extends State<_TypedDate> {
+  final _text = TextEditingController();
+  String? _error;
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  void _submit(String value) {
+    final strings = MmStrings.of(MyanmarCalendarScope.of(context).language);
+    if (value.trim().isEmpty) return;
+    final day = widget.parse(value);
+    setState(() {
+      if (day == null) {
+        _error = strings.notADate;
+      } else if (!widget.onDate(DateUtils.dateOnly(day))) {
+        _error = strings.unavailable;
+      } else {
+        _error = null;
+        _text.clear();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = MyanmarCalendarScope.of(context);
+    final theme = MyanmarCalendarScope.themeOf(context);
+    final strings = MmStrings.of(scope.language);
+    return TextField(
+      key: const ValueKey('mm-typed-date'),
+      controller: _text,
+      textInputAction: TextInputAction.go,
+      onSubmitted: _submit,
+      style: theme.textStyle(
+        TextStyle(color: theme.ink, fontSize: 15),
+        scope.language,
+      ),
+      decoration: InputDecoration(
+        isDense: true,
+        hintText: strings.typeDate,
+        errorText: _error,
+        prefixIcon: Icon(Icons.keyboard_outlined, color: theme.muted, size: 20),
+        suffixIcon: IconButton(
+          icon: Icon(Icons.arrow_forward_rounded, color: theme.accent),
+          tooltip: strings.typeDate,
+          onPressed: () => _submit(_text.text),
+        ),
+        filled: true,
+        fillColor: theme.surfaceVariant,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+      ),
     );
   }
 }
@@ -343,6 +445,7 @@ Future<CompleteDate?> showMyanmarDatePicker({
   String? title,
   MmVisualStyle? style,
   DateTime Function()? clock,
+  MyanmarDateParser? dateParser,
 }) async {
   final controller = MyanmarCalendarController(
     initialMonth: initialDate,
@@ -361,6 +464,7 @@ Future<CompleteDate?> showMyanmarDatePicker({
     cellStyle: cellStyle,
     style: style,
     clock: clock,
+    dateParser: dateParser,
   );
   final day = controller.selection.days.firstOrNull;
   controller.dispose();
@@ -426,6 +530,7 @@ Future<List<CompleteDate>?> showMyanmarMultiDatePicker({
   String? title,
   MmVisualStyle? style,
   DateTime Function()? clock,
+  MyanmarDateParser? dateParser,
 }) async {
   final controller = MyanmarCalendarController(
     initialMonth: initialMonth ?? initialDates.firstOrNull,
@@ -444,6 +549,7 @@ Future<List<CompleteDate>?> showMyanmarMultiDatePicker({
     cellStyle: cellStyle,
     style: style,
     clock: clock,
+    dateParser: dateParser,
   );
   final days = controller.selection.days;
   controller.dispose();
@@ -460,6 +566,7 @@ Future<bool?> _showPicker({
   required MmVisualStyle? style,
   required DateTime Function()? clock,
   bool Function(CalendarSelection selection)? canConfirm,
+  MyanmarDateParser? dateParser,
 }) {
   final resolved = MyanmarCalendarScope.styleOf(context, style);
   final strings = MmStrings.of(MyanmarCalendarScope.of(context).language);
@@ -473,6 +580,7 @@ Future<bool?> _showPicker({
     cellStyle: cellStyle,
     style: style,
     clock: clock,
+    dateParser: dateParser,
   );
 
   if (resolved == MmVisualStyle.material) {

@@ -36,6 +36,8 @@ class MmStrings {
     'Select dates': 'ရက်များ ရွေးပါ',
     'Select range': 'ရက်အပိုင်းအခြား ရွေးပါ',
     'Choose month': 'လ ရွေးပါ',
+    'Type a date': 'ရက်စွဲ ရိုက်ထည့်ပါ',
+    'Not a date': 'ရက်စွဲ မဟုတ်ပါ',
     'Cancel': 'မလုပ်တော့',
     'OK': 'ရွေးမည်',
     'Done': 'ပြီးပြီ',
@@ -135,6 +137,12 @@ class MmStrings {
 
   /// The month-year picker's tooltip.
   String get chooseMonth => _t('Choose month');
+
+  /// The date picker's typed-date field hint.
+  String get typeDate => _t('Type a date');
+
+  /// A typed date that couldn't be read.
+  String get notADate => _t('Not a date');
 
   /// "Cancel".
   String get cancel => _t('Cancel');
