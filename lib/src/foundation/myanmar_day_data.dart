@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' show DateUtils;
+import 'package:material_ui/material_ui.dart' show DateUtils;
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 import 'calendar_selection.dart';

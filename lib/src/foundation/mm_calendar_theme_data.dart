@@ -1,7 +1,7 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/foundation.dart' show listEquals;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 /// Colours, type and shape for the calendar widgets.

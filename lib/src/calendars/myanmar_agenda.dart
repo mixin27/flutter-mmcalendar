@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 import '../adaptive/mm_chip.dart';
@@ -32,8 +32,10 @@ enum MyanmarAgendaItem {
 }
 
 /// Builds the row for one of the app's events.
-typedef MyanmarEventBuilder =
-    Widget Function(BuildContext context, Object? event);
+typedef MyanmarEventBuilder = Widget Function(
+  BuildContext context,
+  Object? event,
+);
 
 /// The days from [from] to [to] that have something on them, as a sliver
 /// with a pinned header per month. Put it in a `CustomScrollView`, or use

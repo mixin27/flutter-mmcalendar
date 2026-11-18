@@ -1,3 +1,17 @@
+## 5.0.0
+
+- **Breaking:** built on `material_ui` and `cupertino_ui` instead of
+  `package:flutter/material.dart` and `cupertino.dart`, which Flutter 3.50
+  deprecates. `material_ui` is a separate copy of the Material library, so
+  its `ThemeData`, `ColorScheme` and `MaterialLocalizations` are different
+  types from the SDK's: pass `material_ui` types to this package, for
+  example to `MmCalendarThemeData.fromColorScheme`.
+- To migrate an app, run `dart fix --apply --code=migrate_design_widgets`
+  and add `...GlobalMaterialLocalizations.delegates` from `material_ui` to
+  your `MaterialApp` (it has Myanmar). An app that stays on
+  `package:flutter/material.dart` can keep using 4.x.
+- Requires Flutter 3.47 or later and Dart 3.13.
+
 ## 4.1.0
 
 - Date pickers can take a typed date: pass `dateParser` to

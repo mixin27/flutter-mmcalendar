@@ -36,9 +36,8 @@ void main() {
     });
 
     test('tapping before the start moves the start', () {
-      final r = RangeSelection(
-        start: DateTime(2026, 10, 25),
-      ).select(DateTime(2026, 10, 20));
+      final r = RangeSelection(start: DateTime(2026, 10, 25))
+          .select(DateTime(2026, 10, 20));
       expect([r.start, r.end], [DateTime(2026, 10, 20), null]);
     });
 

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Records the scope data and resolved style it sees on each build.
 class _Probe extends StatelessWidget {

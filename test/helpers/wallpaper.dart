@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A busy, colourful backdrop, so glass goldens have something to show.
 class GoldenWallpaper extends StatelessWidget {

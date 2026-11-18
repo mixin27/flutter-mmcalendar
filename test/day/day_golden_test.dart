@@ -1,9 +1,9 @@
 @Tags(['golden'])
 library;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../helpers/fonts.dart';
 import '../helpers/wallpaper.dart';
@@ -158,9 +158,9 @@ void main() {
               for (var d = 12; d <= 31; d += 2)
                 Builder(
                   builder: (context) => MoonGlyph(
-                    date: MyanmarCalendarScope.of(
-                      context,
-                    ).day(DateTime(2026, 10, d)).myanmar,
+                    date: MyanmarCalendarScope.of(context)
+                        .day(DateTime(2026, 10, d))
+                        .myanmar,
                     size: 34,
                     tilt: MoonTilt.myanmar,
                     earthshine: true,

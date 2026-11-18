@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Builds with today's date and rebuilds at local midnight, and when the app
 /// comes back to the foreground, so "today" stays right in long-running apps.
