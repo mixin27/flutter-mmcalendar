@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
 import 'package:flutter_mmcalendar_example/gallery_settings.dart';
 import 'package:flutter_mmcalendar_example/main.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   for (final (style, size) in [

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Today: the card, the moon, holidays, astrology and every detail.
 class DayPage extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../foundation/myanmar_calendar_scope.dart';
 
@@ -352,18 +352,13 @@ class _GlassShaderFilter extends SingleChildRenderObjectWidget {
 
 class _RenderGlassShaderFilter extends RenderProxyBox {
   _RenderGlassShaderFilter({
-    required ui.FragmentShader shader,
-    required BorderRadius borderRadius,
-    required double blurSigma,
-    required double refraction,
-    required double devicePixelRatio,
-    required ScrollPosition? scrollPosition,
-  }) : _shader = shader,
-       _borderRadius = borderRadius,
-       _blurSigma = blurSigma,
-       _refraction = refraction,
-       _devicePixelRatio = devicePixelRatio,
-       _scrollPosition = scrollPosition;
+    required this._shader,
+    required this._borderRadius,
+    required this._blurSigma,
+    required this._refraction,
+    required this._devicePixelRatio,
+    required this._scrollPosition,
+  });
 
   final ui.FragmentShader _shader;
 

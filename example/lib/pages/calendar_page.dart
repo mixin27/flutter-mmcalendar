@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_mmcalendar/flutter_mmcalendar.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Sample events, so the event dots and agenda have something to show.
 final Map<DateTime, List<String>> sampleEvents = () {

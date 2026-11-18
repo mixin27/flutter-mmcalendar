@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:myanmar_calendar_dart/myanmar_calendar_dart.dart';
 
 import '../adaptive/mm_surface.dart';
@@ -18,8 +18,11 @@ import 'myanmar_day_cell.dart';
 typedef MyanmarEventLoader = List<Object?> Function(DateTime day);
 
 /// Wraps or replaces a day cell. [cell] is the default cell for [day].
-typedef MyanmarDayBuilder =
-    Widget Function(BuildContext context, MyanmarDayData day, Widget cell);
+typedef MyanmarDayBuilder = Widget Function(
+  BuildContext context,
+  MyanmarDayData day,
+  Widget cell,
+);
 
 /// A month grid that shows Western and Myanmar dates together, pages by
 /// swiping, and selects one day, a range or several days.

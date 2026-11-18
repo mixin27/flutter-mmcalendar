@@ -25,11 +25,17 @@ astrology, the Shan and Sasana years and the chronicles.
 
 ```yaml
 dependencies:
-  flutter_mmcalendar: ^4.0.0
+  flutter_mmcalendar: ^5.0.0
 ```
 
 This package re-exports `myanmar_calendar_dart`, so one import gives you
-both the widgets and the calendar API. It needs Flutter 3.41 or later.
+both the widgets and the calendar API. It needs Flutter 3.47 or later, and
+is built on [`material_ui`](https://pub.dev/packages/material_ui) and
+[`cupertino_ui`](https://pub.dev/packages/cupertino_ui), the standalone
+Material and Cupertino libraries that replace `package:flutter/material.dart`
+and `cupertino.dart` from Flutter 3.50. Apps still on
+`package:flutter/material.dart` can use 4.x, or see the 5.0.0 notes in the
+changelog.
 
 ## Quick start
 
