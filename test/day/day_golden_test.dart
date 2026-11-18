@@ -158,9 +158,9 @@ void main() {
               for (var d = 12; d <= 31; d += 2)
                 Builder(
                   builder: (context) => MoonGlyph(
-                    date: MyanmarCalendarScope.of(
-                      context,
-                    ).day(DateTime(2026, 10, d)).myanmar,
+                    date: MyanmarCalendarScope.of(context)
+                        .day(DateTime(2026, 10, d))
+                        .myanmar,
                     size: 34,
                     tilt: MoonTilt.myanmar,
                     earthshine: true,
